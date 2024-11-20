@@ -15,6 +15,12 @@ import {
 } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import { FloppyDisk, PencilSimple, Trash } from "@phosphor-icons/react";
+import {
+  getConsymRoute,
+  insertConsymRoute,
+  updateConsymRoute,
+  deleteConsymRoute,
+} from "../../../../routes/facultyProfessionalProfileRoutes";
 
 export default function ConferenceSymposium() {
   const [inputs, setInputs] = useState({
@@ -39,9 +45,7 @@ export default function ConferenceSymposium() {
   // Fetch projects from the backend
   const fetchProjects = async () => {
     try {
-      const response = await axios.get(
-        "http://127.0.0.1:8000/eis/consym/pf_no/",
-      );
+      const response = await axios.get(getConsymRoute);
       const projects = response.data;
       // Sort projects by submission date in descending order
       const sortedProjects = projects.sort(
@@ -72,17 +76,11 @@ export default function ConferenceSymposium() {
       formData.append("conference_end_date", inputs.endDate);
 
       if (isEdit === false) {
-        const res = await axios.post(
-          "http://127.0.0.1:8000/eis/consym/",
-          formData,
-        );
+        const res = await axios.post(insertConsymRoute, formData);
         console.log(res.data);
       } else {
         formData.append("conferencepk2", Id);
-        const res = await axios.post(
-          "http://127.0.0.1:8000/eis/consym/edit",
-          formData,
-        );
+        const res = await axios.post(updateConsymRoute, formData);
         console.log(res.data);
         setEdit(false);
         setId(0);
@@ -129,7 +127,7 @@ export default function ConferenceSymposium() {
     ) {
       try {
         await axios.post(
-          `http://127.0.0.1:8000/eis/emp_consymDelete/`,
+          deleteConsymRoute,
           new URLSearchParams({ pk: projectId }),
         ); // Adjust the delete URL as needed
         fetchProjects(); // Refresh the project list after deletion
@@ -151,7 +149,11 @@ export default function ConferenceSymposium() {
             backgroundColor: "#f9fafb",
           }}
         >
-          <Title order={2} mb="lg" style={{ color: "#2185d0", textAlign: "left" }}>
+          <Title
+            order={2}
+            mb="lg"
+            style={{ color: "#2185d0", textAlign: "left" }}
+          >
             Add a Conference/Symposium
           </Title>
           <form onSubmit={handleSubmit}>
@@ -183,9 +185,7 @@ export default function ConferenceSymposium() {
                   label="Start Date"
                   placeholder="Select date"
                   value={inputs.startDate}
-                  onChange={(date) =>
-                    setInputs({ ...inputs, startDate: date })
-                  }
+                  onChange={(date) => setInputs({ ...inputs, startDate: date })}
                 />
               </Grid.Col>
               <Grid.Col span={6}>
@@ -193,9 +193,7 @@ export default function ConferenceSymposium() {
                   label="End Date"
                   placeholder="Select date"
                   value={inputs.endDate}
-                  onChange={(date) =>
-                    setInputs({ ...inputs, endDate: date })
-                  }
+                  onChange={(date) => setInputs({ ...inputs, endDate: date })}
                 />
               </Grid.Col>
               <Grid.Col span={12}>
@@ -209,7 +207,10 @@ export default function ConferenceSymposium() {
                   }
                 />
               </Grid.Col>
-              <Grid.Col span={12} style={{ display: "flex", justifyContent: "flex-end" }}>
+              <Grid.Col
+                span={12}
+                style={{ display: "flex", justifyContent: "flex-end" }}
+              >
                 <Button
                   type="submit"
                   mt="md"
@@ -223,62 +224,146 @@ export default function ConferenceSymposium() {
             </Grid>
           </form>
         </Paper>
-  
-        <Paper mt="xl" p="lg" withBorder shadow="sm" style={{ border: "1px solid #ddd", borderRadius: "8px", overflow: "hidden", boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)" }}>
-          <Title order={3} mb="lg" style={{ color: "#2185d0" }}> {/* Consistent color with border */}
-            Projects Report:
+
+        <Paper
+          mt="xl"
+          p="lg"
+          withBorder
+          shadow="sm"
+          style={{
+            border: "1px solid #ddd",
+            borderRadius: "8px",
+            overflow: "hidden",
+            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+          }}
+        >
+          <Title order={3} mb="lg" style={{ color: "#2185d0" }}>
+            Report:
           </Title>
-          <Table striped highlightOnHover withBorder style={{ minWidth: "100%", borderCollapse: "collapse" }}>
-        <thead>
-          <tr style={{ backgroundColor: "#f8f9fa" }}>
-            {["Conference Name", "Venue", "Role", "Start Date", "End Date", "Actions"].map((header, index) => (
-              <th
-                key={index}
-                style={{
-                  textAlign: "center",
-                  padding: "12px",
-                  color: "#495057",
-                  fontWeight: "600",
-                  border: "1px solid #dee2e6",
-                  backgroundColor: "#f1f3f5",
-                }}
-              >
-                {header}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {tableData.length > 0 ? (
-            tableData.map((project) => (
-              <tr key={project.id} style={{ backgroundColor: "#fff" }}>
-                <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>{project.name}</td>
-                <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>{project.venue}</td>
-                <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>{project.role1}</td>
-                <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>{project.start_date}</td>
-                <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>{project.end_date}</td>
-                <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>
-                  <ActionIcon color="blue" onClick={() => handleEdit(project)} variant="light" style={{ marginRight: "8px" }}>
-                    <PencilSimple size={16} />
-                  </ActionIcon>
-                  <ActionIcon color="red" onClick={() => handleDelete(project.id)} variant="light">
-                    <Trash size={16} />
-                  </ActionIcon>
-                </td>
+          <Table
+            striped
+            highlightOnHover
+            withBorder
+            style={{ minWidth: "100%", borderCollapse: "collapse" }}
+          >
+            <thead>
+              <tr style={{ backgroundColor: "#f8f9fa" }}>
+                {[
+                  "Conference Name",
+                  "Venue",
+                  "Role",
+                  "Start Date",
+                  "End Date",
+                  "Actions",
+                ].map((header, index) => (
+                  <th
+                    key={index}
+                    style={{
+                      textAlign: "center",
+                      padding: "12px",
+                      color: "#495057",
+                      fontWeight: "600",
+                      border: "1px solid #dee2e6",
+                      backgroundColor: "#f1f3f5",
+                    }}
+                  >
+                    {header}
+                  </th>
+                ))}
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan={5} style={{ textAlign: "center", padding: "12px", border: "1px solid #dee2e6" }}>
-                No Conferences/Symposium found.
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </Table>
+            </thead>
+            <tbody>
+              {tableData.length > 0 ? (
+                tableData.map((project) => (
+                  <tr key={project.id} style={{ backgroundColor: "#fff" }}>
+                    <td
+                      style={{
+                        padding: "12px",
+                        textAlign: "center",
+                        border: "1px solid #dee2e6",
+                      }}
+                    >
+                      {project.name}
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px",
+                        textAlign: "center",
+                        border: "1px solid #dee2e6",
+                      }}
+                    >
+                      {project.venue}
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px",
+                        textAlign: "center",
+                        border: "1px solid #dee2e6",
+                      }}
+                    >
+                      {project.role1}
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px",
+                        textAlign: "center",
+                        border: "1px solid #dee2e6",
+                      }}
+                    >
+                      {project.start_date}
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px",
+                        textAlign: "center",
+                        border: "1px solid #dee2e6",
+                      }}
+                    >
+                      {project.end_date}
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px",
+                        textAlign: "center",
+                        border: "1px solid #dee2e6",
+                      }}
+                    >
+                      <ActionIcon
+                        color="blue"
+                        onClick={() => handleEdit(project)}
+                        variant="light"
+                        style={{ marginRight: "8px" }}
+                      >
+                        <PencilSimple size={16} />
+                      </ActionIcon>
+                      <ActionIcon
+                        color="red"
+                        onClick={() => handleDelete(project.id)}
+                        variant="light"
+                      >
+                        <Trash size={16} />
+                      </ActionIcon>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td
+                    colSpan={5}
+                    style={{
+                      textAlign: "center",
+                      padding: "12px",
+                      border: "1px solid #dee2e6",
+                    }}
+                  >
+                    No Conferences/Symposium found.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </Table>
         </Paper>
       </Container>
     </MantineProvider>
   );
-  
 }

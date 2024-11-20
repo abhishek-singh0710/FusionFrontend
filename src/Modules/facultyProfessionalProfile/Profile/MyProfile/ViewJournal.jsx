@@ -10,6 +10,7 @@ import {
   ScrollArea,
 } from "@mantine/core";
 import { Books } from "@phosphor-icons/react";
+import { getJournalRoute } from "../../../../routes/facultyProfessionalProfileRoutes";
 
 export default function ViewJournal() {
   const [tableData, setTableData] = useState([]);
@@ -18,9 +19,7 @@ export default function ViewJournal() {
   // Fetch projects from the backend
   const fetchProjects = async () => {
     try {
-      const response = await axios.get(
-        "http://127.0.0.1:8000/FPF/journal/pf_no/",
-      );
+      const response = await axios.get(getJournalRoute);
       const projects = response.data;
       // Sort projects by submission date in descending order
       const sortedProjects = projects.sort(
@@ -158,23 +157,29 @@ export default function ViewJournal() {
             <Books size={24} />
             Journals
           </Title>
-  
+
           {error && (
             <Text color="red" mb="sm" style={{ textAlign: "center" }}>
               {error}
             </Text>
           )}
-  
+
           <ScrollArea>
             <Table striped highlightOnHover style={{ minWidth: "100%" }}>
               <thead>
                 <tr>
                   <th style={{ textAlign: "left", padding: "8px" }}>Author</th>
-                  <th style={{ textAlign: "left", padding: "8px" }}>Co-Author</th>
-                  <th style={{ textAlign: "left", padding: "8px" }}>Journal Name</th>
+                  <th style={{ textAlign: "left", padding: "8px" }}>
+                    Co-Author
+                  </th>
+                  <th style={{ textAlign: "left", padding: "8px" }}>
+                    Journal Name
+                  </th>
                   <th style={{ textAlign: "left", padding: "8px" }}>Year</th>
                   <th style={{ textAlign: "left", padding: "8px" }}>Title</th>
-                  <th style={{ textAlign: "left", padding: "8px" }}>Journal File</th>
+                  <th style={{ textAlign: "left", padding: "8px" }}>
+                    Journal File
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -190,7 +195,10 @@ export default function ViewJournal() {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={6} style={{ textAlign: "center", padding: "8px" }}>
+                    <td
+                      colSpan={6}
+                      style={{ textAlign: "center", padding: "8px" }}
+                    >
                       No journals found.
                     </td>
                   </tr>
@@ -202,5 +210,4 @@ export default function ViewJournal() {
       </Container>
     </MantineProvider>
   );
-  
 }

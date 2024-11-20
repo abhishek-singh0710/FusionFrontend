@@ -16,8 +16,12 @@ import {
   Table,
   ActionIcon,
 } from "@mantine/core";
-import { DatePickerInput } from "@mantine/dates";
 import { FloppyDisk, PencilSimple, Trash } from "@phosphor-icons/react";
+import {
+  getPatentsRoute,
+  insertPatentsRoute,
+  deletePatentsRoute,
+} from "../../../../routes/facultyProfessionalProfileRoutes";
 
 export default function Patents() {
   const [inputs, setInputs] = useState({
@@ -36,9 +40,7 @@ export default function Patents() {
 
   const fetchProjects = async () => {
     try {
-      const response = await axios.get(
-        "http://127.0.0.1:8000/eis/patents/pf_no/",
-      );
+      const response = await axios.get(getPatentsRoute);
       const projects = response.data;
       // Sort projects by submission date in descending order
       const sortedProjects = projects.sort(
@@ -70,17 +72,11 @@ export default function Patents() {
       formData.append("title", inputs.title);
 
       if (isEdit === false) {
-        const res = await axios.post(
-          "http://127.0.0.1:8000/eis/patent_insert/",
-          formData,
-        );
+        const res = await axios.post(insertPatentsRoute, formData);
         console.log(res.data);
       } else {
         formData.append("patent_id", Id);
-        const res = await axios.post(
-          "http://127.0.0.1:8000/eis/patent_insert/",
-          formData,
-        );
+        const res = await axios.post(insertPatentsRoute, formData);
         console.log(res.data);
         setEdit(false);
         setId(0);
@@ -125,7 +121,7 @@ export default function Patents() {
     if (window.confirm("Are you sure you want to delete this Patent?")) {
       try {
         await axios.post(
-          `http://127.0.0.1:8000/eis/emp_patentsDelete/`,
+          deletePatentsRoute,
           new URLSearchParams({ pk: projectId }),
         ); // Adjust the delete URL as needed
         fetchProjects(); // Refresh the project list after deletion
@@ -135,8 +131,6 @@ export default function Patents() {
     }
   };
 
-  
-
   return (
     <MantineProvider withGlobalStyles withNormalizeCSS>
       <Container size="2xl" mt="xl">
@@ -144,7 +138,10 @@ export default function Patents() {
           shadow="xs"
           p="md"
           withBorder
-          style={{ borderLeft: "8px solid #2185d0", backgroundColor: "#f9fafb" }} // Light background for contrast
+          style={{
+            borderLeft: "8px solid #2185d0",
+            backgroundColor: "#f9fafb",
+          }} // Light background for contrast
         >
           <Title order={2} mb="sm" style={{ color: "#2185d0" }}>
             Add a Patent
@@ -233,7 +230,10 @@ export default function Patents() {
                   style={{ padding: "10px" }} // Consistent padding
                 />
               </Grid.Col>
-              <Grid.Col span={12} style={{ display: "flex", justifyContent: "flex-end" }}>
+              <Grid.Col
+                span={12}
+                style={{ display: "flex", justifyContent: "flex-end" }}
+              >
                 <Button
                   type="submit"
                   mt="md"
@@ -247,12 +247,39 @@ export default function Patents() {
             </Grid>
           </form>
         </Paper>
-  
-        <Paper mt="xl" p="lg" withBorder shadow="sm" style={{ border: "1px solid #ddd", borderRadius: "8px", overflow: "hidden", boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)" }}>
-          <Table striped highlightOnHover withBorder style={{ minWidth: "100%", borderCollapse: "collapse" }}>
+
+        <Paper
+          mt="xl"
+          p="lg"
+          withBorder
+          shadow="sm"
+          style={{
+            border: "1px solid #ddd",
+            borderRadius: "8px",
+            overflow: "hidden",
+            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+          }}
+        >
+          <Title order={3} mb="lg" style={{ color: "#2185d0" }}>
+            Report:
+          </Title>
+          <Table
+            striped
+            highlightOnHover
+            withBorder
+            style={{ minWidth: "100%", borderCollapse: "collapse" }}
+          >
             <thead>
               <tr style={{ backgroundColor: "#f8f9fa" }}>
-                {["Title", "Patent Number", "Status", "Earnings", "Year", "Month", "Actions"].map((header, index) => (
+                {[
+                  "Title",
+                  "Patent Number",
+                  "Status",
+                  "Earnings",
+                  "Year",
+                  "Month",
+                  "Actions",
+                ].map((header, index) => (
                   <th
                     key={index}
                     style={{
@@ -273,17 +300,80 @@ export default function Patents() {
               {tableData.length > 0 ? (
                 tableData.map((project) => (
                   <tr key={project.id} style={{ backgroundColor: "#fff" }}>
-                    <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>{project.title}</td>
-                    <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>{project.p_no}</td>
-                    <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>{project.status}</td>
-                    <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>{project.earnings}</td>
-                    <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>{project.p_year}</td>
-                    <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>{project.a_month}</td>
-                    <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>
-                      <ActionIcon color="blue" onClick={() => handleEdit(project)} variant="light" style={{ marginRight: "8px" }}>
+                    <td
+                      style={{
+                        padding: "12px",
+                        textAlign: "center",
+                        border: "1px solid #dee2e6",
+                      }}
+                    >
+                      {project.title}
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px",
+                        textAlign: "center",
+                        border: "1px solid #dee2e6",
+                      }}
+                    >
+                      {project.p_no}
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px",
+                        textAlign: "center",
+                        border: "1px solid #dee2e6",
+                      }}
+                    >
+                      {project.status}
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px",
+                        textAlign: "center",
+                        border: "1px solid #dee2e6",
+                      }}
+                    >
+                      {project.earnings}
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px",
+                        textAlign: "center",
+                        border: "1px solid #dee2e6",
+                      }}
+                    >
+                      {project.p_year}
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px",
+                        textAlign: "center",
+                        border: "1px solid #dee2e6",
+                      }}
+                    >
+                      {project.a_month}
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px",
+                        textAlign: "center",
+                        border: "1px solid #dee2e6",
+                      }}
+                    >
+                      <ActionIcon
+                        color="blue"
+                        onClick={() => handleEdit(project)}
+                        variant="light"
+                        style={{ marginRight: "8px" }}
+                      >
                         <PencilSimple size={16} />
                       </ActionIcon>
-                      <ActionIcon color="red" onClick={() => handleDelete(project.id)} variant="light">
+                      <ActionIcon
+                        color="red"
+                        onClick={() => handleDelete(project.id)}
+                        variant="light"
+                      >
                         <Trash size={16} />
                       </ActionIcon>
                     </td>
@@ -291,7 +381,14 @@ export default function Patents() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={6} style={{ textAlign: "center", padding: "12px", border: "1px solid #dee2e6" }}>
+                  <td
+                    colSpan={6}
+                    style={{
+                      textAlign: "center",
+                      padding: "12px",
+                      border: "1px solid #dee2e6",
+                    }}
+                  >
                     No patents found.
                   </td>
                 </tr>
@@ -302,5 +399,4 @@ export default function Patents() {
       </Container>
     </MantineProvider>
   );
-  
 }

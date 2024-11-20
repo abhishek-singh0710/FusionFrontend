@@ -229,18 +229,6 @@
 //   );
 // }
 
-
-
-
-
-
-
-
-
-
-
-
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
@@ -254,10 +242,15 @@ import {
   Button,
   Table,
   FileInput,
-  Accordion,
   Modal,
 } from "@mantine/core";
 import { FloppyDisk, Pencil, Trash, UploadSimple } from "@phosphor-icons/react";
+import {
+  getConferenceRoute,
+  insertConferenceRoute,
+  updateConferenceRoute,
+  deleteConferenceRoute,
+} from "../../../../routes/facultyProfessionalProfileRoutes";
 
 export default function Conference() {
   const [inputs, setInputs] = useState({
@@ -281,18 +274,18 @@ export default function Conference() {
   const [editingId, setEditingId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  useEffect(() => {
-    fetchConferences();
-  }, []);
-
   const fetchConferences = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:8000/eis/fetch_conference/");
+      const response = await axios.get(getConferenceRoute);
       setTableData(response.data);
     } catch (error) {
       console.error("Error fetching conferences:", error);
     }
   };
+
+  useEffect(() => {
+    fetchConferences();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -314,7 +307,7 @@ export default function Conference() {
         formData.append("dop", inputs.dateOfPublication);
         formData.append("dos", inputs.dateOfSubmission);
         formData.append("conferencepk", editingId);
-        await axios.post("http://127.0.0.1:8000/eis/conference/edit", formData);
+        await axios.post(updateConferenceRoute, formData);
       } else {
         const formData = new FormData();
         formData.append("author", inputs.author);
@@ -330,7 +323,7 @@ export default function Conference() {
         formData.append("doa", inputs.dateOfAcceptance);
         formData.append("dop", inputs.dateOfPublication);
         formData.append("dos", inputs.dateOfSubmission);
-        await axios.post("http://127.0.0.1:8000/eis/conference/", formData);
+        await axios.post(insertConferenceRoute, formData);
       }
       fetchConferences();
       setInputs({
@@ -368,7 +361,7 @@ export default function Conference() {
     try {
       const formData = new FormData();
       formData.append("pk", id);
-      await axios.post("http://127.0.0.1:8000/eis/emp_confrence_organisedDelete/", formData);
+      await axios.post(deleteConferenceRoute, formData);
       fetchConferences();
     } catch (error) {
       console.error("Error deleting conference:", error);
@@ -384,7 +377,10 @@ export default function Conference() {
           shadow="xs"
           p="md"
           withBorder
-          style={{ borderLeft: "8px solid #2185d0", backgroundColor: "#f9fafb" }}
+          style={{
+            borderLeft: "8px solid #2185d0",
+            backgroundColor: "#f9fafb",
+          }}
         >
           <Title order={2} mb="sm" style={{ color: "#2185d0" }}>
             {inputs.id ? "Edit Conference" : "Add a Conference"}
@@ -459,107 +455,109 @@ export default function Conference() {
                 {/* <Accordion>
                   <Accordion.Item label="Optional Conference Details"> */}
                 <details>
-                  <summary style={{ cursor: "pointer", color: "#2185d0" }}>Optional Journal Details</summary>
-                    <Grid gutter="md">
-                      <Grid.Col span={6}>
-                        <TextInput
-                          label="Venue/Host Institute"
-                          placeholder="Venue/Host Institute"
-                          value={inputs.venueHostInstitute}
-                          onChange={(e) =>
-                            setInputs({
-                              ...inputs,
-                              venueHostInstitute: e.target.value,
-                            })
-                          }
-                        />
-                      </Grid.Col>
-                      <Grid.Col span={6}>
-                        <TextInput
-                          label="Date of Submission(DOS)"
-                          placeholder="Date/Time"
-                          value={inputs.dateOfSubmission}
-                          onChange={(e) =>
-                            setInputs({
-                              ...inputs,
-                              dateOfSubmission: e.target.value,
-                            })
-                          }
-                        />
-                      </Grid.Col>
-                      <Grid.Col span={6}>
-                        <TextInput
-                          label="Date of Acceptance(DOA)"
-                          placeholder="Date/Time"
-                          value={inputs.dateOfAcceptance}
-                          onChange={(e) =>
-                            setInputs({
-                              ...inputs,
-                              dateOfAcceptance: e.target.value,
-                            })
-                          }
-                        />
-                      </Grid.Col>
-                      <Grid.Col span={6}>
-                        <TextInput
-                          label="Date of Publication(DOP)"
-                          placeholder="Date/Time"
-                          value={inputs.dateOfPublication}
-                          onChange={(e) =>
-                            setInputs({
-                              ...inputs,
-                              dateOfPublication: e.target.value,
-                            })
-                          }
-                        />
-                      </Grid.Col>
-                      <Grid.Col span={6}>
-                        <TextInput
-                          label="Page No."
-                          placeholder="Date of Publication"
-                          value={inputs.pageNo}
-                          onChange={(e) =>
-                            setInputs({ ...inputs, pageNo: e.target.value })
-                          }
-                        />
-                      </Grid.Col>
-                      <Grid.Col span={6}>
-                        <Select
-                          label="Status"
-                          placeholder="Status"
-                          data={["Published", "Accepted", "Submitted"]}
-                          value={inputs.status}
-                          onChange={(value) =>
-                            setInputs({ ...inputs, status: value })
-                          }
-                        />
-                      </Grid.Col>
-                      <Grid.Col span={6}>
-                        <TextInput
-                          label="Conference Date(s)"
-                          placeholder="SCI/SCIE"
-                          value={inputs.conferenceDates}
-                          onChange={(e) =>
-                            setInputs({
-                              ...inputs,
-                              conferenceDates: e.target.value,
-                            })
-                          }
-                        />
-                      </Grid.Col>
-                      <Grid.Col span={6}>
-                        <TextInput
-                          label="ISBN No"
-                          placeholder="Date of Issuance"
-                          value={inputs.isbnNo}
-                          onChange={(e) =>
-                            setInputs({ ...inputs, isbnNo: e.target.value })
-                          }
-                        />
-                      </Grid.Col>
-                    </Grid>
-                  </details>
-                  {/* </Accordion.Item>
+                  <summary style={{ cursor: "pointer", color: "#2185d0" }}>
+                    Optional Journal Details
+                  </summary>
+                  <Grid gutter="md">
+                    <Grid.Col span={6}>
+                      <TextInput
+                        label="Venue/Host Institute"
+                        placeholder="Venue/Host Institute"
+                        value={inputs.venueHostInstitute}
+                        onChange={(e) =>
+                          setInputs({
+                            ...inputs,
+                            venueHostInstitute: e.target.value,
+                          })
+                        }
+                      />
+                    </Grid.Col>
+                    <Grid.Col span={6}>
+                      <TextInput
+                        label="Date of Submission(DOS)"
+                        placeholder="Date/Time"
+                        value={inputs.dateOfSubmission}
+                        onChange={(e) =>
+                          setInputs({
+                            ...inputs,
+                            dateOfSubmission: e.target.value,
+                          })
+                        }
+                      />
+                    </Grid.Col>
+                    <Grid.Col span={6}>
+                      <TextInput
+                        label="Date of Acceptance(DOA)"
+                        placeholder="Date/Time"
+                        value={inputs.dateOfAcceptance}
+                        onChange={(e) =>
+                          setInputs({
+                            ...inputs,
+                            dateOfAcceptance: e.target.value,
+                          })
+                        }
+                      />
+                    </Grid.Col>
+                    <Grid.Col span={6}>
+                      <TextInput
+                        label="Date of Publication(DOP)"
+                        placeholder="Date/Time"
+                        value={inputs.dateOfPublication}
+                        onChange={(e) =>
+                          setInputs({
+                            ...inputs,
+                            dateOfPublication: e.target.value,
+                          })
+                        }
+                      />
+                    </Grid.Col>
+                    <Grid.Col span={6}>
+                      <TextInput
+                        label="Page No."
+                        placeholder="Date of Publication"
+                        value={inputs.pageNo}
+                        onChange={(e) =>
+                          setInputs({ ...inputs, pageNo: e.target.value })
+                        }
+                      />
+                    </Grid.Col>
+                    <Grid.Col span={6}>
+                      <Select
+                        label="Status"
+                        placeholder="Status"
+                        data={["Published", "Accepted", "Submitted"]}
+                        value={inputs.status}
+                        onChange={(value) =>
+                          setInputs({ ...inputs, status: value })
+                        }
+                      />
+                    </Grid.Col>
+                    <Grid.Col span={6}>
+                      <TextInput
+                        label="Conference Date(s)"
+                        placeholder="SCI/SCIE"
+                        value={inputs.conferenceDates}
+                        onChange={(e) =>
+                          setInputs({
+                            ...inputs,
+                            conferenceDates: e.target.value,
+                          })
+                        }
+                      />
+                    </Grid.Col>
+                    <Grid.Col span={6}>
+                      <TextInput
+                        label="ISBN No"
+                        placeholder="Date of Issuance"
+                        value={inputs.isbnNo}
+                        onChange={(e) =>
+                          setInputs({ ...inputs, isbnNo: e.target.value })
+                        }
+                      />
+                    </Grid.Col>
+                  </Grid>
+                </details>
+                {/* </Accordion.Item>
                 </Accordion> */}
               </Grid.Col>
               <Grid.Col
@@ -603,7 +601,7 @@ export default function Conference() {
                       <td>{index + 1}</td>
                       <td>{data.title}</td>
                       <td>{`${data.author}${
-                        data.coAuthor ?` , ${data.coAuthor}` : ""
+                        data.coAuthor ? ` , ${data.coAuthor}` : ""
                       }`}</td>
                       <td>{data.conferenceName}</td>
                       <td>
@@ -798,9 +796,7 @@ export default function Conference() {
                   placeholder="Status"
                   data={["Published", "Accepted", "Submitted"]}
                   value={inputs.status}
-                  onChange={(value) =>
-                    setInputs({ ...inputs, status: value })
-                  }
+                  onChange={(value) => setInputs({ ...inputs, status: value })}
                 />
               </Grid.Col>
               <Grid.Col span={6}>
