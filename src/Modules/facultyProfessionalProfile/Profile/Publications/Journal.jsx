@@ -468,8 +468,10 @@ import {
   Select,
   Button,
   Table,
+  ScrollArea,
+  ActionIcon,
 } from "@mantine/core";
-import { DatePickerInput } from "@mantine/dates";
+// import { DatePickerInput } from "@mantine/dates";
 import { FloppyDisk, PencilSimple, Trash } from "@phosphor-icons/react";
 
 export default function Journal() {
@@ -477,39 +479,39 @@ export default function Journal() {
     author: "",
     coAuthors: "",
     journalName: "",
-    journalFile: null,
+    // journalFile: null,
     year: "",
     title: "",
-    volume: "",
-    pageNo: "",
-    paperRefNo: "",
-    dateSubmission: "",
-    datePublication: "",
-    status: "",
-    category: "",
-    doi: "",
+    // volume: "",
+    // pageNo: "",
+    // paperRefNo: "",
+    // dateSubmission: "",
+    // datePublication: "",
+    // status: "",
+    // category: "",
+    // doi: "",
   });
   const [isLoading, setIsLoading] = useState(false);
   const [tableData, setTableData] = useState([]);
   const [editingId, setEditingId] = useState(null); // For editing
 
-  const fetchData = async () => {
+  const fetchAchievements = async () => {
     try {
       const res = await axios.get(
         "http://127.0.0.1:8000/eis/api/fetch_journal",
       );
+      // console.log(res.data);
       setTableData(res.data);
     } catch (error) {
       console.error(error);
     }
   };
 
-  // Fetch data using useEffect from the API
+  // Fetch achievements on component mount
   useEffect(() => {
-    fetchData();
+    fetchAchievements();
   }, []);
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -518,19 +520,9 @@ export default function Journal() {
       formData.append("user_id", 5318); // Adjust this as needed
       formData.append("authors", inputs.author);
       formData.append("title", inputs.title);
-      formData.append("co_authors", inputs.coAuthors);
+      formData.append("co_author", inputs.coAuthors);
       formData.append("name", inputs.journalName);
-      formData.append("book_title", inputs.title);
-      formData.append("status", inputs.status);
-      formData.append("ref", inputs.paperRefNo);
-      formData.append("sci", inputs.category);
-      formData.append("volume", inputs.volume);
-      formData.append("page", inputs.pageNo);
       formData.append("year", inputs.year);
-      formData.append("doi", inputs.doi);
-      formData.append("dos", inputs.dateSubmission);
-      formData.append("dop", inputs.datePublication);
-      formData.append("doc_id", inputs.id);
       if (editingId) {
         // Update the book
         formData.append("journalpk", editingId);
@@ -546,24 +538,21 @@ export default function Journal() {
         author: "",
         coAuthors: "",
         journalName: "",
-        journalFile: null,
+        // journalFile: null,
         year: "",
         title: "",
-        volume: "",
-        pageNo: "",
-        paperRefNo: "",
-        dateSubmission: "",
-        datePublication: "",
-        status: "",
-        category: "",
-        doi: "",
+        // volume: "",
+        // pageNo: "",
+        // paperRefNo: "",
+        // dateSubmission: "",
+        // datePublication: "",
+        // status: "",
+        // category: "",
+        // doi: "",
       });
       setEditingId(null); // Reset editing ID
       // Refresh the list of achievements
-      const res = await axios.get(
-        "http://127.0.0.1:8000/eis/api/fetch_journal",
-      );
-      setTableData(res.data);
+      fetchAchievements();
     } catch (error) {
       console.error(error);
     } finally {
@@ -573,16 +562,16 @@ export default function Journal() {
 
   // Handle delete action
   const handleDelete = async (achievement) => {
-    if (window.confirm("Are you sure you want to delete this Book?")) {
+    if (window.confirm("Are you sure you want to delete this Journal?")) {
       try {
         // console.log(achievement)
         await axios.post(
           "http://127.0.0.1:8000/eis/api/emp_research_papersDelete/",
           new URLSearchParams({ pk: achievement }),
         ); // Adjust the delete URL as needed
-        fetchData();
+        fetchAchievements();
       } catch (error) {
-        console.error("Error deleting book:", error);
+        console.error("Error deleting Journal:", error);
       }
     }
   };
@@ -594,14 +583,14 @@ export default function Journal() {
       coAuthors: project.co_authors,
       journalName: project.name,
       year: project.year,
-      title: project.title,
-      volume: project.year,
-      pageNo: project.page_no,
-      paperRefNo: project.ref,
-      dateSubmission: project.dos,
-      datePublication: project.dop,
-      status: project.status,
-      category: project.is_sci ? "SCI" : "SCIE",
+      title: project.title_paper,
+      // volume: project.year,
+      // pageNo: project.page_no,
+      // paperRefNo: project.ref,
+      // dateSubmission: project.dos,
+      // datePublication: project.dop,
+      // status: project.status,
+      // category: project.is_sci ? "SCI" : "SCIE",
     });
     setEditingId(project.id);
   };
@@ -661,7 +650,7 @@ export default function Journal() {
                   style={{ padding: "10px" }} // Consistent padding
                 />
               </Grid.Col>
-              <Grid.Col span={3}>
+              {/* <Grid.Col span={3}>
                 <TextInput
                   type="file"
                   label="Journal File"
@@ -671,8 +660,8 @@ export default function Journal() {
                   }
                   style={{ padding: "10px" }} // Consistent padding
                 />
-              </Grid.Col>
-              <Grid.Col span={3}>
+              </Grid.Col> */}
+              <Grid.Col span={6}>
                 <Select
                   label="Year"
                   placeholder="Select year"
@@ -708,7 +697,7 @@ export default function Journal() {
                   {inputs.id ? "Update" : "Save"}
                 </Button>
               </Grid.Col> */}
-              <Grid.Col span={12}>
+              {/* <Grid.Col span={12}>
                 <details>
                   <summary style={{ cursor: "pointer", color: "#2185d0" }}>
                     Optional Journal Details
@@ -797,7 +786,7 @@ export default function Journal() {
                     </Grid.Col>
                   </Grid>
                 </details>
-              </Grid.Col>
+              </Grid.Col> */}
               <Grid.Col
                 span={12}
                 style={{ display: "flex", justifyContent: "flex-end" }}
@@ -816,7 +805,7 @@ export default function Journal() {
           </form>
         </Paper>
 
-        <Paper mt="xl" p="md" withBorder>
+        {/* <Paper mt="xl" p="md" withBorder>
           <Title order={3} mb="sm" style={{ color: "#2185d0" }}>
             Journal Report:
           </Title>
@@ -911,6 +900,136 @@ export default function Journal() {
               </tbody>
             </Table>
           )}
+        </Paper> */}
+
+        <Paper mt="xl" p="md" withBorder>
+          <Title order={3} mb="sm" style={{ color: "#2185d0" }}>
+            Report:
+          </Title>
+          <ScrollArea>
+            <Table
+              striped
+              highlightOnHover
+              withBorder
+              style={{ minWidth: "100%", borderCollapse: "collapse" }}
+            >
+              <thead>
+                <tr style={{ backgroundColor: "#f8f9fa" }}>
+                  {[
+                    "Title Of Journal",
+                    "Authors",
+                    "Co-Authors",
+                    "Journal Name",
+                    "Year",
+                    "Actions",
+                  ].map((header, index) => (
+                    <th
+                      key={index}
+                      style={{
+                        textAlign: "center",
+                        padding: "12px",
+                        color: "#495057",
+                        fontWeight: "600",
+                        border: "1px solid #dee2e6",
+                        backgroundColor: "#f1f3f5",
+                      }}
+                    >
+                      {header}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {tableData.length > 0 ? (
+                  tableData.map((project) => (
+                    <tr key={project.id} style={{ backgroundColor: "#fff" }}>
+                      <td
+                        style={{
+                          padding: "12px",
+                          textAlign: "center",
+                          border: "1px solid #dee2e6",
+                        }}
+                      >
+                        {project.title_paper}
+                      </td>
+                      <td
+                        style={{
+                          padding: "12px",
+                          textAlign: "center",
+                          border: "1px solid #dee2e6",
+                        }}
+                      >
+                        {project.authors}
+                      </td>
+                      <td
+                        style={{
+                          padding: "12px",
+                          textAlign: "center",
+                          border: "1px solid #dee2e6",
+                        }}
+                      >
+                        {project.co_authors}
+                      </td>
+                      <td
+                        style={{
+                          padding: "12px",
+                          textAlign: "center",
+                          border: "1px solid #dee2e6",
+                        }}
+                      >
+                        {project.name}
+                      </td>
+                      <td
+                        style={{
+                          padding: "12px",
+                          textAlign: "center",
+                          border: "1px solid #dee2e6",
+                        }}
+                      >
+                        {project.year}
+                      </td>
+                      <td
+                        style={{
+                          padding: "12px",
+                          textAlign: "center",
+                          border: "1px solid #dee2e6",
+                        }}
+                      >
+                        <ActionIcon
+                          color="blue"
+                          onClick={() => handleEdit(project)}
+                          variant="light"
+                          style={{ marginRight: "8px" }}
+                        >
+                          <PencilSimple size={16} />
+                        </ActionIcon>
+                        <ActionIcon
+                          color="red"
+                          onClick={() => handleDelete(project.id)}
+                          variant="light"
+                        >
+                          <Trash size={16} />
+                        </ActionIcon>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td
+                      colSpan={5}
+                      style={{
+                        textAlign: "center",
+                        padding: "12px",
+                        border: "1px solid #dee2e6",
+                      }}
+                    >
+                      No Journals found.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </Table>
+          </ScrollArea>
         </Paper>
       </Container>
     </MantineProvider>

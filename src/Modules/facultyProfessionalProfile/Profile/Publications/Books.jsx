@@ -316,8 +316,7 @@ export default function Books() {
       });
       setEditingId(null); // Reset editing ID
       // Refresh the list of achievements
-      const res = await axios.get("http://127.0.0.1:8000/eis/api/fetch_book");
-      setTableData(res.data);
+      fetchAchievements();
     } catch (error) {
       console.error(error);
     } finally {
