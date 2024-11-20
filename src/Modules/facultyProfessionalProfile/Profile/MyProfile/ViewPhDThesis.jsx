@@ -10,35 +10,16 @@ import {
   Text,
 } from "@mantine/core";
 import { Books } from "@phosphor-icons/react";
+import { getPhDThesisRoute } from "../../../../routes/facultyProfessionalProfileRoutes";
 
 export default function ViewPhdThesis() {
-  const [tableData, setTableData] = useState([
-    {
-      id: 1,
-      title:
-        "Advanced Machine Learning Techniques for Natural Language Processing",
-      rollno: "CS2021001",
-      s_name: "John Doe",
-      s_year: "2023",
-      a_month: "May",
-    },
-    {
-      id: 2,
-      title: "Quantum Computing Algorithms for Cryptography",
-      rollno: "CS2021002",
-      s_name: "Jane Smith",
-      s_year: "2023",
-      a_month: "June",
-    },
-  ]);
+  const [tableData, setTableData] = useState([]);
   const [error, setError] = useState(null); // For error handling
 
   // Fetch projects from the backend
   const fetchProjects = async () => {
     try {
-      const response = await axios.get(
-        "http://127.0.0.1:8000/eis/phd_thesis/pf_no/",
-      );
+      const response = await axios.get(getPhDThesisRoute);
       const projects = response.data;
       // Sort projects by submission date in descending order
       const sortedProjects = projects.sort(
@@ -55,7 +36,6 @@ export default function ViewPhdThesis() {
     fetchProjects();
   }, []);
 
-  
   return (
     <MantineProvider withGlobalStyles withNormalizeCSS>
       <Container size="2xl" mt="xl">
@@ -81,13 +61,13 @@ export default function ViewPhdThesis() {
             <Books size={24} />
             PG Thesis
           </Title>
-  
+
           {error && (
             <Text color="red" mb="sm" style={{ textAlign: "center" }}>
               {error}
             </Text>
           )}
-  
+
           {/* <ScrollArea>
             <Table striped highlightOnHover style={{ minWidth: "100%" }}>
               <thead>
@@ -121,52 +101,104 @@ export default function ViewPhdThesis() {
             </Table>
           </ScrollArea> */}
 
-
-<ScrollArea>
-      <Table striped highlightOnHover withBorder style={{ minWidth: "100%", borderCollapse: "collapse" }}>
-        <thead>
-          <tr style={{ backgroundColor: "#f8f9fa" }}>
-            {["Title", "Roll Number", "Name", "Year", "Month"].map((header, index) => (
-              <th
-                key={index}
-                style={{
-                  textAlign: "center",
-                  padding: "12px",
-                  color: "#495057",
-                  fontWeight: "600",
-                  border: "1px solid #dee2e6",
-                  backgroundColor: "#f1f3f5",
-                }}
-              >
-                {header}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {tableData.length > 0 ? (
-            tableData.map((project) => (
-              <tr key={project.id} style={{ backgroundColor: "#fff" }}>
-                <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>{project.title}</td>
-                <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>{project.rollno}</td>
-                <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>{project.s_name}</td>
-                <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>{project.s_year}</td>
-                <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>{project.a_month}</td>
-              </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan={5} style={{ textAlign: "center", padding: "12px", border: "1px solid #dee2e6" }}>
-                No theses found.
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </Table>
-    </ScrollArea>
+          <ScrollArea>
+            <Table
+              striped
+              highlightOnHover
+              withBorder
+              style={{ minWidth: "100%", borderCollapse: "collapse" }}
+            >
+              <thead>
+                <tr style={{ backgroundColor: "#f8f9fa" }}>
+                  {["Title", "Roll Number", "Name", "Year", "Month"].map(
+                    (header, index) => (
+                      <th
+                        key={index}
+                        style={{
+                          textAlign: "center",
+                          padding: "12px",
+                          color: "#495057",
+                          fontWeight: "600",
+                          border: "1px solid #dee2e6",
+                          backgroundColor: "#f1f3f5",
+                        }}
+                      >
+                        {header}
+                      </th>
+                    ),
+                  )}
+                </tr>
+              </thead>
+              <tbody>
+                {tableData.length > 0 ? (
+                  tableData.map((project) => (
+                    <tr key={project.id} style={{ backgroundColor: "#fff" }}>
+                      <td
+                        style={{
+                          padding: "12px",
+                          textAlign: "center",
+                          border: "1px solid #dee2e6",
+                        }}
+                      >
+                        {project.title}
+                      </td>
+                      <td
+                        style={{
+                          padding: "12px",
+                          textAlign: "center",
+                          border: "1px solid #dee2e6",
+                        }}
+                      >
+                        {project.rollno}
+                      </td>
+                      <td
+                        style={{
+                          padding: "12px",
+                          textAlign: "center",
+                          border: "1px solid #dee2e6",
+                        }}
+                      >
+                        {project.s_name}
+                      </td>
+                      <td
+                        style={{
+                          padding: "12px",
+                          textAlign: "center",
+                          border: "1px solid #dee2e6",
+                        }}
+                      >
+                        {project.s_year}
+                      </td>
+                      <td
+                        style={{
+                          padding: "12px",
+                          textAlign: "center",
+                          border: "1px solid #dee2e6",
+                        }}
+                      >
+                        {project.a_month}
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td
+                      colSpan={5}
+                      style={{
+                        textAlign: "center",
+                        padding: "12px",
+                        border: "1px solid #dee2e6",
+                      }}
+                    >
+                      No theses found.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </Table>
+          </ScrollArea>
         </Paper>
       </Container>
     </MantineProvider>
   );
-  
 }

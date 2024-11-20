@@ -25,20 +25,25 @@ import { useRef, useState } from "react";
 import { Button, Flex, Tabs, Text } from "@mantine/core";
 import { CaretCircleLeft, CaretCircleRight } from "@phosphor-icons/react";
 // import CustomBreadcrumbs from "../../../../components/Breadcrumbs";
+import { useSelector } from "react-redux";
 import classes from "../../../Dashboard/Dashboard.module.css"; // Ensure the CSS module is properly set
-import Conference from "./Conference";
+// import Conference from "./Conference";
 import Books from "./Books";
-import Journal from "./Journal";
+// import Journal from "./Journal";
 
 function PublicationMaster() {
   const [activeTab, setActiveTab] = useState("0");
   const tabsListRef = useRef(null);
 
+  const pfNo = useSelector((state) => state.pfNo.value);
+
+  console.log("publications", pfNo);
+
   // Tab items data
   const tabItems = [
-    { title: "Journal", component: <Journal /> },
+    // { title: "Journal", component: <Journal /> },
     { title: "Books", component: <Books /> },
-    { title: "Conference", component: <Conference /> },
+    // { title: "Conference", component: <Conference /> },
     // { title: "Thesis Supervision", component: <ThesisSupervisionMaster /> },
   ];
 

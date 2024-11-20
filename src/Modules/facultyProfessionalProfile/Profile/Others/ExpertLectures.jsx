@@ -15,6 +15,11 @@ import {
 } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
 import { FloppyDisk, PencilSimple, Trash } from "@phosphor-icons/react";
+import {
+  getTalkRoute,
+  insertTalkRoute,
+  deleteTalkRoute,
+} from "../../../../routes/facultyProfessionalProfileRoutes";
 
 export default function ExpertLecturesForm() {
   const [inputs, setInputs] = useState({
@@ -23,7 +28,6 @@ export default function ExpertLecturesForm() {
     date: "",
     title: "",
   });
-  const [lectures, setLectures] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [tableData, setTableData] = useState([]);
   const [isEdit, setEdit] = useState(false);
@@ -31,9 +35,7 @@ export default function ExpertLecturesForm() {
 
   const fetchProjects = async () => {
     try {
-      const response = await axios.get(
-        "http://127.0.0.1:8000/eis/talk/pf_no/",
-      );
+      const response = await axios.get(getTalkRoute);
       const projects = response.data;
       setTableData(projects);
     } catch (error) {
@@ -58,23 +60,17 @@ export default function ExpertLecturesForm() {
       formData.append("l_date", inputs.date);
 
       if (isEdit === false) {
-        const res = await axios.post(
-          "http://127.0.0.1:8000/eis/talk/",
-          formData,
-        );
+        const res = await axios.post(insertTalkRoute, formData);
         console.log(res.data);
       } else {
         formData.append("lec_id", Id);
-        const res = await axios.post(
-          "http://127.0.0.1:8000/eis/talk/",
-          formData,
-        );
+        const res = await axios.post(insertTalkRoute, formData);
         console.log(res.data);
         setEdit(false);
         setId(0);
       }
 
-      fetchProjects() // Refresh the list of achievements
+      fetchProjects(); // Refresh the list of achievements
 
       setInputs({
         presentationType: "",
@@ -89,7 +85,6 @@ export default function ExpertLecturesForm() {
     }
   };
 
-
   const handleEdit = (lecture) => {
     setInputs({
       presentationType: lecture.l_type,
@@ -97,19 +92,15 @@ export default function ExpertLecturesForm() {
       date: lecture.l_date ? new Date(lecture.l_date) : null,
       title: lecture.title,
     });
-  
+
     setId(lecture.id);
     setEdit(true);
   };
 
-
   const handleDelete = async (talkId) => {
     if (window.confirm("Are you sure you want to delete this achievement?")) {
       try {
-        await axios.post(
-          `http://127.0.0.1:8000/eis/emp_expert_lecturesDelete/`,
-          new URLSearchParams({ pk: talkId }),
-        ); // Adjust the delete URL as needed
+        await axios.post(deleteTalkRoute, new URLSearchParams({ pk: talkId })); // Adjust the delete URL as needed
         fetchProjects(); // Refresh the project list after deletion
       } catch (error) {
         console.error("Error deleting project:", error);
@@ -117,7 +108,6 @@ export default function ExpertLecturesForm() {
     }
   };
 
-  
   return (
     <MantineProvider withGlobalStyles withNormalizeCSS>
       <Container size="2xl" mt="xl">
@@ -125,9 +115,14 @@ export default function ExpertLecturesForm() {
           shadow="xs"
           p="lg"
           withBorder
-          style={{ borderLeft: "8px solid #2185d0", backgroundColor: "#f9fafb" }} // Light background for contrast
+          style={{
+            borderLeft: "8px solid #2185d0",
+            backgroundColor: "#f9fafb",
+          }} // Light background for contrast
         >
-          <Title order={2} mb="lg" style={{ color: "#2185d0" }}> {/* Consistent color with border */}
+          <Title order={2} mb="lg" style={{ color: "#2185d0" }}>
+            {" "}
+            {/* Consistent color with border */}
             Add an Expert Lecture/Invited Talk
           </Title>
           <form onSubmit={handleSubmit}>
@@ -178,7 +173,10 @@ export default function ExpertLecturesForm() {
                   required
                 />
               </Grid.Col>
-              <Grid.Col span={12} style={{ display: "flex", justifyContent: "flex-end" }}>
+              <Grid.Col
+                span={12}
+                style={{ display: "flex", justifyContent: "flex-end" }}
+              >
                 <Button
                   type="submit"
                   mt="md"
@@ -192,7 +190,7 @@ export default function ExpertLecturesForm() {
             </Grid>
           </form>
         </Paper>
-  
+
         {/* <Paper mt="xl" p="lg" withBorder style={{ backgroundColor: "#ffffff" }}>
           <Title order={3} mb="lg" style={{ color: "#2185d0" }}>
             Report:
@@ -244,73 +242,140 @@ export default function ExpertLecturesForm() {
           </Table>
         </Paper> */}
 
-
-<Paper
-      mt="xl"
-      p="lg"
-      withBorder
-      shadow="sm"
-      style={{
-        backgroundColor: "#ffffff",
-        border: "1px solid #ddd",
-        borderRadius: "8px",
-        overflow: "hidden",
-        boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
-      }}
-    >
-      <Title order={3} mb="lg" style={{ color: "#2185d0" }}>
-        Report:
-      </Title>
-      <Table striped highlightOnHover withBorder style={{ borderCollapse: "collapse", width: "100%" }}>
-        <thead>
-          <tr style={{ backgroundColor: "#f8f9fa" }}>
-            {["Sr.", "Presented", "Title", "Place", "Date", "Actions"].map((header, index) => (
-              <th
-                key={index}
-                style={{
-                  padding: "12px",
-                  textAlign: "center",
-                  border: "1px solid #dee2e6",
-                  color: "#495057",
-                  fontWeight: "600",
-                }}
-              >
-                {header}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {tableData.length === 0 ? (
-            <tr>
-              <td colSpan={6} style={{ textAlign: "center", padding: "10px", border: "1px solid #dee2e6" }}>
-                No Lectures/Talks Recorded Yet
-              </td>
-            </tr>
-          ) : (
-            tableData.map((lecture, index) => (
-              <tr key={lecture.id} style={{ backgroundColor: "#fff" }}>
-                <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>{index + 1}</td>
-                <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>{lecture.l_type}</td>
-                <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>{lecture.title}</td>
-                <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>{lecture.place}</td>
-                <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>{lecture.l_date}</td>
-                <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>
-                  <ActionIcon color="blue" onClick={() => handleEdit(lecture)} variant="light" style={{ marginRight: "8px" }}>
-                    <PencilSimple size={16} />
-                  </ActionIcon>
-                  <ActionIcon color="red" onClick={() => handleDelete(lecture.id)} variant="light">
-                    <Trash size={16} />
-                  </ActionIcon>
-                </td>
+        <Paper
+          mt="xl"
+          p="lg"
+          withBorder
+          shadow="sm"
+          style={{
+            backgroundColor: "#ffffff",
+            border: "1px solid #ddd",
+            borderRadius: "8px",
+            overflow: "hidden",
+            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+          }}
+        >
+          <Title order={3} mb="lg" style={{ color: "#2185d0" }}>
+            Report:
+          </Title>
+          <Table
+            striped
+            highlightOnHover
+            withBorder
+            style={{ borderCollapse: "collapse", width: "100%" }}
+          >
+            <thead>
+              <tr style={{ backgroundColor: "#f8f9fa" }}>
+                {["Sr.", "Presented", "Title", "Place", "Date", "Actions"].map(
+                  (header, index) => (
+                    <th
+                      key={index}
+                      style={{
+                        padding: "12px",
+                        textAlign: "center",
+                        border: "1px solid #dee2e6",
+                        color: "#495057",
+                        fontWeight: "600",
+                      }}
+                    >
+                      {header}
+                    </th>
+                  ),
+                )}
               </tr>
-            ))
-          )}
-        </tbody>
-      </Table>
-    </Paper>
+            </thead>
+            <tbody>
+              {tableData.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan={6}
+                    style={{
+                      textAlign: "center",
+                      padding: "10px",
+                      border: "1px solid #dee2e6",
+                    }}
+                  >
+                    No Lectures/Talks Recorded Yet
+                  </td>
+                </tr>
+              ) : (
+                tableData.map((lecture, index) => (
+                  <tr key={lecture.id} style={{ backgroundColor: "#fff" }}>
+                    <td
+                      style={{
+                        padding: "12px",
+                        textAlign: "center",
+                        border: "1px solid #dee2e6",
+                      }}
+                    >
+                      {index + 1}
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px",
+                        textAlign: "center",
+                        border: "1px solid #dee2e6",
+                      }}
+                    >
+                      {lecture.l_type}
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px",
+                        textAlign: "center",
+                        border: "1px solid #dee2e6",
+                      }}
+                    >
+                      {lecture.title}
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px",
+                        textAlign: "center",
+                        border: "1px solid #dee2e6",
+                      }}
+                    >
+                      {lecture.place}
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px",
+                        textAlign: "center",
+                        border: "1px solid #dee2e6",
+                      }}
+                    >
+                      {lecture.l_date}
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px",
+                        textAlign: "center",
+                        border: "1px solid #dee2e6",
+                      }}
+                    >
+                      <ActionIcon
+                        color="blue"
+                        onClick={() => handleEdit(lecture)}
+                        variant="light"
+                        style={{ marginRight: "8px" }}
+                      >
+                        <PencilSimple size={16} />
+                      </ActionIcon>
+                      <ActionIcon
+                        color="red"
+                        onClick={() => handleDelete(lecture.id)}
+                        variant="light"
+                      >
+                        <Trash size={16} />
+                      </ActionIcon>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </Table>
+        </Paper>
       </Container>
     </MantineProvider>
   );
-  
 }

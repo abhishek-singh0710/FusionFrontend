@@ -37,7 +37,7 @@
 //   const fetchProjects = async () => {
 //     try {
 //       const response = await axios.get(
-//         "http://127.0.0.1:8000/eis/pg_thesis/pf_no/",
+//         "http://127.0.0.1:8000/eis/api/pg_thesis/pf_no/",
 //       );
 //       const projects = response.data;
 //       // Sort projects by submission date in descending order
@@ -70,11 +70,11 @@
 //       formData.append("title", inputs.title);
 
 //       if (isEdit === false) {
-//         const res = await axios.post("http://127.0.0.1:8000/eis/pg/", formData);
+//         const res = await axios.post("http://127.0.0.1:8000/eis/api/pg/", formData);
 //         console.log(res.data);
 //       } else {
 //         formData.append("pg_id", Id);
-//         const res = await axios.post("http://127.0.0.1:8000/eis/pg/", formData);
+//         const res = await axios.post("http://127.0.0.1:8000/eis/api/pg/", formData);
 //         console.log(res.data);
 //         setEdit(false);
 //         setId(0);
@@ -120,7 +120,7 @@
 //     if (window.confirm("Are you sure you want to delete this Thesis?")) {
 //       try {
 //         await axios.post(
-//           `http://127.0.0.1:8000/eis/emp_mtechphd_thesisDelete/`,
+//           `http://127.0.0.1:8000/eis/api/emp_mtechphd_thesisDelete/`,
 //           new URLSearchParams({ pk: projectId }),
 //         ); // Adjust the delete URL as needed
 //         fetchProjects(); // Refresh the project list after deletion
@@ -129,7 +129,6 @@
 //       }
 //     }
 //   };
-
 
 //   return (
 //     <MantineProvider withGlobalStyles withNormalizeCSS>
@@ -290,19 +289,6 @@
 //   );
 // }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 import { useState, useEffect } from "react";
 // import { Save, Edit, Trash } from "lucide-react";
 import axios from "axios";
@@ -321,6 +307,11 @@ import {
 } from "@mantine/core";
 // import { DatePickerInput } from "@mantine/dates";
 import { FloppyDisk, PencilSimple, Trash } from "@phosphor-icons/react";
+import {
+  getPGThesisRoute,
+  insertPGThesisRoute,
+  deletePGThesisRoute,
+} from "../../../../routes/facultyProfessionalProfileRoutes";
 
 export default function PgThesis() {
   const [inputs, setInputs] = useState({
@@ -343,10 +334,7 @@ export default function PgThesis() {
     try {
       const formData = new FormData();
       formData.append("user_id", 5318);
-      const response = await axios.get(
-        "http://127.0.0.1:8000/eis/pg_thesis/pf_no/",
-        formData
-      );
+      const response = await axios.get(getPGThesisRoute, formData);
       const projects = response.data;
       // Sort projects by submission date in descending order
       const sortedProjects = projects.sort(
@@ -378,11 +366,11 @@ export default function PgThesis() {
       formData.append("title", inputs.title);
 
       if (isEdit === false) {
-        const res = await axios.post("http://127.0.0.1:8000/eis/pg/", formData);
+        const res = await axios.post(insertPGThesisRoute, formData);
         console.log(res.data);
       } else {
         formData.append("pg_id", Id);
-        const res = await axios.post("http://127.0.0.1:8000/eis/pg/", formData);
+        const res = await axios.post(insertPGThesisRoute, formData);
         console.log(res.data);
         setEdit(false);
         setId(0);
@@ -428,7 +416,7 @@ export default function PgThesis() {
     if (window.confirm("Are you sure you want to delete this Thesis?")) {
       try {
         await axios.post(
-          "http://127.0.0.1:8000/eis/emp_mtechphd_thesisDelete/",
+          deletePGThesisRoute,
           new URLSearchParams({ pk: projectId }),
         ); // Adjust the delete URL as needed
         fetchProjects(); // Refresh the project list after deletion
@@ -445,7 +433,10 @@ export default function PgThesis() {
           shadow="xs"
           p="md"
           withBorder
-          style={{ borderLeft: "8px solid #2185d0", backgroundColor: "#f9fafb" }} // Light background for contrast
+          style={{
+            borderLeft: "8px solid #2185d0",
+            backgroundColor: "#f9fafb",
+          }} // Light background for contrast
         >
           <Title order={2} mb="sm" style={{ color: "#2185d0" }}>
             Add a PG Thesis
@@ -458,7 +449,9 @@ export default function PgThesis() {
                   label="Name"
                   placeholder="Name"
                   value={inputs.name}
-                  onChange={(e) => setInputs({ ...inputs, name: e.target.value })}
+                  onChange={(e) =>
+                    setInputs({ ...inputs, name: e.target.value })
+                  }
                   style={{ padding: "10px" }} // Consistent padding
                 />
               </Grid.Col>
@@ -468,7 +461,9 @@ export default function PgThesis() {
                   label="Roll Number"
                   placeholder="Roll Number"
                   value={inputs.rollNumber}
-                  onChange={(e) => setInputs({ ...inputs, rollNumber: e.target.value })}
+                  onChange={(e) =>
+                    setInputs({ ...inputs, rollNumber: e.target.value })
+                  }
                   style={{ padding: "10px" }} // Consistent padding
                 />
               </Grid.Col>
@@ -530,7 +525,9 @@ export default function PgThesis() {
                   label="Title"
                   placeholder="Title"
                   value={inputs.title}
-                  onChange={(e) => setInputs({ ...inputs, title: e.target.value })}
+                  onChange={(e) =>
+                    setInputs({ ...inputs, title: e.target.value })
+                  }
                   style={{ padding: "10px" }} // Consistent padding
                 />
               </Grid.Col>
@@ -540,11 +537,16 @@ export default function PgThesis() {
                   label="Supervisor"
                   placeholder="Supervisor"
                   value={inputs.supervisor}
-                  onChange={(e) => setInputs({ ...inputs, supervisor: e.target.value })}
+                  onChange={(e) =>
+                    setInputs({ ...inputs, supervisor: e.target.value })
+                  }
                   style={{ padding: "10px" }} // Consistent padding
                 />
               </Grid.Col>
-              <Grid.Col span={12} style={{ display: "flex", justifyContent: "flex-end" }}>
+              <Grid.Col
+                span={12}
+                style={{ display: "flex", justifyContent: "flex-end" }}
+              >
                 <Button
                   type="submit"
                   mt="md"
@@ -558,62 +560,148 @@ export default function PgThesis() {
             </Grid>
           </form>
         </Paper>
-  
-        <Paper mt="xl" p="lg" withBorder shadow="sm" style={{ border: "1px solid #ddd", borderRadius: "8px", overflow: "hidden", boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)" }}>
-          <Title order={3} mb="lg" style={{ color: "#2185d0" }}> {/* Consistent color with border */}
+
+        <Paper
+          mt="xl"
+          p="lg"
+          withBorder
+          shadow="sm"
+          style={{
+            border: "1px solid #ddd",
+            borderRadius: "8px",
+            overflow: "hidden",
+            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+          }}
+        >
+          <Title order={3} mb="lg" style={{ color: "#2185d0" }}>
+            {" "}
+            {/* Consistent color with border */}
             Projects Report:
           </Title>
-          <Table striped highlightOnHover withBorder style={{ minWidth: "100%", borderCollapse: "collapse" }}>
-        <thead>
-          <tr style={{ backgroundColor: "#f8f9fa" }}>
-            {["Title", "Roll Number", "Name", "Year", "Month", "Actions"].map((header, index) => (
-              <th
-                key={index}
-                style={{
-                  textAlign: "center",
-                  padding: "12px",
-                  color: "#495057",
-                  fontWeight: "600",
-                  border: "1px solid #dee2e6",
-                  backgroundColor: "#f1f3f5",
-                }}
-              >
-                {header}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {tableData.length > 0 ? (
-            tableData.map((project) => (
-              <tr key={project.id} style={{ backgroundColor: "#fff" }}>
-                <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>{project.title}</td>
-                <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>{project.rollno}</td>
-                <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>{project.s_name}</td>
-                <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>{project.s_year}</td>
-                <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>{project.a_month}</td>
-                <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>
-                  <ActionIcon color="blue" onClick={() => handleEdit(project)} variant="light" style={{ marginRight: "8px" }}>
-                    <PencilSimple size={16} />
-                  </ActionIcon>
-                  <ActionIcon color="red" onClick={() => handleDelete(project.id)} variant="light">
-                    <Trash size={16} />
-                  </ActionIcon>
-                </td>
+          <Table
+            striped
+            highlightOnHover
+            withBorder
+            style={{ minWidth: "100%", borderCollapse: "collapse" }}
+          >
+            <thead>
+              <tr style={{ backgroundColor: "#f8f9fa" }}>
+                {[
+                  "Title",
+                  "Roll Number",
+                  "Name",
+                  "Year",
+                  "Month",
+                  "Actions",
+                ].map((header, index) => (
+                  <th
+                    key={index}
+                    style={{
+                      textAlign: "center",
+                      padding: "12px",
+                      color: "#495057",
+                      fontWeight: "600",
+                      border: "1px solid #dee2e6",
+                      backgroundColor: "#f1f3f5",
+                    }}
+                  >
+                    {header}
+                  </th>
+                ))}
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan={5} style={{ textAlign: "center", padding: "12px", border: "1px solid #dee2e6" }}>
-                No theses found.
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </Table>
+            </thead>
+            <tbody>
+              {tableData.length > 0 ? (
+                tableData.map((project) => (
+                  <tr key={project.id} style={{ backgroundColor: "#fff" }}>
+                    <td
+                      style={{
+                        padding: "12px",
+                        textAlign: "center",
+                        border: "1px solid #dee2e6",
+                      }}
+                    >
+                      {project.title}
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px",
+                        textAlign: "center",
+                        border: "1px solid #dee2e6",
+                      }}
+                    >
+                      {project.rollno}
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px",
+                        textAlign: "center",
+                        border: "1px solid #dee2e6",
+                      }}
+                    >
+                      {project.s_name}
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px",
+                        textAlign: "center",
+                        border: "1px solid #dee2e6",
+                      }}
+                    >
+                      {project.s_year}
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px",
+                        textAlign: "center",
+                        border: "1px solid #dee2e6",
+                      }}
+                    >
+                      {project.a_month}
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px",
+                        textAlign: "center",
+                        border: "1px solid #dee2e6",
+                      }}
+                    >
+                      <ActionIcon
+                        color="blue"
+                        onClick={() => handleEdit(project)}
+                        variant="light"
+                        style={{ marginRight: "8px" }}
+                      >
+                        <PencilSimple size={16} />
+                      </ActionIcon>
+                      <ActionIcon
+                        color="red"
+                        onClick={() => handleDelete(project.id)}
+                        variant="light"
+                      >
+                        <Trash size={16} />
+                      </ActionIcon>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td
+                    colSpan={5}
+                    style={{
+                      textAlign: "center",
+                      padding: "12px",
+                      border: "1px solid #dee2e6",
+                    }}
+                  >
+                    No theses found.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </Table>
         </Paper>
       </Container>
     </MantineProvider>
   );
-  
 }

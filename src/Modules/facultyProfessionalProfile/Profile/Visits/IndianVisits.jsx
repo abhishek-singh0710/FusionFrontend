@@ -15,6 +15,11 @@ import {
 } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import { FloppyDisk, PencilSimple, Trash } from "@phosphor-icons/react";
+import {
+  getIVisitsRoute,
+  insertIVisitsRoute,
+  deleteIVisitsRoute,
+} from "../../../../routes/facultyProfessionalProfileRoutes";
 
 export default function IndianVisits() {
   const [inputs, setInputs] = useState({
@@ -34,9 +39,7 @@ export default function IndianVisits() {
   // Fetch projects from the backend
   const fetchProjects = async () => {
     try {
-      const response = await axios.get(
-        "http://127.0.0.1:8000/eis/ivisits/pf_no/",
-      );
+      const response = await axios.get(getIVisitsRoute);
       const projects = response.data;
       // Sort projects by submission date in descending order
       const sortedProjects = projects.sort(
@@ -67,17 +70,11 @@ export default function IndianVisits() {
       formData.append("end_date", inputs.toDate);
 
       if (isEdit === false) {
-        const res = await axios.post(
-          "http://127.0.0.1:8000/eis/ivisit/",
-          formData,
-        );
+        const res = await axios.post(insertIVisitsRoute, formData);
         console.log(res.data);
       } else {
         formData.append("ivisit_id", Id);
-        const res = await axios.post(
-          "http://127.0.0.1:8000/eis/ivisit/",
-          formData,
-        );
+        const res = await axios.post(insertIVisitsRoute, formData);
         console.log(res.data);
         setEdit(false);
         setId(0);
@@ -122,7 +119,7 @@ export default function IndianVisits() {
     if (window.confirm("Are you sure you want to delete this Visit?")) {
       try {
         await axios.post(
-          `http://127.0.0.1:8000/eis/emp_visitsDelete/`,
+          deleteIVisitsRoute,
           new URLSearchParams({ pk: projectId }),
         ); // Adjust the delete URL as needed
         fetchProjects(); // Refresh the project list after deletion
@@ -132,7 +129,6 @@ export default function IndianVisits() {
     }
   };
 
-
   return (
     <MantineProvider withGlobalStyles withNormalizeCSS>
       <Container size="2xl" mt="xl">
@@ -140,7 +136,10 @@ export default function IndianVisits() {
           shadow="xs"
           p="md"
           withBorder
-          style={{ borderLeft: "8px solid #2185d0", backgroundColor: "#f9fafb" }} // Light background for contrast
+          style={{
+            borderLeft: "8px solid #2185d0",
+            backgroundColor: "#f9fafb",
+          }} // Light background for contrast
         >
           <Title order={2} mb="sm" style={{ color: "#2185d0" }}>
             Add a India Visit
@@ -153,7 +152,9 @@ export default function IndianVisits() {
                   label="Country"
                   placeholder="Country"
                   value={inputs.country}
-                  onChange={(e) => setInputs({ ...inputs, country: e.target.value })}
+                  onChange={(e) =>
+                    setInputs({ ...inputs, country: e.target.value })
+                  }
                   style={{ padding: "10px" }} // Consistent padding
                 />
               </Grid.Col>
@@ -163,7 +164,9 @@ export default function IndianVisits() {
                   label="Place"
                   placeholder="Place"
                   value={inputs.place}
-                  onChange={(e) => setInputs({ ...inputs, place: e.target.value })}
+                  onChange={(e) =>
+                    setInputs({ ...inputs, place: e.target.value })
+                  }
                   style={{ padding: "10px" }} // Consistent padding
                 />
               </Grid.Col>
@@ -191,11 +194,16 @@ export default function IndianVisits() {
                   label="Purpose"
                   placeholder="Purpose"
                   value={inputs.purpose}
-                  onChange={(e) => setInputs({ ...inputs, purpose: e.target.value })}
+                  onChange={(e) =>
+                    setInputs({ ...inputs, purpose: e.target.value })
+                  }
                   style={{ padding: "10px" }} // Consistent padding
                 />
               </Grid.Col>
-              <Grid.Col span={12} style={{ display: "flex", justifyContent: "flex-end" }}>
+              <Grid.Col
+                span={12}
+                style={{ display: "flex", justifyContent: "flex-end" }}
+              >
                 <Button
                   type="submit"
                   mt="md"
@@ -209,62 +217,148 @@ export default function IndianVisits() {
             </Grid>
           </form>
         </Paper>
-  
-        <Paper mt="xl" p="lg" withBorder shadow="sm" style={{ border: "1px solid #ddd", borderRadius: "8px", overflow: "hidden", boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)" }}>
-          <Title order={3} mb="lg" style={{ color: "#2185d0" }}> {/* Consistent color with border */}
+
+        <Paper
+          mt="xl"
+          p="lg"
+          withBorder
+          shadow="sm"
+          style={{
+            border: "1px solid #ddd",
+            borderRadius: "8px",
+            overflow: "hidden",
+            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+          }}
+        >
+          <Title order={3} mb="lg" style={{ color: "#2185d0" }}>
+            {" "}
+            {/* Consistent color with border */}
             Projects Report:
           </Title>
-          <Table striped highlightOnHover withBorder style={{ minWidth: "100%", borderCollapse: "collapse" }}>
-        <thead>
-          <tr style={{ backgroundColor: "#f8f9fa" }}>
-            {["Country", "Place", "Purpose", "Start Date", "End Date", "Actions"].map((header, index) => (
-              <th
-                key={index}
-                style={{
-                  textAlign: "center",
-                  padding: "12px",
-                  color: "#495057",
-                  fontWeight: "600",
-                  border: "1px solid #dee2e6",
-                  backgroundColor: "#f1f3f5",
-                }}
-              >
-                {header}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {tableData.length > 0 ? (
-            tableData.map((visit) => (
-              <tr key={visit.id} style={{ backgroundColor: "#fff" }}>
-                <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>{visit.country}</td>
-                <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>{visit.place}</td>
-                <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>{visit.purpose}</td>
-                <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>{visit.start_date}</td>
-                <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>{visit.end_date}</td>
-                <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>
-                  <ActionIcon color="blue" onClick={() => handleEdit(visit)} variant="light" style={{ marginRight: "8px" }}>
-                    <PencilSimple size={16} />
-                  </ActionIcon>
-                  <ActionIcon color="red" onClick={() => handleDelete(visit.id)} variant="light">
-                    <Trash size={16} />
-                  </ActionIcon>
-                </td>
+          <Table
+            striped
+            highlightOnHover
+            withBorder
+            style={{ minWidth: "100%", borderCollapse: "collapse" }}
+          >
+            <thead>
+              <tr style={{ backgroundColor: "#f8f9fa" }}>
+                {[
+                  "Country",
+                  "Place",
+                  "Purpose",
+                  "Start Date",
+                  "End Date",
+                  "Actions",
+                ].map((header, index) => (
+                  <th
+                    key={index}
+                    style={{
+                      textAlign: "center",
+                      padding: "12px",
+                      color: "#495057",
+                      fontWeight: "600",
+                      border: "1px solid #dee2e6",
+                      backgroundColor: "#f1f3f5",
+                    }}
+                  >
+                    {header}
+                  </th>
+                ))}
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan={5} style={{ textAlign: "center", padding: "12px", border: "1px solid #dee2e6" }}>
-                No visits found.
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </Table>
+            </thead>
+            <tbody>
+              {tableData.length > 0 ? (
+                tableData.map((visit) => (
+                  <tr key={visit.id} style={{ backgroundColor: "#fff" }}>
+                    <td
+                      style={{
+                        padding: "12px",
+                        textAlign: "center",
+                        border: "1px solid #dee2e6",
+                      }}
+                    >
+                      {visit.country}
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px",
+                        textAlign: "center",
+                        border: "1px solid #dee2e6",
+                      }}
+                    >
+                      {visit.place}
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px",
+                        textAlign: "center",
+                        border: "1px solid #dee2e6",
+                      }}
+                    >
+                      {visit.purpose}
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px",
+                        textAlign: "center",
+                        border: "1px solid #dee2e6",
+                      }}
+                    >
+                      {visit.start_date}
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px",
+                        textAlign: "center",
+                        border: "1px solid #dee2e6",
+                      }}
+                    >
+                      {visit.end_date}
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px",
+                        textAlign: "center",
+                        border: "1px solid #dee2e6",
+                      }}
+                    >
+                      <ActionIcon
+                        color="blue"
+                        onClick={() => handleEdit(visit)}
+                        variant="light"
+                        style={{ marginRight: "8px" }}
+                      >
+                        <PencilSimple size={16} />
+                      </ActionIcon>
+                      <ActionIcon
+                        color="red"
+                        onClick={() => handleDelete(visit.id)}
+                        variant="light"
+                      >
+                        <Trash size={16} />
+                      </ActionIcon>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td
+                    colSpan={5}
+                    style={{
+                      textAlign: "center",
+                      padding: "12px",
+                      border: "1px solid #dee2e6",
+                    }}
+                  >
+                    No visits found.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </Table>
         </Paper>
       </Container>
     </MantineProvider>
   );
-  
 }
