@@ -231,9 +231,7 @@ export default function ForeignVisits() {
           }}
         >
           <Title order={3} mb="lg" style={{ color: "#2185d0" }}>
-            {" "}
-            {/* Consistent color with border */}
-            Projects Report:
+            Report:
           </Title>
           <Table
             striped
