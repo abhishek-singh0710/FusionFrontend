@@ -1,32 +1,11 @@
-// import { Link, Outlet } from 'react-router-dom';
-// import './ConferenceMaster.css'; // Import CSS for styling
-
-// function ConferenceMaster() {
-//   return (
-//     <div className="project-master-container">
-//       {/* Navigation buttons */}
-//       <nav style={{ marginBottom: '20px' }}>
-//         <Link to="/conferences/conference" style={{ marginRight: '20px' }}>Conference/Symposium</Link>
-//       </nav>
-
-//       {/* Display the selected form below the buttons */}
-//       <div className="form-container">
-//         <Outlet />
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default ConferenceMaster;
-
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button, Flex, Tabs, Text } from "@mantine/core";
 import { CaretCircleLeft, CaretCircleRight } from "@phosphor-icons/react";
 // import CustomBreadcrumbs from "../../../../components/Breadcrumbs";
 import classes from "../../../Dashboard/Dashboard.module.css"; // Ensure the CSS module is properly set
 import Conference from "./Conference";
 
-function VisitsMaster() {
+function VisitsMaster({ breadCrumbItems, setBreadCrumbItems }) {
   const [activeTab, setActiveTab] = useState("0");
   const tabsListRef = useRef(null);
 
@@ -47,6 +26,24 @@ function VisitsMaster() {
       behavior: "smooth",
     });
   };
+
+  useEffect(() => {
+    const currentTab = tabItems[parseInt(activeTab, 10)];
+    // console.log(currentTab);
+
+    const breadcrumbs = [
+      { title: currentTab.title, href: "#" },
+    ].map((item, index) => (
+      <Text key={index} component="a" href={item.href} size="16px" fw={600}>
+        {item.title}
+      </Text>
+    ));
+
+    setBreadCrumbItems((prevBreadCrumbs) => {
+      const firstThreeEntries = prevBreadCrumbs.slice(0, 3);
+      return [...firstThreeEntries, breadcrumbs];
+    });
+  }, [activeTab]);
 
   return (
     <>

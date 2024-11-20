@@ -1,26 +1,4 @@
-// import { Link, Outlet } from 'react-router-dom';
-// import './OtherMaster.css'; // Import CSS for styling
-
-// function OtherMaster() {
-//   return (
-//     <div className="project-master-container">
-//       {/* Navigation buttons */}
-//       <nav style={{ marginBottom: '20px' }}>
-//         <Link to="/others/achievements" style={{ marginRight: '20px' }}>Achievements</Link>
-//         <Link to="/others/expert-lectures" style={{ marginRight: '20px' }}>Expert Lectures</Link>
-//       </nav>
-
-//       {/* Display the selected form below the buttons */}
-//       <div className="form-container">
-//         <Outlet />
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default OtherMaster;
-
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button, Flex, Tabs, Text } from "@mantine/core";
 import { CaretCircleLeft, CaretCircleRight } from "@phosphor-icons/react";
 // import CustomBreadcrumbs from "../../../../components/Breadcrumbs";
@@ -28,7 +6,7 @@ import classes from "../../../Dashboard/Dashboard.module.css"; // Ensure the CSS
 import Achievements from "./Achievements";
 import ExpertLectures from "./ExpertLectures";
 
-function OtherMaster() {
+function OtherMaster({ breadCrumbItems, setBreadCrumbItems }) {
   const [activeTab, setActiveTab] = useState("0");
   const tabsListRef = useRef(null);
 
@@ -50,6 +28,24 @@ function OtherMaster() {
       behavior: "smooth",
     });
   };
+
+  useEffect(() => {
+    const currentTab = tabItems[parseInt(activeTab, 10)];
+    // console.log(currentTab);
+
+    const breadcrumbs = [
+      { title: currentTab.title, href: "#" },
+    ].map((item, index) => (
+      <Text key={index} component="a" href={item.href} size="16px" fw={600}>
+        {item.title}
+      </Text>
+    ));
+
+    setBreadCrumbItems((prevBreadCrumbs) => {
+      const firstThreeEntries = prevBreadCrumbs.slice(0, 3);
+      return [...firstThreeEntries, breadcrumbs];
+    });
+  }, [activeTab]);
 
   return (
     <>
