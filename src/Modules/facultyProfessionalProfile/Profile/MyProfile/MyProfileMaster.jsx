@@ -1,54 +1,4 @@
-// import { Link, Outlet } from 'react-router-dom';
-// import './MyProfileMaster.css';
-
-// function MyProfileMaster() {
-//   return (
-//     <div className="project-master-container">
-//       {/* Navigation buttons */}
-//       <nav style={{ marginBottom: '20px' }}>
-//         <Link to="/myprofile/view-research-project" style={{ marginRight: '20px' }}>Research Projects</Link>
-//         <Link to="/myprofile/view-consultancy-project" style={{ marginRight: '20px' }}>Consultancy Projects</Link>
-//         <Link to="/myprofile/view-patent" style={{ marginRight: '20px' }}>Patents</Link>
-//         <Link to="/myprofile/view-pg-thesis" style={{ marginRight: '20px' }}>PG Thesis</Link>
-//         <Link to="/myprofile/view-phd-thesis" style={{ marginRight: '20px' }}>PhD Thesis</Link>
-//         <Link to="/myprofile/view-events" style={{ marginRight: '20px' }}>Events</Link>
-//         <Link to="/myprofile/view-fvisits" style={{ marginRight: '20px' }}>Foreign Visits</Link>
-//         <Link to="/myprofile/view-ivisits" style={{ marginRight: '20px' }}>Indian Visits</Link>
-//         <Link to="/myprofile/view-consym" style={{ marginRight: '20px' }}>Conference/Symposium</Link>
-//       </nav>
-
-//       {/* Display the selected form below the buttons */}
-//       <div className="form-container">
-//         <Outlet />
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default MyProfileMaster;
-
-// import { Link, Outlet } from 'react-router-dom';
-// import './ConferenceMaster.css'; // Import CSS for styling
-
-// function ConferenceMaster() {
-//   return (
-//     <div className="project-master-container">
-//       {/* Navigation buttons */}
-//       <nav style={{ marginBottom: '20px' }}>
-//         <Link to="/conferences/conference" style={{ marginRight: '20px' }}>Conference/Symposium</Link>
-//       </nav>
-
-//       {/* Display the selected form below the buttons */}
-//       <div className="form-container">
-//         <Outlet />
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default ConferenceMaster;
-
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button, Flex, Tabs, Text } from "@mantine/core";
 import { CaretCircleLeft, CaretCircleRight } from "@phosphor-icons/react";
 // import CustomBreadcrumbs from "../../../../components/Breadcrumbs";
@@ -68,7 +18,7 @@ import classes from "../../../Dashboard/Dashboard.module.css";
 import ViewJournal from "./ViewJournal";
 import ViewBooks from "./ViewBooks";
 
-function VisitsMaster() {
+function VisitsMaster({ breadCrumbItems, setBreadCrumbItems }) {
   const [activeTab, setActiveTab] = useState("0");
   const tabsListRef = useRef(null);
 
@@ -99,6 +49,24 @@ function VisitsMaster() {
       behavior: "smooth",
     });
   };
+
+  useEffect(() => {
+    const currentTab = tabItems[parseInt(activeTab, 10)];
+    // console.log(currentTab);
+
+    const breadcrumbs = [
+      { title: currentTab.title, href: "#" },
+    ].map((item, index) => (
+      <Text key={index} component="a" href={item.href} size="16px" fw={600}>
+        {item.title}
+      </Text>
+    ));
+
+    setBreadCrumbItems((prevBreadCrumbs) => {
+      const firstThreeEntries = prevBreadCrumbs.slice(0, 3);
+      return [...firstThreeEntries, breadcrumbs];
+    });
+  }, [activeTab]);
 
   return (
     <>
