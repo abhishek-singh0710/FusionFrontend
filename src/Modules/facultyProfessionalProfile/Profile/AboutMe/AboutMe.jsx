@@ -1,139 +1,181 @@
-import React, { useState, useEffect } from 'react';
-import { MantineProvider, Container, Paper, Title, Button, TextInput, Textarea, Grid, Loader, Text } from '@mantine/core';
-import { FloppyDisk, PencilSimple, Phone, EnvelopeSimple, LinkedinLogo, GithubLogo } from '@phosphor-icons/react';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import {
+  MantineProvider,
+  Container,
+  Paper,
+  Title,
+  Button,
+  TextInput,
+  Textarea,
+  Grid,
+  Loader,
+} from "@mantine/core";
+import {
+  FloppyDisk,
+  PencilSimple,
+  Phone,
+  EnvelopeSimple,
+  LinkedinLogo,
+  GithubLogo,
+} from "@phosphor-icons/react";
+import axios from "axios";
+import {
+  getPersonalInfoRoute,
+  updatePersonalInfoRoute,
+} from "../../../../routes/facultyProfessionalProfileRoutes";
+import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 
 export default function AboutMePage() {
+  // const username = useSelector((state) => state.user.roll_no);
+
+  // const [PF, setPF] = useState(0);
+
+  // const fetchPF = async () => {
+  //   try {
+  //     const formData = new FormData();
+  //     formData.append("username", username);
+
+  //     const response = await axios.post(
+  //       getPFRoute,
+  //       formData
+  //     );
+
+  //     setPF(response.data.pf)
+
+  //   } catch (error) {
+  //     console.error("Error fetching data:", error);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   fetchPF();
+  // }, []);
+
   const [inputs, setInputs] = useState({
-    aboutMe: 'CSE Prof.',
-    dateOfJoining: '12-12-2012',
-    pensionFund: '#PF',
-    education: 'PhD',
-    interestAreas: 'Teaching',
-    contact: '+919876543210',
-    email: 'atul@iiitdmj.ac.in',
-    linkedIn: 'linkedin',
-    github: 'github'
+    aboutMe: "CSE Prof.",
+    dateOfJoining: "2012-12-12",
+    pensionFund: "#PF",
+    education: "PhD",
+    interestAreas: "Teaching",
+    contact: "+919876543210",
+    email: "atul@iiitdmj.ac.in",
+    linkedIn: "linkedin",
+    github: "github",
   });
 
   const [isLoading, setIsLoading] = useState(false);
-  const [tableData, setTableData] = useState([]);
   const [isEdit, setIsEdit] = useState(false);
-  const [id, setId] = useState(0);
+  const pfNo = useSelector((state) => state.pfNo.value);
 
   // Fetch user data from the backend
   const fetchUserData = async () => {
     try {
-      // const formData = new FormData();
-      // formData.append("user_id", 5318);
-      const response = await axios.get("http://127.0.0.1:8000/eis/api/get_personal_info/", {
-        params: { pfNo }
+      const response = await axios.get(getPersonalInfoRoute, {
+        params: { pfNo },
       });
-      setTableData(response.data); // Assuming response data contains the user data
-      console.log(tableData);
+      // console.log(response);
+      if (response.data) {
+        setInputs({
+          aboutMe: response.data[0].about || "",
+          dateOfJoining: response.data[0].doj || "",
+          pensionFund: "#PF", // Default value as this field isn't from the backend
+          education: response.data[0].education || "",
+          interestAreas: response.data[0].interest || "",
+          contact: response.data[0].contact || "",
+          email: "atul@iiitdmj.ac.in", // Static as no backend support for this
+          linkedIn: response.data[0].linkedin || "",
+          github: response.data[0].github || "",
+        });
+      }
     } catch (error) {
       console.error("Error fetching data:", error);
-      setError("Failed to fetch data. Please try again later.");
     }
   };
-
-  
 
   useEffect(() => {
     fetchUserData();
   }, []);
 
-  // Handle form submission (save or update user info)
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       setIsLoading(true);
 
-      const formData = new FormData();
-      formData.append("user_id", 5318); // Adjust this as needed
-      formData.append("about_me", inputs.aboutMe);
-      formData.append("date_of_joining", inputs.dateOfJoining);
-      formData.append("pension_fund", inputs.pensionFund);
-      formData.append("education", inputs.education);
-      formData.append("interest_areas", inputs.interestAreas);
-      formData.append("contact", inputs.contact);
-      formData.append("email", inputs.email);
-      formData.append("linkedIn", inputs.linkedIn);
-      formData.append("github", inputs.github);
+      // Prepare the data to send
+      const data = {
+        user_id: 5318, // Static or fetched from context
+        aboutMe: inputs.aboutMe,
+        dateOfJoining: inputs.dateOfJoining,
+        education: inputs.education,
+        interestAreas: inputs.interestAreas,
+        contact: inputs.contact,
+        github: inputs.github,
+        linkedIn: inputs.linkedIn,
+      };
 
-      if (!isEdit) {
-        const res = await axios.post("http://127.0.0.1:8000/eis/api/persinfo/", formData);
-        console.log(res.data);
-      } else {
-        formData.append("id", id); // Include ID for editing existing data
-        const res = await axios.post(`http://127.0.0.1:8000/eis/api/persinfo/`, formData);
-        console.log(res.data);
-        setIsEdit(false);
-        setId(0);
+      const response = await axios.post(updatePersonalInfoRoute, data);
+
+      if (response.status === 200) {
+        console.log("Details updated successfully.");
+        fetchUserData(); // Fetch updated data
       }
-
-      // Fetch updated data after submission
-      fetchUserData();
-
-      // Reset input fields after submission
-      setInputs({
-        aboutMe: '',
-        dateOfJoining: '',
-        pensionFund: '',
-        education: '',
-        interestAreas: '',
-        contact: '',
-        email: 'atul@iiitdmj.ac.in',
-        linkedIn: '',
-        github: ''
-      });
     } catch (error) {
-      console.error(error);
-      setError("Failed to submit data. Please try again.");
+      console.error("Error updating data:", error);
     } finally {
       setIsLoading(false);
     }
   };
 
   // Handle editing an existing entry
-  const handleEdit = (data) => {
-    setInputs({
-      aboutMe: data.aboutMe,
-      dateOfJoining: data.dateOfJoining,
-      pensionFund: data.pensionFund,
-      education: data.education,
-      interestAreas: data.interestAreas,
-      contact: data.contact,
-      email: data.email,
-      linkedIn: data.linkedIn,
-      github: data.github
-    });
+  // const handleEdit = (data) => {
+  //   setInputs({
+  //     aboutMe: data.aboutMe,
+  //     dateOfJoining: data.dateOfJoining,
+  //     pensionFund: data.pensionFund,
+  //     education: data.education,
+  //     interestAreas: data.interestAreas,
+  //     contact: data.contact,
+  //     email: data.email,
+  //     linkedIn: data.linkedIn,
+  //     github: data.github,
+  //   });
 
-    setId(data.id);
-    setIsEdit(true);
-  };
+  //   setId(data.id);
+  //   setIsEdit(true);
+  // };
 
   // Handle input change
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setInputs((prevData) => ({
       ...prevData,
-      [name]: value
+      [name]: value,
     }));
   };
 
   return (
     <MantineProvider withGlobalStyles withNormalizeCSS>
       <Container size="md" mt="xl">
-        <Paper shadow="xs" p="md" withBorder style={{ borderLeft: '8px solid #2185d0', marginBottom: '1rem' }}>
+        <Paper
+          shadow="xs"
+          p="md"
+          withBorder
+          style={{ borderLeft: "8px solid #2185d0", marginBottom: "1rem" }}
+        >
           <Grid align="center">
             <Grid.Col span={10}>
               <Title order={2}>Profile</Title>
             </Grid.Col>
             <Grid.Col span={1}>
-              <Button variant="filled" color={isEdit ? 'green' : 'blue'} compact onClick={() => setIsEdit(!isEdit)}>
+              <Button
+                variant="filled"
+                color={isEdit ? "green" : "blue"}
+                compact
+                onClick={() => setIsEdit(!isEdit)}
+              >
                 {isEdit ? <FloppyDisk size={16} /> : <PencilSimple size={16} />}
-                {isEdit ? ' Save' : ' Edit'}
+                {isEdit ? " Save" : " Edit"}
               </Button>
             </Grid.Col>
           </Grid>
@@ -244,8 +286,14 @@ export default function AboutMePage() {
           </Grid>
 
           {/* Submit Button */}
-          <Button variant="filled" color="blue" onClick={handleSubmit} disabled={isLoading} mt="md">
-            {isLoading ? <Loader size="sm" /> : 'Save Changes'}
+          <Button
+            variant="filled"
+            color="blue"
+            onClick={handleSubmit}
+            disabled={isLoading}
+            mt="md"
+          >
+            {isLoading ? <Loader size="sm" /> : "Save Changes"}
           </Button>
         </Paper>
       </Container>

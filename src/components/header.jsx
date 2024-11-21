@@ -166,7 +166,7 @@ function Header({ opened, toggleSidebar }) {
                       variant="light"
                       color="blue"
                       size="xs"
-                      onClick={() => navigate("/profile")}
+                      onClick={() => navigate("/facultyprofessionalprofile")}
                     >
                       Profile
                     </Button>

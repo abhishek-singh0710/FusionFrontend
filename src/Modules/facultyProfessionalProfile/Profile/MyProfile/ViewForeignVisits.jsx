@@ -10,6 +10,7 @@ import {
   ScrollArea,
 } from "@mantine/core";
 import { Airplane } from "@phosphor-icons/react";
+import { getFVisitsRoute } from "../../../../routes/facultyProfessionalProfileRoutes";
 import { useSelector } from "react-redux";
 
 export default function ViewForeignVisits() {
@@ -20,11 +21,9 @@ export default function ViewForeignVisits() {
   // Fetch projects from the backend
   const fetchProjects = async () => {
     try {
-      const response = await axios.get(
-        "http://127.0.0.1:8000/eis/api/fvisits/pf_no/", {
-          params: { pfNo },
-        }
-      );
+      const response = await axios.get(getFVisitsRoute, {
+        params: { pfNo },
+      });
       const projects = response.data;
       // Sort projects by submission date in descending order
       const sortedProjects = projects.sort(
@@ -41,7 +40,6 @@ export default function ViewForeignVisits() {
     fetchProjects();
   }, []);
 
-  
   return (
     <MantineProvider withGlobalStyles withNormalizeCSS>
       <Container size="2xl" mt="xl">
@@ -67,13 +65,13 @@ export default function ViewForeignVisits() {
             <Airplane size={24} />
             Foreign Visits
           </Title>
-          
+
           {error && (
             <Text color="red" mb="sm" style={{ textAlign: "center" }}>
               {error}
             </Text>
           )}
-          
+
           {/* <ScrollArea>
             <Table striped highlightOnHover style={{ minWidth: "100%" }}>
               <thead>
@@ -107,52 +105,108 @@ export default function ViewForeignVisits() {
             </Table>
           </ScrollArea> */}
 
-
-<ScrollArea>
-      <Table striped highlightOnHover withBorder style={{ minWidth: "100%", borderCollapse: "collapse" }}>
-        <thead>
-          <tr style={{ backgroundColor: "#f8f9fa" }}>
-            {["Country", "Place", "Purpose", "Start Date", "End Date"].map((header, index) => (
-              <th
-                key={index}
-                style={{
-                  textAlign: "center",
-                  padding: "12px",
-                  color: "#495057",
-                  fontWeight: "600",
-                  border: "1px solid #dee2e6",
-                  backgroundColor: "#f1f3f5",
-                }}
-              >
-                {header}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {tableData.length > 0 ? (
-            tableData.map((visit) => (
-              <tr key={visit.id} style={{ backgroundColor: "#fff" }}>
-                <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>{visit.country}</td>
-                <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>{visit.place}</td>
-                <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>{visit.purpose}</td>
-                <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>{visit.start_date}</td>
-                <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>{visit.end_date}</td>
-              </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan={5} style={{ textAlign: "center", padding: "12px", border: "1px solid #dee2e6" }}>
-                No visits found.
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </Table>
-    </ScrollArea>
+          <ScrollArea>
+            <Table
+              striped
+              highlightOnHover
+              withBorder
+              style={{ minWidth: "100%", borderCollapse: "collapse" }}
+            >
+              <thead>
+                <tr style={{ backgroundColor: "#f8f9fa" }}>
+                  {[
+                    "Country",
+                    "Place",
+                    "Purpose",
+                    "Start Date",
+                    "End Date",
+                  ].map((header, index) => (
+                    <th
+                      key={index}
+                      style={{
+                        textAlign: "center",
+                        padding: "12px",
+                        color: "#495057",
+                        fontWeight: "600",
+                        border: "1px solid #dee2e6",
+                        backgroundColor: "#f1f3f5",
+                      }}
+                    >
+                      {header}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {tableData.length > 0 ? (
+                  tableData.map((visit) => (
+                    <tr key={visit.id} style={{ backgroundColor: "#fff" }}>
+                      <td
+                        style={{
+                          padding: "12px",
+                          textAlign: "center",
+                          border: "1px solid #dee2e6",
+                        }}
+                      >
+                        {visit.country}
+                      </td>
+                      <td
+                        style={{
+                          padding: "12px",
+                          textAlign: "center",
+                          border: "1px solid #dee2e6",
+                        }}
+                      >
+                        {visit.place}
+                      </td>
+                      <td
+                        style={{
+                          padding: "12px",
+                          textAlign: "center",
+                          border: "1px solid #dee2e6",
+                        }}
+                      >
+                        {visit.purpose}
+                      </td>
+                      <td
+                        style={{
+                          padding: "12px",
+                          textAlign: "center",
+                          border: "1px solid #dee2e6",
+                        }}
+                      >
+                        {visit.start_date}
+                      </td>
+                      <td
+                        style={{
+                          padding: "12px",
+                          textAlign: "center",
+                          border: "1px solid #dee2e6",
+                        }}
+                      >
+                        {visit.end_date}
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td
+                      colSpan={5}
+                      style={{
+                        textAlign: "center",
+                        padding: "12px",
+                        border: "1px solid #dee2e6",
+                      }}
+                    >
+                      No visits found.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </Table>
+          </ScrollArea>
         </Paper>
       </Container>
     </MantineProvider>
   );
-  
 }

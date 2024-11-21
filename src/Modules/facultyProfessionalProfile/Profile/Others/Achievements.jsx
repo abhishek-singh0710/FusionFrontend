@@ -14,6 +14,11 @@ import {
   ActionIcon,
 } from "@mantine/core";
 import { FloppyDisk, PencilSimple, Trash } from "@phosphor-icons/react";
+import {
+  getAwardsRoute,
+  insertAwardRoute,
+  deleteAchievementRoute,
+} from "../../../../routes/facultyProfessionalProfileRoutes";
 import { useSelector } from "react-redux";
 
 export default function AchievementsForm() {
@@ -24,11 +29,11 @@ export default function AchievementsForm() {
     achievementType: "",
     title: "",
   });
-  const [achievements] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [tableData, setTableData] = useState([]);
   const [isEdit, setEdit] = useState(false);
   const [Id, setId] = useState(0);
+  const pfNo = useSelector((state) => state.pfNo.value);
 
   // function changeAchievements() {
   //   setAchievements(1);
@@ -64,15 +69,11 @@ export default function AchievementsForm() {
     "Other",
   ].map((type) => ({ value: type, label: type }));
 
-  const pfNo = useSelector((state) => state.pfNo.value);
-
   const fetchProjects = async () => {
     try {
-      const response = await axios.get(
-        "http://127.0.0.1:8000/eis/api/award/pf_no/", {
-          params: { pfNo },
-        }
-      );
+      const response = await axios.get(getAwardsRoute, {
+        params: { pfNo },
+      });
       const projects = response.data;
       setTableData(projects);
     } catch (error) {
@@ -98,23 +99,17 @@ export default function AchievementsForm() {
       formData.append("details", inputs.title);
 
       if (isEdit === false) {
-        const res = await axios.post(
-          "http://127.0.0.1:8000/eis/api/award/",
-          formData,
-        );
+        const res = await axios.post(insertAwardRoute, formData);
         console.log(res.data);
       } else {
         formData.append("ach_id", Id);
-        const res = await axios.post(
-          "http://127.0.0.1:8000/eis/api/award/",
-          formData,
-        );
+        const res = await axios.post(insertAwardRoute, formData);
         console.log(res.data);
         setEdit(false);
         setId(0);
       }
 
-      fetchProjects() // Refresh the list of achievements
+      fetchProjects(); // Refresh the list of achievements
 
       setInputs({
         day: "",
@@ -130,7 +125,6 @@ export default function AchievementsForm() {
     }
   };
 
-
   const handleEdit = (achievement) => {
     setInputs({
       day: achievement.a_day,
@@ -139,17 +133,16 @@ export default function AchievementsForm() {
       achievementType: achievement.a_type,
       title: achievement.details,
     });
-  
+
     setId(achievement.id);
     setEdit(true);
   };
-
 
   const handleDelete = async (achievementId) => {
     if (window.confirm("Are you sure you want to delete this achievement?")) {
       try {
         await axios.post(
-          `http://127.0.0.1:8000/eis/api/achv/`,
+          deleteAchievementRoute,
           new URLSearchParams({ pk: achievementId }),
         ); // Adjust the delete URL as needed
         fetchProjects(); // Refresh the project list after deletion
@@ -159,7 +152,6 @@ export default function AchievementsForm() {
     }
   };
 
-  
   return (
     <MantineProvider withGlobalStyles withNormalizeCSS>
       <Container size="2xl" mt="xl">
@@ -167,9 +159,14 @@ export default function AchievementsForm() {
           shadow="xs"
           p="lg"
           withBorder
-          style={{ borderLeft: "8px solid #2185d0", backgroundColor: "#f9fafb" }} // Light background for contrast
+          style={{
+            borderLeft: "8px solid #2185d0",
+            backgroundColor: "#f9fafb",
+          }} // Light background for contrast
         >
-          <Title order={2} mb="lg" style={{ color: "#2185d0" }}> {/* Consistent color with border */}
+          <Title order={2} mb="lg" style={{ color: "#2185d0" }}>
+            {" "}
+            {/* Consistent color with border */}
             Add an Achievement
           </Title>
           <form onSubmit={handleSubmit}>
@@ -180,7 +177,9 @@ export default function AchievementsForm() {
                   placeholder="Select Day"
                   data={days}
                   value={inputs.day}
-                  onChange={(value) => setInputs({ ...inputs, day: value || "" })}
+                  onChange={(value) =>
+                    setInputs({ ...inputs, day: value || "" })
+                  }
                   required
                 />
               </Grid.Col>
@@ -190,7 +189,9 @@ export default function AchievementsForm() {
                   placeholder="Select Month"
                   data={months}
                   value={inputs.month}
-                  onChange={(value) => setInputs({ ...inputs, month: value || "" })}
+                  onChange={(value) =>
+                    setInputs({ ...inputs, month: value || "" })
+                  }
                   required
                 />
               </Grid.Col>
@@ -200,7 +201,9 @@ export default function AchievementsForm() {
                   placeholder="Select Year"
                   data={years}
                   value={inputs.year}
-                  onChange={(value) => setInputs({ ...inputs, year: value || "" })}
+                  onChange={(value) =>
+                    setInputs({ ...inputs, year: value || "" })
+                  }
                   required
                 />
               </Grid.Col>
@@ -210,7 +213,9 @@ export default function AchievementsForm() {
                   placeholder="Select Type"
                   data={achievementTypes}
                   value={inputs.achievementType}
-                  onChange={(value) => setInputs({ ...inputs, achievementType: value || "" })}
+                  onChange={(value) =>
+                    setInputs({ ...inputs, achievementType: value || "" })
+                  }
                   required
                 />
               </Grid.Col>
@@ -220,10 +225,15 @@ export default function AchievementsForm() {
                   label="Title"
                   placeholder="Title"
                   value={inputs.title}
-                  onChange={(e) => setInputs({ ...inputs, title: e.target.value })}
+                  onChange={(e) =>
+                    setInputs({ ...inputs, title: e.target.value })
+                  }
                 />
               </Grid.Col>
-              <Grid.Col span={12} style={{ display: "flex", justifyContent: "flex-end" }}>
+              <Grid.Col
+                span={12}
+                style={{ display: "flex", justifyContent: "flex-end" }}
+              >
                 <Button
                   type="submit"
                   mt="md"
@@ -237,7 +247,7 @@ export default function AchievementsForm() {
             </Grid>
           </form>
         </Paper>
-  
+
         {/* <Paper mt="xl" p="lg" withBorder shadow="sm" style={{ border: "1px solid #ddd", borderRadius: "8px", overflow: "hidden", boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)" }}>
           <Title order={3} mb="lg" style={{ color: "#2185d0" }}>
             Projects Report:
@@ -281,7 +291,6 @@ export default function AchievementsForm() {
           </Table>
         </Paper> */}
 
-
         <Paper
           mt="xl"
           p="lg"
@@ -295,12 +304,23 @@ export default function AchievementsForm() {
           }}
         >
           <Title order={3} mb="lg" style={{ color: "#2185d0" }}>
-            Projects Report:
+            Report:
           </Title>
-          <Table striped highlightOnHover withBorder style={{ borderCollapse: "collapse", width: "100%" }}>
+          <Table
+            striped
+            highlightOnHover
+            withBorder
+            style={{ borderCollapse: "collapse", width: "100%" }}
+          >
             <thead>
               <tr style={{ backgroundColor: "#f8f9fa" }}>
-                {["Sr.", "Achievement", "Title", "Day/Month/Year", "Actions"].map((header, index) => (
+                {[
+                  "Sr.",
+                  "Achievement",
+                  "Title",
+                  "Day/Month/Year",
+                  "Actions",
+                ].map((header, index) => (
                   <th
                     key={index}
                     style={{
@@ -319,24 +339,76 @@ export default function AchievementsForm() {
             <tbody>
               {tableData.length === 0 ? (
                 <tr>
-                  <td colSpan={5} style={{ textAlign: "center", padding: "10px", border: "1px solid #dee2e6" }}>
+                  <td
+                    colSpan={5}
+                    style={{
+                      textAlign: "center",
+                      padding: "10px",
+                      border: "1px solid #dee2e6",
+                    }}
+                  >
                     No Achievements Recorded Yet
                   </td>
                 </tr>
               ) : (
                 tableData.map((achievement, index) => (
                   <tr key={achievement.id} style={{ backgroundColor: "#fff" }}>
-                    <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>{index + 1}</td>
-                    <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>{achievement.a_type}</td>
-                    <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>{achievement.details}</td>
-                    <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>
+                    <td
+                      style={{
+                        padding: "12px",
+                        textAlign: "center",
+                        border: "1px solid #dee2e6",
+                      }}
+                    >
+                      {index + 1}
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px",
+                        textAlign: "center",
+                        border: "1px solid #dee2e6",
+                      }}
+                    >
+                      {achievement.a_type}
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px",
+                        textAlign: "center",
+                        border: "1px solid #dee2e6",
+                      }}
+                    >
+                      {achievement.details}
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px",
+                        textAlign: "center",
+                        border: "1px solid #dee2e6",
+                      }}
+                    >
                       {`${achievement.a_day}/${achievement.a_month}/${achievement.a_year}`}
                     </td>
-                    <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>
-                      <ActionIcon color="blue" onClick={() => handleEdit(achievement)} variant="light" style={{ marginRight: "8px" }}>
+                    <td
+                      style={{
+                        padding: "12px",
+                        textAlign: "center",
+                        border: "1px solid #dee2e6",
+                      }}
+                    >
+                      <ActionIcon
+                        color="blue"
+                        onClick={() => handleEdit(achievement)}
+                        variant="light"
+                        style={{ marginRight: "8px" }}
+                      >
                         <PencilSimple size={16} />
                       </ActionIcon>
-                      <ActionIcon color="red" onClick={() => handleDelete(achievement.id)} variant="light">
+                      <ActionIcon
+                        color="red"
+                        onClick={() => handleDelete(achievement.id)}
+                        variant="light"
+                      >
                         <Trash size={16} />
                       </ActionIcon>
                     </td>
@@ -349,5 +421,4 @@ export default function AchievementsForm() {
       </Container>
     </MantineProvider>
   );
-  
 }

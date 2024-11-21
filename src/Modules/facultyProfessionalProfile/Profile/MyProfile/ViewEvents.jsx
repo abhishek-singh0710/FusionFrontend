@@ -1,5 +1,3 @@
-// 
-
 import { useState, useEffect } from "react";
 import axios from "axios";
 import {
@@ -12,6 +10,7 @@ import {
   ScrollArea,
 } from "@mantine/core";
 import { Chalkboard } from "@phosphor-icons/react";
+import { getEventRoute } from "../../../../routes/facultyProfessionalProfileRoutes";
 import { useSelector } from "react-redux";
 
 export default function ViewEvents() {
@@ -22,11 +21,9 @@ export default function ViewEvents() {
   // Fetch projects from the backend
   const fetchProjects = async () => {
     try {
-      const response = await axios.get(
-        "http://127.0.0.1:8000/eis/api/event/pf_no/", {
-          params: { pfNo },
-        }
-      );
+      const response = await axios.get(getEventRoute, {
+        params: { pfNo },
+      });
       const projects = response.data;
       // Sort projects by submission date in descending order
       const sortedProjects = projects.sort(
@@ -43,7 +40,6 @@ export default function ViewEvents() {
     fetchProjects();
   }, []);
 
-  
   return (
     <MantineProvider withGlobalStyles withNormalizeCSS>
       <Container size="2xl" mt="xl">
@@ -69,13 +65,13 @@ export default function ViewEvents() {
             <Chalkboard size={24} />
             Workshops / Training Programs
           </Title>
-          
+
           {error && (
             <Text color="red" mb="sm" style={{ textAlign: "center" }}>
               {error}
             </Text>
           )}
-          
+
           <ScrollArea>
             {/* <Table striped highlightOnHover style={{ minWidth: "100%" }}>
               <thead>
@@ -112,45 +108,112 @@ export default function ViewEvents() {
               </tbody>
             </Table> */}
 
-
-<Table striped highlightOnHover withBorder style={{ minWidth: "100%", borderCollapse: "collapse" }}>
-        <thead>
-          <tr style={{ backgroundColor: "#f8f9fa" }}>
-            {["Name", "Role", "Sponsoring Agency", "Event Type", "Venue", "Start Date", "End Date"].map((header, index) => (
-              <th
-                key={index}
-                style={{
-                  textAlign: "center",
-                  padding: "12px",
-                  color: "#495057",
-                  fontWeight: "600",
-                  border: "1px solid #dee2e6",
-                  backgroundColor: "#f1f3f5",
-                }}
-              >
-                {header}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {tableData.map((project) => (
-            <tr key={project.id} style={{ backgroundColor: "#fff" }}>
-              <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>{project.name}</td>
-              <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>{project.role}</td>
-              <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>{project.sponsoring_agency}</td>
-              <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>{project.type}</td>
-              <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>{project.venue}</td>
-              <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>{project.start_date}</td>
-              <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>{project.end_date}</td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
+            <Table
+              striped
+              highlightOnHover
+              withBorder
+              style={{ minWidth: "100%", borderCollapse: "collapse" }}
+            >
+              <thead>
+                <tr style={{ backgroundColor: "#f8f9fa" }}>
+                  {[
+                    "Name",
+                    "Role",
+                    "Sponsoring Agency",
+                    "Event Type",
+                    "Venue",
+                    "Start Date",
+                    "End Date",
+                  ].map((header, index) => (
+                    <th
+                      key={index}
+                      style={{
+                        textAlign: "center",
+                        padding: "12px",
+                        color: "#495057",
+                        fontWeight: "600",
+                        border: "1px solid #dee2e6",
+                        backgroundColor: "#f1f3f5",
+                      }}
+                    >
+                      {header}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {tableData.map((project) => (
+                  <tr key={project.id} style={{ backgroundColor: "#fff" }}>
+                    <td
+                      style={{
+                        padding: "12px",
+                        textAlign: "center",
+                        border: "1px solid #dee2e6",
+                      }}
+                    >
+                      {project.name}
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px",
+                        textAlign: "center",
+                        border: "1px solid #dee2e6",
+                      }}
+                    >
+                      {project.role}
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px",
+                        textAlign: "center",
+                        border: "1px solid #dee2e6",
+                      }}
+                    >
+                      {project.sponsoring_agency}
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px",
+                        textAlign: "center",
+                        border: "1px solid #dee2e6",
+                      }}
+                    >
+                      {project.type}
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px",
+                        textAlign: "center",
+                        border: "1px solid #dee2e6",
+                      }}
+                    >
+                      {project.venue}
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px",
+                        textAlign: "center",
+                        border: "1px solid #dee2e6",
+                      }}
+                    >
+                      {project.start_date}
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px",
+                        textAlign: "center",
+                        border: "1px solid #dee2e6",
+                      }}
+                    >
+                      {project.end_date}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
           </ScrollArea>
         </Paper>
       </Container>
     </MantineProvider>
   );
-  
 }

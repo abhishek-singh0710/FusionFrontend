@@ -13,8 +13,8 @@ function ProjectMaster({ breadCrumbItems, setBreadCrumbItems }) {
 
   // Tab items data
   const tabItems = [
-    { title: "ResearchProjects", component: <ResearchProjects /> },
-    { title: "patents", component: <Patents /> },
+    { title: "Research Projects", component: <ResearchProjects /> },
+    { title: "Patents", component: <Patents /> },
     { title: "Consultancy Projects", component: <ConsultancyProjects /> },
     // { title: "Thesis Supervision", component: <ThesisSupervisionMaster /> },
   ];

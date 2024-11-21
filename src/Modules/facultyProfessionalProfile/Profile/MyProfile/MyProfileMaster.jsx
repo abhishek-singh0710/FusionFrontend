@@ -15,7 +15,7 @@ import ViewEvents from "./ViewEvents";
 import classes from "../../../Dashboard/Dashboard.module.css";
 // import Books from "../Publications/Books";
 // import Journal from "../Publications/Journal";
-import ViewJournal from "./ViewJournal";
+// import ViewJournal from "./ViewJournal";
 import ViewBooks from "./ViewBooks";
 
 function VisitsMaster({ breadCrumbItems, setBreadCrumbItems }) {
@@ -33,7 +33,7 @@ function VisitsMaster({ breadCrumbItems, setBreadCrumbItems }) {
     { title: "ForeignVisits", component: <ViewForeignVisits /> },
     { title: "IndianVisits", component: <ViewIndianVisits /> },
     { title: "Con/Sym", component: <ViewConSym /> },
-    { title: "Journal", component: <ViewJournal /> },
+    // { title: "Journal", component: <ViewJournal /> },
     { title: "Books", component: <ViewBooks /> },
   ];
 

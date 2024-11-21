@@ -21,6 +21,11 @@ import {
 } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import { FloppyDisk, PencilSimple, Trash } from "@phosphor-icons/react";
+import {
+  getResearchProjectsRoute,
+  insertResearchProjectsRoute,
+  deleteResearchProjectsRoute,
+} from "../../../../routes/facultyProfessionalProfileRoutes";
 import { useSelector } from "react-redux";
 
 export default function ResearchProjects() {
@@ -45,11 +50,9 @@ export default function ResearchProjects() {
   // Function to fetch projects from the backend
   const fetchProjects = async () => {
     try {
-      const response = await axios.get(
-        "http://127.0.0.1:8000/eis/api/projects/pf_no/", {
-          params: { pfNo }
-        }
-      );
+      const response = await axios.get(getResearchProjectsRoute, {
+        params: { pfNo },
+      });
       const projects = response.data;
       console.log(projects);
       // Sort projects by submission date in descending order
@@ -84,17 +87,11 @@ export default function ResearchProjects() {
       formData.append("title", inputs.title);
 
       if (isEdit === false) {
-        const res = await axios.post(
-          "http://127.0.0.1:8000/eis/api/project/",
-          formData,
-        );
+        const res = await axios.post(insertResearchProjectsRoute, formData);
         console.log(res.data);
       } else {
         formData.append("project_id", Id);
-        const res = await axios.post(
-          "http://127.0.0.1:8000/eis/api/project/",
-          formData,
-        );
+        const res = await axios.post(insertResearchProjectsRoute, formData);
         console.log(res.data);
         setEdit(false);
         setId(0);
@@ -123,7 +120,7 @@ export default function ResearchProjects() {
 
   // const handleEdit = (project) => {
   //   // Populate the inputs with the project data for editing
-    
+
   //   setInputs({
   //     pi: project.pi,
   //     coPi: project.co_pi,
@@ -145,24 +142,27 @@ export default function ResearchProjects() {
       coPi: project.co_pi,
       fundingAgency: project.funding_agency,
       status: project.status,
-      submissionDate: project.date_submission ? new Date(project.date_submission) : null,
+      submissionDate: project.date_submission
+        ? new Date(project.date_submission)
+        : null,
       startDate: project.start_date ? new Date(project.start_date) : null,
-      expectedFinishDate: project.finish_date ? new Date(project.finish_date) : null,
+      expectedFinishDate: project.finish_date
+        ? new Date(project.finish_date)
+        : null,
       financialOutlay: project.financial_outlay,
       title: project.title,
     });
-  
+
     setId(project.id);
     setEdit(true);
   };
-  
 
   const handleDelete = async (projectId) => {
     console.log(projectId);
     if (window.confirm("Are you sure you want to delete this project?")) {
       try {
         await axios.post(
-          `http://127.0.0.1:8000/eis/api/emp_research_projectsDelete/`,
+          deleteResearchProjectsRoute,
           new URLSearchParams({ pk: projectId }),
         ); // Adjust the delete URL as needed
         fetchProjects(); // Refresh the project list after deletion
@@ -172,8 +172,6 @@ export default function ResearchProjects() {
     }
   };
 
-  
-
   return (
     <MantineProvider withGlobalStyles withNormalizeCSS>
       <Container size="2xl" mt="xl">
@@ -181,7 +179,10 @@ export default function ResearchProjects() {
           shadow="xs"
           p="md"
           withBorder
-          style={{ borderLeft: "8px solid #2185d0", backgroundColor: "#f9fafb" }} // Light background for contrast
+          style={{
+            borderLeft: "8px solid #2185d0",
+            backgroundColor: "#f9fafb",
+          }} // Light background for contrast
         >
           <Title order={2} mb="sm" style={{ color: "#2185d0" }}>
             Add a Research Project
@@ -254,9 +255,7 @@ export default function ResearchProjects() {
                   label="Start Date"
                   placeholder="Select date"
                   value={inputs.startDate}
-                  onChange={(date) =>
-                    setInputs({ ...inputs, startDate: date })
-                  }
+                  onChange={(date) => setInputs({ ...inputs, startDate: date })}
                   valueFormat="YYYY-MM-DD"
                   style={{ padding: "10px" }} // Consistent padding
                 />
@@ -297,8 +296,11 @@ export default function ResearchProjects() {
                   style={{ padding: "10px" }} // Consistent padding
                 />
               </Grid.Col>
-          
-              <Grid.Col span={12} style={{ display: "flex", justifyContent: "flex-end" }}>
+
+              <Grid.Col
+                span={12}
+                style={{ display: "flex", justifyContent: "flex-end" }}
+              >
                 <Button
                   type="submit"
                   mt="md"
@@ -312,12 +314,41 @@ export default function ResearchProjects() {
             </Grid>
           </form>
         </Paper>
-  
-        <Paper mt="xl" p="lg" withBorder shadow="sm" style={{ border: "1px solid #ddd", borderRadius: "8px", overflow: "hidden", boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)" }}>
-          <Table striped highlightOnHover style={{ minWidth: "100%", borderCollapse: "collapse" }}>
+
+        <Paper
+          mt="xl"
+          p="lg"
+          withBorder
+          shadow="sm"
+          style={{
+            border: "1px solid #ddd",
+            borderRadius: "8px",
+            overflow: "hidden",
+            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+          }}
+        >
+          <Title order={3} mb="lg" style={{ color: "#2185d0" }}>
+            Report:
+          </Title>
+          <Table
+            striped
+            highlightOnHover
+            style={{ minWidth: "100%", borderCollapse: "collapse" }}
+          >
             <thead>
               <tr style={{ backgroundColor: "#f8f9fa" }}>
-                {["Title", "PI", "Co-PI", "Funding Agency", "Status", "Submission Date", "Start Date", "Expected Finish Date", "Financial Outlay", "Actions"].map((header, index) => (
+                {[
+                  "Title",
+                  "PI",
+                  "Co-PI",
+                  "Funding Agency",
+                  "Status",
+                  "Submission Date",
+                  "Start Date",
+                  "Expected Finish Date",
+                  "Financial Outlay",
+                  "Actions",
+                ].map((header, index) => (
                   <th
                     key={index}
                     style={{
@@ -338,22 +369,109 @@ export default function ResearchProjects() {
               {tableData.length > 0 ? (
                 tableData.map((project, index) => (
                   <tr key={index} style={{ backgroundColor: "#fff" }}>
-                    <td style={{ padding: "12px 16px", textAlign: "center", border: "1px solid #dee2e6" }}>{project.title}</td>
-                    <td style={{ padding: "12px 16px", textAlign: "center", border: "1px solid #dee2e6" }}>{project.pi}</td>
-                    <td style={{ padding: "12px 16px", textAlign: "center", border: "1px solid #dee2e6" }}>{project.co_pi}</td>
-                    <td style={{ padding: "12px 16px", textAlign: "center", border: "1px solid #dee2e6" }}>{project.funding_agency}</td>
-                    <td style={{ padding: "12px 16px", textAlign: "center", border: "1px solid #dee2e6" }}>{project.status}</td>
-                    <td style={{ padding: "12px 16px", textAlign: "center", border: "1px solid #dee2e6" }}>{project.date_submission}</td>
-                    <td style={{ padding: "12px 16px", textAlign: "center", border: "1px solid #dee2e6" }}>{project.start_date}</td>
-                    <td style={{ padding: "12px 16px", textAlign: "center", border: "1px solid #dee2e6" }}>{project.finish_date}</td>
-                    <td style={{ padding: "12px 16px", textAlign: "center", color: "#0d6efd", fontWeight: "500", border: "1px solid #dee2e6" }}>
+                    <td
+                      style={{
+                        padding: "12px 16px",
+                        textAlign: "center",
+                        border: "1px solid #dee2e6",
+                      }}
+                    >
+                      {project.title}
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px 16px",
+                        textAlign: "center",
+                        border: "1px solid #dee2e6",
+                      }}
+                    >
+                      {project.pi}
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px 16px",
+                        textAlign: "center",
+                        border: "1px solid #dee2e6",
+                      }}
+                    >
+                      {project.co_pi}
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px 16px",
+                        textAlign: "center",
+                        border: "1px solid #dee2e6",
+                      }}
+                    >
+                      {project.funding_agency}
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px 16px",
+                        textAlign: "center",
+                        border: "1px solid #dee2e6",
+                      }}
+                    >
+                      {project.status}
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px 16px",
+                        textAlign: "center",
+                        border: "1px solid #dee2e6",
+                      }}
+                    >
+                      {project.date_submission}
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px 16px",
+                        textAlign: "center",
+                        border: "1px solid #dee2e6",
+                      }}
+                    >
+                      {project.start_date}
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px 16px",
+                        textAlign: "center",
+                        border: "1px solid #dee2e6",
+                      }}
+                    >
+                      {project.finish_date}
+                    </td>
+                    <td
+                      style={{
+                        padding: "12px 16px",
+                        textAlign: "center",
+                        color: "#0d6efd",
+                        fontWeight: "500",
+                        border: "1px solid #dee2e6",
+                      }}
+                    >
                       {project.financial_outlay}
                     </td>
-                    <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>
-                      <ActionIcon color="blue" onClick={() => handleEdit(project)} variant="light" style={{ marginRight: "8px" }}>
+                    <td
+                      style={{
+                        padding: "12px",
+                        textAlign: "center",
+                        border: "1px solid #dee2e6",
+                      }}
+                    >
+                      <ActionIcon
+                        color="blue"
+                        onClick={() => handleEdit(project)}
+                        variant="light"
+                        style={{ marginRight: "8px" }}
+                      >
                         <PencilSimple size={16} />
                       </ActionIcon>
-                      <ActionIcon color="red" onClick={() => handleDelete(project.id)} variant="light">
+                      <ActionIcon
+                        color="red"
+                        onClick={() => handleDelete(project.id)}
+                        variant="light"
+                      >
                         <Trash size={16} />
                       </ActionIcon>
                     </td>
@@ -361,7 +479,15 @@ export default function ResearchProjects() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={9} style={{ textAlign: "center", padding: "20px", color: "#6c757d", border: "1px solid #dee2e6" }}>
+                  <td
+                    colSpan={9}
+                    style={{
+                      textAlign: "center",
+                      padding: "20px",
+                      color: "#6c757d",
+                      border: "1px solid #dee2e6",
+                    }}
+                  >
                     No research projects found.
                   </td>
                 </tr>
@@ -372,5 +498,4 @@ export default function ResearchProjects() {
       </Container>
     </MantineProvider>
   );
-  
 }

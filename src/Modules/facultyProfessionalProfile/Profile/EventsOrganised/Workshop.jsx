@@ -16,6 +16,12 @@ import {
 } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import { FloppyDisk, PencilSimple, Trash } from "@phosphor-icons/react";
+import {
+  getEventRoute,
+  insertEventRoute,
+  updateEventRoute,
+  deleteEventRoute,
+} from "../../../../routes/facultyProfessionalProfileRoutes";
 import { useSelector } from "react-redux";
 
 export default function WorkshopForm() {
@@ -33,17 +39,15 @@ export default function WorkshopForm() {
   const [, setError] = useState(null); // For error handling
   const [isEdit, setEdit] = useState(false);
   const [eventId, setEventId] = useState(0);
-  // new URLSearchParams({"pk": projectId}))
   const pfNo = useSelector((state) => state.pfNo.value);
+  // new URLSearchParams({"pk": projectId}))
 
   // Fetch projects from the backend
   const fetchProjects = async () => {
     try {
-      const response = await axios.get(
-        "http://127.0.0.1:8000/eis/api/event/pf_no/", {
-          params: { pfNo },
-        }
-      );
+      const response = await axios.get(getEventRoute, {
+        params: { pfNo },
+      });
       const projects = response.data;
       // Sort projects by submission date in descending order
       const sortedProjects = projects.sort(
@@ -76,17 +80,11 @@ export default function WorkshopForm() {
       formData.append("event_end_date", inputs.endDate);
 
       if (isEdit === false) {
-        const res = await axios.post(
-          "http://127.0.0.1:8000/eis/api/event/",
-          formData,
-        );
+        const res = await axios.post(insertEventRoute, formData);
         console.log(res.data);
       } else {
         formData.append("eventpk", eventId);
-        const res = await axios.post(
-          "http://127.0.0.1:8000/eis/api/event/edit",
-          formData,
-        );
+        const res = await axios.post(updateEventRoute, formData);
         console.log(res.data);
         setEdit(false);
         setEventId(0);
@@ -132,7 +130,7 @@ export default function WorkshopForm() {
     if (window.confirm("Are you sure you want to delete this Event?")) {
       try {
         await axios.post(
-          `http://127.0.0.1:8000/eis/api/emp_event_organizedDelete/`,
+          deleteEventRoute,
           new URLSearchParams({ pk: projectId }),
         ); // Adjust the delete URL as needed
         fetchProjects(); // Refresh the project list after deletion
@@ -141,7 +139,6 @@ export default function WorkshopForm() {
       }
     }
   };
-
 
   return (
     <MantineProvider
@@ -159,7 +156,11 @@ export default function WorkshopForm() {
             backgroundColor: "#f9fafb",
           }}
         >
-          <Title order={2} mb="lg" style={{ color: "#2185d0", textAlign: "left" }}>
+          <Title
+            order={2}
+            mb="lg"
+            style={{ color: "#2185d0", textAlign: "left" }}
+          >
             Add an Event
           </Title>
           <form onSubmit={handleSubmit}>
@@ -194,9 +195,7 @@ export default function WorkshopForm() {
                   label="Start Date"
                   placeholder="Select date"
                   value={inputs.startDate}
-                  onChange={(date) =>
-                    setInputs({ ...inputs, startDate: date })
-                  }
+                  onChange={(date) => setInputs({ ...inputs, startDate: date })}
                 />
               </Grid.Col>
               <Grid.Col span={6}>
@@ -204,9 +203,7 @@ export default function WorkshopForm() {
                   label="End Date"
                   placeholder="Select date"
                   value={inputs.endDate}
-                  onChange={(date) =>
-                    setInputs({ ...inputs, endDate: date })
-                  }
+                  onChange={(date) => setInputs({ ...inputs, endDate: date })}
                 />
               </Grid.Col>
               <Grid.Col span={6}>
@@ -245,7 +242,10 @@ export default function WorkshopForm() {
                   }
                 />
               </Grid.Col>
-              <Grid.Col span={12} style={{ display: "flex", justifyContent: "flex-end" }}>
+              <Grid.Col
+                span={12}
+                style={{ display: "flex", justifyContent: "flex-end" }}
+              >
                 <Button
                   type="submit"
                   mt="md"
@@ -259,7 +259,7 @@ export default function WorkshopForm() {
             </Grid>
           </form>
         </Paper>
-  
+
         {/* <Paper mt="xl" p="lg" withBorder shadow="sm" style={{ border: "1px solid #ddd" }}>
           <Table striped highlightOnHover withBorder>
             <thead>
@@ -307,53 +307,150 @@ export default function WorkshopForm() {
           </Table>
         </Paper> */}
 
-
-<Paper mt="xl" p="lg" withBorder shadow="sm" style={{ border: "1px solid #ddd", borderRadius: "8px", overflow: "hidden", boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)" }}>
-      <Table striped highlightOnHover withBorder style={{ minWidth: "100%", borderCollapse: "collapse" }}>
-        <thead>
-          <tr style={{ backgroundColor: "#f8f9fa" }}>
-            {["Name", "Role", "Sponsoring Agency", "Event Type", "Venue", "Start Date", "End Date", "Actions"].map((header, index) => (
-              <th
-                key={index}
-                style={{
-                  textAlign: "center",
-                  padding: "12px",
-                  color: "#495057",
-                  fontWeight: "600",
-                  border: "1px solid #dee2e6",
-                  backgroundColor: "#f1f3f5",
-                }}
-              >
-                {header}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {tableData.map((project) => (
-            <tr key={project.id} style={{ backgroundColor: "#fff" }}>
-              <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>{project.name}</td>
-              <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>{project.role}</td>
-              <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>{project.sponsoring_agency}</td>
-              <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>{project.type}</td>
-              <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>{project.venue}</td>
-              <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>{project.start_date}</td>
-              <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>{project.end_date}</td>
-              <td style={{ padding: "12px", textAlign: "center", border: "1px solid #dee2e6" }}>
-                <ActionIcon color="blue" onClick={() => handleEdit(project)} variant="light" style={{ marginRight: "8px" }}>
-                  <PencilSimple size={16} />
-                </ActionIcon>
-                <ActionIcon color="red" onClick={() => handleDelete(project.id)} variant="light">
-                  <Trash size={16} />
-                </ActionIcon>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
-    </Paper>
+        <Paper
+          mt="xl"
+          p="lg"
+          withBorder
+          shadow="sm"
+          style={{
+            border: "1px solid #ddd",
+            borderRadius: "8px",
+            overflow: "hidden",
+            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+          }}
+        >
+          <Title order={3} mb="lg" style={{ color: "#2185d0" }}>
+            Report:
+          </Title>
+          <Table
+            striped
+            highlightOnHover
+            withBorder
+            style={{ minWidth: "100%", borderCollapse: "collapse" }}
+          >
+            <thead>
+              <tr style={{ backgroundColor: "#f8f9fa" }}>
+                {[
+                  "Name",
+                  "Role",
+                  "Sponsoring Agency",
+                  "Event Type",
+                  "Venue",
+                  "Start Date",
+                  "End Date",
+                  "Actions",
+                ].map((header, index) => (
+                  <th
+                    key={index}
+                    style={{
+                      textAlign: "center",
+                      padding: "12px",
+                      color: "#495057",
+                      fontWeight: "600",
+                      border: "1px solid #dee2e6",
+                      backgroundColor: "#f1f3f5",
+                    }}
+                  >
+                    {header}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {tableData.map((project) => (
+                <tr key={project.id} style={{ backgroundColor: "#fff" }}>
+                  <td
+                    style={{
+                      padding: "12px",
+                      textAlign: "center",
+                      border: "1px solid #dee2e6",
+                    }}
+                  >
+                    {project.name}
+                  </td>
+                  <td
+                    style={{
+                      padding: "12px",
+                      textAlign: "center",
+                      border: "1px solid #dee2e6",
+                    }}
+                  >
+                    {project.role}
+                  </td>
+                  <td
+                    style={{
+                      padding: "12px",
+                      textAlign: "center",
+                      border: "1px solid #dee2e6",
+                    }}
+                  >
+                    {project.sponsoring_agency}
+                  </td>
+                  <td
+                    style={{
+                      padding: "12px",
+                      textAlign: "center",
+                      border: "1px solid #dee2e6",
+                    }}
+                  >
+                    {project.type}
+                  </td>
+                  <td
+                    style={{
+                      padding: "12px",
+                      textAlign: "center",
+                      border: "1px solid #dee2e6",
+                    }}
+                  >
+                    {project.venue}
+                  </td>
+                  <td
+                    style={{
+                      padding: "12px",
+                      textAlign: "center",
+                      border: "1px solid #dee2e6",
+                    }}
+                  >
+                    {project.start_date}
+                  </td>
+                  <td
+                    style={{
+                      padding: "12px",
+                      textAlign: "center",
+                      border: "1px solid #dee2e6",
+                    }}
+                  >
+                    {project.end_date}
+                  </td>
+                  <td
+                    style={{
+                      padding: "12px",
+                      textAlign: "center",
+                      border: "1px solid #dee2e6",
+                    }}
+                  >
+                    <ActionIcon
+                      color="blue"
+                      onClick={() => handleEdit(project)}
+                      variant="light"
+                      style={{ marginRight: "8px" }}
+                    >
+                      <PencilSimple size={16} />
+                    </ActionIcon>
+                    <ActionIcon
+                      color="red"
+                      onClick={() => handleDelete(project.id)}
+                      variant="light"
+                    >
+                      <Trash size={16} />
+                    </ActionIcon>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </Paper>
       </Container>
     </MantineProvider>
   );
-  
 }
