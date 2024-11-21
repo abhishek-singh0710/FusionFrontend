@@ -1,3 +1,5 @@
+// 
+
 import { useState, useEffect } from "react";
 import axios from "axios";
 import {
@@ -10,16 +12,20 @@ import {
   ScrollArea,
 } from "@mantine/core";
 import { Chalkboard } from "@phosphor-icons/react";
+import { useSelector } from "react-redux";
 
 export default function ViewEvents() {
   const [tableData, setTableData] = useState([]);
   const [error, setError] = useState(null); // For error handling
+  const pfNo = useSelector((state) => state.pfNo.value);
 
   // Fetch projects from the backend
   const fetchProjects = async () => {
     try {
       const response = await axios.get(
-        "http://127.0.0.1:8000/eis/event/pf_no/",
+        "http://127.0.0.1:8000/eis/api/event/pf_no/", {
+          params: { pfNo },
+        }
       );
       const projects = response.data;
       // Sort projects by submission date in descending order

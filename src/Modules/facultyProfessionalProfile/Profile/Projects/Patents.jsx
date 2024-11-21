@@ -1,3 +1,5 @@
+// 
+
 import { useState, useEffect } from "react";
 // import { Button, Select, TextInput, Table, Divider, LoadingOverlay } from '@mantine/core';
 // import { Edit, } from '@phosphor-icons/react';
@@ -18,6 +20,7 @@ import {
 } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import { FloppyDisk, PencilSimple, Trash } from "@phosphor-icons/react";
+import { useSelector } from "react-redux";
 
 export default function Patents() {
   const [inputs, setInputs] = useState({
@@ -33,11 +36,14 @@ export default function Patents() {
   const [, setError] = useState(null); // For error handling
   const [isEdit, setEdit] = useState(false);
   const [Id, setId] = useState(0);
+  const pfNo = useSelector((state) => state.pfNo.value);
 
   const fetchProjects = async () => {
     try {
       const response = await axios.get(
-        "http://127.0.0.1:8000/eis/patents/pf_no/",
+        "http://127.0.0.1:8000/eis/api/patents/pf_no/", {
+          params: { pfNo }
+        }
       );
       const projects = response.data;
       // Sort projects by submission date in descending order
@@ -71,14 +77,14 @@ export default function Patents() {
 
       if (isEdit === false) {
         const res = await axios.post(
-          "http://127.0.0.1:8000/eis/patent_insert/",
+          "http://127.0.0.1:8000/eis/api/patent_insert/",
           formData,
         );
         console.log(res.data);
       } else {
         formData.append("patent_id", Id);
         const res = await axios.post(
-          "http://127.0.0.1:8000/eis/patent_insert/",
+          "http://127.0.0.1:8000/eis/api/patent_insert/",
           formData,
         );
         console.log(res.data);
@@ -125,7 +131,7 @@ export default function Patents() {
     if (window.confirm("Are you sure you want to delete this Patent?")) {
       try {
         await axios.post(
-          `http://127.0.0.1:8000/eis/emp_patentsDelete/`,
+          `http://127.0.0.1:8000/eis/api/emp_patentsDelete/`,
           new URLSearchParams({ pk: projectId }),
         ); // Adjust the delete URL as needed
         fetchProjects(); // Refresh the project list after deletion
