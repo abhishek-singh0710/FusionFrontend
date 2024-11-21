@@ -20,6 +20,7 @@ import {
   insertIVisitsRoute,
   deleteIVisitsRoute,
 } from "../../../../routes/facultyProfessionalProfileRoutes";
+import { useSelector } from "react-redux";
 
 export default function IndianVisits() {
   const [inputs, setInputs] = useState({
@@ -35,11 +36,14 @@ export default function IndianVisits() {
   const [, setError] = useState(null); // For error handling
   const [isEdit, setEdit] = useState(false);
   const [Id, setId] = useState(0);
+  const pfNo = useSelector((state) => state.pfNo.value);
 
   // Fetch projects from the backend
   const fetchProjects = async () => {
     try {
-      const response = await axios.get(getIVisitsRoute);
+      const response = await axios.get(getIVisitsRoute, {
+        params: { pfNo },
+      });
       const projects = response.data;
       // Sort projects by submission date in descending order
       const sortedProjects = projects.sort(

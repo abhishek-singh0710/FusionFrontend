@@ -714,6 +714,7 @@ import {
   insertConsultancyProjectRoute,
   deleteConsultancyProjectRoute,
 } from "../../../../routes/facultyProfessionalProfileRoutes";
+import { useSelector } from "react-redux";
 
 export default function ConsultancyProjects() {
   const [inputs, setInputs] = useState({
@@ -730,13 +731,16 @@ export default function ConsultancyProjects() {
   const [, setError] = useState(null); // For error handling
   const [isEdit, setEdit] = useState(false);
   const [Id, setId] = useState(0);
+  const pfNo = useSelector((state) => state.pfNo.value);
 
   // Function to fetch Consultancy Projects from the backend
   const fetchProjects = async () => {
     try {
       // const formData = new FormData();
       // formData.append("user_id", 5318);
-      const response = await axios.get(getConsultancyProjectRoute);
+      const response = await axios.get(getConsultancyProjectRoute, {
+        params: { pfNo },
+      });
       const projects = response.data;
       // Sort projects by submission date in descending order
       const sortedProjects = projects.sort(

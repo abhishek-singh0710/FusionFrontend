@@ -20,6 +20,7 @@ import {
   insertTalkRoute,
   deleteTalkRoute,
 } from "../../../../routes/facultyProfessionalProfileRoutes";
+import { useSelector } from "react-redux";
 
 export default function ExpertLecturesForm() {
   const [inputs, setInputs] = useState({
@@ -32,10 +33,13 @@ export default function ExpertLecturesForm() {
   const [tableData, setTableData] = useState([]);
   const [isEdit, setEdit] = useState(false);
   const [Id, setId] = useState(0);
+  const pfNo = useSelector((state) => state.pfNo.value);
 
   const fetchProjects = async () => {
     try {
-      const response = await axios.get(getTalkRoute);
+      const response = await axios.get(getTalkRoute, {
+        params: { pfNo },
+      });
       const projects = response.data;
       setTableData(projects);
     } catch (error) {

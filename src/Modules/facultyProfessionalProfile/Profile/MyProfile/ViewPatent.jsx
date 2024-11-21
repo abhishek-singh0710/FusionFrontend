@@ -11,14 +11,18 @@ import {
 } from "@mantine/core";
 import { Certificate } from "@phosphor-icons/react";
 import { getPatentsRoute } from "../../../../routes/facultyProfessionalProfileRoutes";
+import { useSelector } from "react-redux";
 
 export default function ViewPatent() {
   const [tableData, setTableData] = useState([]);
   const [error, setError] = useState(null); // For error handling
+  const pfNo = useSelector((state) => state.pfNo.value);
 
   const fetchProjects = async () => {
     try {
-      const response = await axios.get(getPatentsRoute);
+      const response = await axios.get(getPatentsRoute, {
+        params: { pfNo },
+      });
       const projects = response.data;
       // Sort projects by submission date in descending order
       const sortedProjects = projects.sort(

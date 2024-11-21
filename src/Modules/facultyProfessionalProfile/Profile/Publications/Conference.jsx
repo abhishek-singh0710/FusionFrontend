@@ -251,6 +251,7 @@ import {
   updateConferenceRoute,
   deleteConferenceRoute,
 } from "../../../../routes/facultyProfessionalProfileRoutes";
+import { useSelector } from "react-redux";
 
 export default function Conference() {
   const [inputs, setInputs] = useState({
@@ -273,10 +274,13 @@ export default function Conference() {
   const [tableData, setTableData] = useState([]);
   const [editingId, setEditingId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const pfNo = useSelector((state) => state.pfNo.value);
 
   const fetchConferences = async () => {
     try {
-      const response = await axios.get(getConferenceRoute);
+      const response = await axios.get(getConferenceRoute, {
+        params: { pfNo },
+      });
       setTableData(response.data);
     } catch (error) {
       console.error("Error fetching conferences:", error);

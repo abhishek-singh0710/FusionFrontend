@@ -11,15 +11,19 @@ import {
 } from "@mantine/core";
 import { MapPin } from "@phosphor-icons/react";
 import { getIVisitsRoute } from "../../../../routes/facultyProfessionalProfileRoutes";
+import { useSelector } from "react-redux";
 
 export default function ViewIndianVisits() {
   const [tableData, setTableData] = useState([]);
   const [error, setError] = useState(null); // For error handling
+  const pfNo = useSelector((state) => state.pfNo.value);
 
   // Fetch projects from the backend
   const fetchProjects = async () => {
     try {
-      const response = await axios.get(getIVisitsRoute);
+      const response = await axios.get(getIVisitsRoute, {
+        params: { pfNo },
+      });
       const projects = response.data;
       // Sort projects by submission date in descending order
       const sortedProjects = projects.sort(

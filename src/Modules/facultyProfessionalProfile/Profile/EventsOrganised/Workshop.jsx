@@ -22,6 +22,7 @@ import {
   updateEventRoute,
   deleteEventRoute,
 } from "../../../../routes/facultyProfessionalProfileRoutes";
+import { useSelector } from "react-redux";
 
 export default function WorkshopForm() {
   const [inputs, setInputs] = useState({
@@ -38,12 +39,15 @@ export default function WorkshopForm() {
   const [, setError] = useState(null); // For error handling
   const [isEdit, setEdit] = useState(false);
   const [eventId, setEventId] = useState(0);
+  const pfNo = useSelector((state) => state.pfNo.value);
   // new URLSearchParams({"pk": projectId}))
 
   // Fetch projects from the backend
   const fetchProjects = async () => {
     try {
-      const response = await axios.get(getEventRoute);
+      const response = await axios.get(getEventRoute, {
+        params: { pfNo },
+      });
       const projects = response.data;
       // Sort projects by submission date in descending order
       const sortedProjects = projects.sort(

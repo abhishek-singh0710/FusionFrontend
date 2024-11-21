@@ -260,6 +260,7 @@ import {
   ActionIcon,
 } from "@mantine/core";
 import { FloppyDisk, Trash, PencilSimple } from "@phosphor-icons/react";
+import { useSelector } from "react-redux";
 
 export default function Books() {
   const [inputs, setInputs] = useState({
@@ -272,10 +273,13 @@ export default function Books() {
   const [tableData, setTableData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [editingId, setEditingId] = useState(null); // For editing
+  const pfNo = useSelector((state) => state.pfNo.value);
 
   const fetchAchievements = async () => {
     try {
-      const res = await axios.get("http://127.0.0.1:8000/eis/api/fetch_book");
+      const res = await axios.get("http://127.0.0.1:8000/eis/api/fetch_book", {
+        params: { pfNo },
+      });
       console.log(res.data);
       setTableData(res.data);
     } catch (error) {

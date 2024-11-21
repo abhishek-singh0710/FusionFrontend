@@ -26,6 +26,7 @@ import {
   insertResearchProjectsRoute,
   deleteResearchProjectsRoute,
 } from "../../../../routes/facultyProfessionalProfileRoutes";
+import { useSelector } from "react-redux";
 
 export default function ResearchProjects() {
   const [inputs, setInputs] = useState({
@@ -44,11 +45,14 @@ export default function ResearchProjects() {
   const [tableData, setTableData] = useState([]);
   const [isEdit, setEdit] = useState(false);
   const [Id, setId] = useState(0);
+  const pfNo = useSelector((state) => state.pfNo.value);
 
   // Function to fetch projects from the backend
   const fetchProjects = async () => {
     try {
-      const response = await axios.get(getResearchProjectsRoute);
+      const response = await axios.get(getResearchProjectsRoute, {
+        params: { pfNo },
+      });
       const projects = response.data;
       console.log(projects);
       // Sort projects by submission date in descending order

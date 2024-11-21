@@ -471,6 +471,7 @@ import {
 } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import { FloppyDisk, PencilSimple, Trash } from "@phosphor-icons/react";
+import { useSelector } from "react-redux";
 
 export default function Journal() {
   const [inputs, setInputs] = useState({
@@ -492,11 +493,14 @@ export default function Journal() {
   const [isLoading, setIsLoading] = useState(false);
   const [tableData, setTableData] = useState([]);
   const [editingId, setEditingId] = useState(null); // For editing
+  const pfNo = useSelector((state) => state.pfNo.value);
 
   const fetchData = async () => {
     try {
       const res = await axios.get(
-        "http://127.0.0.1:8000/eis/api/fetch_journal",
+        "http://127.0.0.1:8000/eis/api/fetch_journal", {
+          params: { pfNo },
+        }
       );
       setTableData(res.data);
     } catch (error) {

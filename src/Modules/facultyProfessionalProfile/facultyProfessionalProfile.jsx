@@ -6,7 +6,7 @@ import App from "./App";
 function FacultyProfessionalProfile() {
   return (
     <>
-      <CustomBreadcrumbs />
+      {/* <CustomBreadcrumbs /> */}
       {/* <Text>facultyProfessionalProfile Page</Text> */}
       <App />
     </>

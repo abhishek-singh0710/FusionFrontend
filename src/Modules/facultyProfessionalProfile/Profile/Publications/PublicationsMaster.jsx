@@ -2,15 +2,18 @@ import { useEffect, useRef, useState } from "react";
 import { Button, Flex, Tabs, Text } from "@mantine/core";
 import { CaretCircleLeft, CaretCircleRight } from "@phosphor-icons/react";
 // import CustomBreadcrumbs from "../../../../components/Breadcrumbs";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import classes from "../../../Dashboard/Dashboard.module.css"; // Ensure the CSS module is properly set
 // import Conference from "./Conference";
 import Books from "./Books";
+import axios from "axios";
 // import Journal from "./Journal";
+import { setPfNo } from "../../../../redux/pfNoSlice";
 
 function PublicationMaster({ breadCrumbItems, setBreadCrumbItems }) {
   const [activeTab, setActiveTab] = useState("0");
   const tabsListRef = useRef(null);
+  const dispatch = useDispatch();
 
   const pfNo = useSelector((state) => state.pfNo.value);
 
@@ -36,6 +39,21 @@ function PublicationMaster({ breadCrumbItems, setBreadCrumbItems }) {
       behavior: "smooth",
     });
   };
+
+  const username = useSelector((state) => state.user.roll_no);
+  console.log(username);
+
+  const fetchPfNo = async () => {
+    const formData = new FormData();
+    formData.append("username", username);
+    const res = await axios.post("http://127.0.0.1:8000/eis/api/profile/", formData)
+    console.log("res",res.data.pf);
+    dispatch(setPfNo(res.data.pf));
+  }
+
+  useEffect(() => {
+    fetchPfNo();
+  },[])
 
   useEffect(() => {
     const currentTab = tabItems[parseInt(activeTab, 10)];

@@ -23,6 +23,7 @@ import {
   getPersonalInfoRoute,
   updatePersonalInfoRoute,
 } from "../../../../routes/facultyProfessionalProfileRoutes";
+import { useSelector } from "react-redux";
 // import { useSelector } from "react-redux";
 
 export default function AboutMePage() {
@@ -65,11 +66,14 @@ export default function AboutMePage() {
 
   const [isLoading, setIsLoading] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
+  const pfNo = useSelector((state) => state.pfNo.value);
 
   // Fetch user data from the backend
   const fetchUserData = async () => {
     try {
-      const response = await axios.get(getPersonalInfoRoute);
+      const response = await axios.get(getPersonalInfoRoute, {
+        params: { pfNo },
+      });
       // console.log(response);
       if (response.data) {
         setInputs({

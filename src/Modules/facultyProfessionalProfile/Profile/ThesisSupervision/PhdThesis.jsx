@@ -518,6 +518,7 @@ import {
   insertPhDThesisRoute,
   deletePGThesisRoute,
 } from "../../../../routes/facultyProfessionalProfileRoutes";
+import { useSelector } from "react-redux";
 
 export default function PhdThesis() {
   const [inputs, setInputs] = useState({
@@ -534,13 +535,14 @@ export default function PhdThesis() {
   const [, setError] = useState(null); // For error handling
   const [isEdit, setEdit] = useState(false);
   const [Id, setId] = useState(0);
+  const pfNo = useSelector((state) => state.pfNo.value);
 
   // Fetch projects from the backend
   const fetchProjects = async () => {
     try {
-      const formData = new FormData();
-      formData.append("user_id", 5318);
-      const response = await axios.get(getPhDThesisRoute, formData);
+      const response = await axios.get(getPhDThesisRoute, {
+        params: { pfNo },
+      });
       const projects = response.data;
       // Sort projects by submission date in descending order
       const sortedProjects = projects.sort(

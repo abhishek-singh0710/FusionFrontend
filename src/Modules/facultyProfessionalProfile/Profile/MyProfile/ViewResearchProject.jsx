@@ -10,14 +10,18 @@ import {
 } from "@mantine/core";
 import { MagnifyingGlass } from "@phosphor-icons/react";
 import { getResearchProjectsRoute } from "../../../../routes/facultyProfessionalProfileRoutes";
+import { useSelector } from "react-redux";
 
 export default function ViewResearchProject() {
   const [tableData, setTableData] = useState([]);
+  const pfNo = useSelector((state) => state.pfNo.value);
 
   // Function to fetch projects from the backend
   const fetchProjects = async () => {
     try {
-      const response = await axios.get(getResearchProjectsRoute);
+      const response = await axios.get(getResearchProjectsRoute, {
+        params: { pfNo },
+      });
       const projects = response.data;
       // Sort projects by submission date in descending order
       const sortedProjects = projects.sort(

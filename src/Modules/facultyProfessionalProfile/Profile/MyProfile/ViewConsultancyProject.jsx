@@ -11,15 +11,19 @@ import {
 } from "@mantine/core";
 import { Briefcase } from "@phosphor-icons/react";
 import { getConsultancyProjectRoute } from "../../../../routes/facultyProfessionalProfileRoutes";
+import { useSelector } from "react-redux";
 
 export default function ViewConsultancyProject() {
   const [tableData, setTableData] = useState([]);
   const [error, setError] = useState(null); // For error handling
+  const pfNo = useSelector((state) => state.pfNo.value);
 
   // Function to fetch Consultancy Projects from the backend
   const fetchProjects = async () => {
     try {
-      const response = await axios.get(getConsultancyProjectRoute);
+      const response = await axios.get(getConsultancyProjectRoute, {
+        params: { pfNo },
+      });
       const projects = response.data;
       // Sort projects by submission date in descending order
       const sortedProjects = projects.sort(

@@ -11,15 +11,19 @@ import {
 } from "@mantine/core";
 import { Books } from "@phosphor-icons/react";
 import { getPhDThesisRoute } from "../../../../routes/facultyProfessionalProfileRoutes";
+import { useSelector } from "react-redux";
 
 export default function ViewPhdThesis() {
   const [tableData, setTableData] = useState([]);
   const [error, setError] = useState(null); // For error handling
+  const pfNo = useSelector((state) => state.pfNo.value);
 
   // Fetch projects from the backend
   const fetchProjects = async () => {
     try {
-      const response = await axios.get(getPhDThesisRoute);
+      const response = await axios.get(getPhDThesisRoute, {
+        params: { pfNo },
+      });
       const projects = response.data;
       // Sort projects by submission date in descending order
       const sortedProjects = projects.sort(

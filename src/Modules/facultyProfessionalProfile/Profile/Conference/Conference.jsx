@@ -21,6 +21,7 @@ import {
   updateConsymRoute,
   deleteConsymRoute,
 } from "../../../../routes/facultyProfessionalProfileRoutes";
+import { useSelector } from "react-redux";
 
 export default function ConferenceSymposium() {
   const [inputs, setInputs] = useState({
@@ -36,6 +37,7 @@ export default function ConferenceSymposium() {
   const [error, setError] = useState(null); // For error handling
   const [isEdit, setEdit] = useState(false);
   const [Id, setId] = useState(0);
+  const pfNo = useSelector((state) => state.pfNo.value);
 
   function seeError() {
     console.log(error);
@@ -45,7 +47,9 @@ export default function ConferenceSymposium() {
   // Fetch projects from the backend
   const fetchProjects = async () => {
     try {
-      const response = await axios.get(getConsymRoute);
+      const response = await axios.get(getConsymRoute, {
+        params: { pfNo },
+      });
       const projects = response.data;
       // Sort projects by submission date in descending order
       const sortedProjects = projects.sort(
