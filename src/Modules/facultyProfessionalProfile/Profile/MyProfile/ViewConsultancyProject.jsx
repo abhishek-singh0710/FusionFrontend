@@ -8,14 +8,19 @@ import {
   Text,
   Table,
   ScrollArea,
+  Pagination,
 } from "@mantine/core";
 import { Briefcase } from "@phosphor-icons/react";
+import { useSelector } from "react-redux";
 import { getConsultancyProjectRoute } from "../../../../routes/facultyProfessionalProfileRoutes";
 import { useSelector } from "react-redux";
 
 export default function ViewConsultancyProject() {
   const [tableData, setTableData] = useState([]);
   const [error, setError] = useState(null); // For error handling
+  const [currentPage, setCurrentPage] = useState(1); // Current page number
+  const rowsPerPage = 10; // Number of rows per page
+
   const pfNo = useSelector((state) => state.pfNo.value);
 
   // Function to fetch Consultancy Projects from the backend
@@ -39,6 +44,11 @@ export default function ViewConsultancyProject() {
   useEffect(() => {
     fetchProjects();
   }, []);
+
+  // Calculate the current rows to display based on pagination
+  const indexOfLastRow = currentPage * rowsPerPage;
+  const indexOfFirstRow = indexOfLastRow - rowsPerPage;
+  const currentRows = tableData.slice(indexOfFirstRow, indexOfLastRow);
 
   return (
     <MantineProvider withGlobalStyles withNormalizeCSS>
@@ -107,14 +117,7 @@ export default function ViewConsultancyProject() {
             </Table>
           </ScrollArea> */}
 
-          <ScrollArea
-            style={{
-              padding: "20px",
-              borderRadius: "8px",
-              border: "1px solid #e0e0e0",
-              boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
-            }}
-          >
+          <ScrollArea>
             <Table
               striped
               highlightOnHover
@@ -148,8 +151,8 @@ export default function ViewConsultancyProject() {
                 </tr>
               </thead>
               <tbody>
-                {tableData.length > 0 ? (
-                  tableData.map((project) => (
+                {currentRows.length > 0 ? (
+                  currentRows.map((project) => (
                     <tr key={project.id} style={{ backgroundColor: "#fff" }}>
                       <td
                         style={{
@@ -227,6 +230,15 @@ export default function ViewConsultancyProject() {
               </tbody>
             </Table>
           </ScrollArea>
+
+          {/* Pagination Component */}
+          <Pagination
+            total={Math.ceil(tableData.length / rowsPerPage)} // Total pages
+            page={currentPage} // Current page
+            onChange={setCurrentPage} // Handle page change
+            mt="lg" // Add margin-top
+            position="center" // Center the pagination
+          />
         </Paper>
       </Container>
     </MantineProvider>

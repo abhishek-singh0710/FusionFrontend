@@ -8,14 +8,18 @@ import {
   Text,
   Table,
   ScrollArea,
+  Pagination,
 } from "@mantine/core";
 import { MapPin } from "@phosphor-icons/react";
-import { getIVisitsRoute } from "../../../../routes/facultyProfessionalProfileRoutes";
 import { useSelector } from "react-redux";
+import { getIVisitsRoute } from "../../../../routes/facultyProfessionalProfileRoutes";
 
 export default function ViewIndianVisits() {
   const [tableData, setTableData] = useState([]);
   const [error, setError] = useState(null); // For error handling
+  const [currentPage, setCurrentPage] = useState(1); // Current page number
+  const rowsPerPage = 10; // Number of rows per page
+
   const pfNo = useSelector((state) => state.pfNo.value);
 
   // Fetch projects from the backend
@@ -39,6 +43,11 @@ export default function ViewIndianVisits() {
   useEffect(() => {
     fetchProjects();
   }, []);
+
+  // Calculate the current rows to display based on pagination
+  const indexOfLastRow = currentPage * rowsPerPage;
+  const indexOfFirstRow = indexOfLastRow - rowsPerPage;
+  const currentRows = tableData.slice(indexOfFirstRow, indexOfLastRow);
 
   return (
     <MantineProvider withGlobalStyles withNormalizeCSS>
@@ -138,8 +147,8 @@ export default function ViewIndianVisits() {
                 </tr>
               </thead>
               <tbody>
-                {tableData.length > 0 ? (
-                  tableData.map((visit) => (
+                {currentRows.length > 0 ? (
+                  currentRows.map((visit) => (
                     <tr key={visit.id} style={{ backgroundColor: "#fff" }}>
                       <td
                         style={{
@@ -205,6 +214,15 @@ export default function ViewIndianVisits() {
               </tbody>
             </Table>
           </ScrollArea>
+
+          {/* Pagination Component */}
+          <Pagination
+            total={Math.ceil(tableData.length / rowsPerPage)} // Total pages
+            page={currentPage} // Current page
+            onChange={setCurrentPage} // Handle page change
+            mt="lg" // Add margin-top
+            position="center" // Center the pagination
+          />
         </Paper>
       </Container>
     </MantineProvider>

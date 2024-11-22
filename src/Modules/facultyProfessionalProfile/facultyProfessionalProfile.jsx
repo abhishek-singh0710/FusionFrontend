@@ -1,5 +1,4 @@
 // import { Text } from "@mantine/core";
-import CustomBreadcrumbs from "../../components/Breadcrumbs";
 // import ProfileButtons from "./components/ProfileButtons";
 import App from "./App";
 

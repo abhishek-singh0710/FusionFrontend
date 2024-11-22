@@ -17,23 +17,25 @@ import classes from "../../../Dashboard/Dashboard.module.css";
 // import Journal from "../Publications/Journal";
 // import ViewJournal from "./ViewJournal";
 import ViewBooks from "./ViewBooks";
+import ViewJournal from "./ViewJournal";
 
-function VisitsMaster({ breadCrumbItems, setBreadCrumbItems }) {
+// eslint-disable-next-line react/prop-types
+function VisitsMaster({ setBreadCrumbItems }) {
   const [activeTab, setActiveTab] = useState("0");
   const tabsListRef = useRef(null);
 
   // Tab items data
   const tabItems = [
-    { title: "ResearchProject", component: <ViewResearchProject /> },
-    { title: "ConsultancyProject", component: <ViewConsultancyProject /> },
+    { title: "Research Project", component: <ViewResearchProject /> },
+    { title: "Consultancy Project", component: <ViewConsultancyProject /> },
     { title: "Patent", component: <ViewPatent /> },
-    { title: "PGThesis", component: <ViewPGThesis /> },
-    { title: "PhDThesis", component: <ViewPhDThesis /> },
+    { title: "PG Thesis", component: <ViewPGThesis /> },
+    { title: "PhD Thesis", component: <ViewPhDThesis /> },
     { title: "Events", component: <ViewEvents /> },
-    { title: "ForeignVisits", component: <ViewForeignVisits /> },
-    { title: "IndianVisits", component: <ViewIndianVisits /> },
+    { title: "Foreign Visits", component: <ViewForeignVisits /> },
+    { title: "Indian Visits", component: <ViewIndianVisits /> },
     { title: "Con/Sym", component: <ViewConSym /> },
-    // { title: "Journal", component: <ViewJournal /> },
+    { title: "Journal", component: <ViewJournal /> },
     { title: "Books", component: <ViewBooks /> },
   ];
 
@@ -54,13 +56,13 @@ function VisitsMaster({ breadCrumbItems, setBreadCrumbItems }) {
     const currentTab = tabItems[parseInt(activeTab, 10)];
     // console.log(currentTab);
 
-    const breadcrumbs = [
-      { title: currentTab.title, href: "#" },
-    ].map((item, index) => (
-      <Text key={index} component="a" href={item.href} size="16px" fw={600}>
-        {item.title}
-      </Text>
-    ));
+    const breadcrumbs = [{ title: currentTab.title, href: "#" }].map(
+      (item, index) => (
+        <Text key={index} component="a" href={item.href} size="16px" fw={600}>
+          {item.title}
+        </Text>
+      ),
+    );
 
     setBreadCrumbItems((prevBreadCrumbs) => {
       const firstThreeEntries = prevBreadCrumbs.slice(0, 3);

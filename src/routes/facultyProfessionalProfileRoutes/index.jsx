@@ -11,11 +11,11 @@ export const updateConsymRoute = `${host}/eis/api/consym/edit`;
 export const deleteConsymRoute = `${host}/eis/api/emp_consymDelete/`;
 
 export const getEventRoute = `${host}/eis/api/event/pf_no/`;
-export const insertEventRoute = `${host}/eis/api/event/",`;
+export const insertEventRoute = `${host}/eis/api/event/`;
 export const updateEventRoute = `${host}/eis/api/event/edit`;
 export const deleteEventRoute = `${host}/eis/api/emp_event_organizedDelete/`;
 
-export const getBooksRoute = `${host}/eis/api/books/pf_no/`;
+export const getBooksRoute = `${host}/eis/api/fetch_book`;
 export const insertBooksRoute = `${host}/eis/api/book/`;
 export const updateBooksRoute = `${host}/eis/api/books/edit`;
 export const deleteBooksRoute = `${host}/eis/api/emp_published_booksDelete/`;
@@ -32,9 +32,10 @@ export const getIVisitsRoute = `${host}/eis/api/ivisits/pf_no/`;
 export const insertIVisitsRoute = `${host}/eis/api/ivisit/`;
 export const deleteIVisitsRoute = `${host}/eis/api/emp_visitsDelete/`;
 
-export const getJournalRoute = `${host}/eis/api/journal/pf_no/`;
+export const getJournalRoute = `${host}/eis/api/fetch_journal`;
 export const insertJournalRoute = `${host}/eis/api/journal/`;
 export const updateJournalRoute = `${host}/eis/api/journal/edit`;
+export const deleteResearchPaperRoute = `${host}/eis/api/emp_research_papersDelete/`;
 // export const deleteJournalRoute = `${host}/eis/api/journal/pf_no/`;
 
 export const getPatentsRoute = `${host}/eis/api/patents/pf_no/`;

@@ -1,234 +1,3 @@
-// import { useState } from "react";
-// // import { Save } from "lucide-react";
-// import axios from "axios";
-// import {
-//   MantineProvider,
-//   Container,
-//   Paper,
-//   Title,
-//   Grid,
-//   TextInput,
-//   Select,
-//   Button,
-//   Table,
-//   FileInput,
-//   Accordion,
-// } from "@mantine/core";
-// import { FloppyDisk, Trash, UploadSimple } from "@phosphor-icons/react";
-
-// export default function Conference() {
-//   const [inputs, setInputs] = useState({
-//     author: "",
-//     coAuthor: "",
-//     conferenceName: "",
-//     conferneceFile: "",
-//     year: "",
-//     title: "",
-//   });
-//   const [isLoading, setIsLoading] = useState(false);
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     try {
-//       setIsLoading(true);
-//       const res = await axios.post("/author_insert", inputs);
-//       console.log(res.data);
-//     } catch (error) {
-//       console.log(error);
-//     } finally {
-//       setIsLoading(false);
-//     }
-//   };
-
-//   const handleDelete = async (id) => {
-//     try {
-//       const res = await axios.post("/emp_consultancy_projectsDelete", id);
-//       console.log(res.data);
-//     } catch (error) {
-//       console.log(error);
-//     }
-//   };
-
-//   const years = Array.from({ length: 31 }, (_, i) => (2000 + i).toString());
-
-//   // let tableData = [];
-//   // useEffect(() => {
-//   //   const getTableData = async () => {
-//   //     try {
-//   //       const res = await axios.get("/get_data");
-//   //       tableData = res.data;
-//   //     } catch (error) {
-//   //       console.log(error);
-//   //     }
-//   //   };
-//   //   getTableData();
-//   // }, []);
-
-//   const tableData = Array.from({ length: 10 }, (_, index) => ({
-//     id: `${index + 1}`,
-//     title: `Title of Paper ${index + 1}`,
-//     author: `Author ${String.fromCharCode(65 + index)}`,
-//     conferenceName: `Details ${String.fromCharCode(65 + index)}`,
-//     conferenceFile: `Download Link`,
-//   }));
-
-//   return (
-//     <MantineProvider withGlobalStyles withNormalizeCSS>
-//       <Container size="2xl" mt="xl">
-//         <Paper
-//           shadow="xs"
-//           p="md"
-//           withBorder
-//           style={{ borderLeft: "8px solid #2185d0" }}
-//         >
-//           <Title order={2} mb="sm">
-//             Add a Conference
-//           </Title>
-//           <form onSubmit={handleSubmit}>
-//             <Grid>
-//               <Grid.Col span={6}>
-//                 <TextInput
-//                   label="Author"
-//                   placeholder="Author"
-//                   value={inputs.author}
-//                   onChange={(e) =>
-//                     setInputs({ ...inputs, author: e.target.value })
-//                   }
-//                   required
-//                 />
-//               </Grid.Col>
-//               <Grid.Col span={6}>
-//                 <TextInput
-//                   label="Co-author(s)"
-//                   placeholder="Co-author(s)"
-//                   value={inputs.coAuthor}
-//                   onChange={(e) =>
-//                     setInputs({ ...inputs, coAuthor: e.target.value })
-//                   }
-//                 />
-//               </Grid.Col>
-//               <Grid.Col span={6}>
-//                 <TextInput
-//                   label="Conference Name"
-//                   placeholder="Name of the Conference"
-//                   value={inputs.conferenceName}
-//                   onChange={(e) =>
-//                     setInputs({ ...inputs, conferenceName: e.target.value })
-//                   }
-//                   required
-//                 />
-//               </Grid.Col>
-//               <Grid.Col span={3}>
-//                 <FileInput
-//                   label="Conference File"
-//                   placeholder="Choose file"
-//                   icon={<UploadSimple size={14} />}
-//                   value={inputs.conferenceFile}
-//                   onChange={(file) =>
-//                     setInputs({ ...inputs, conferenceFile: file })
-//                   }
-//                 />
-//               </Grid.Col>
-//               <Grid.Col span={3}>
-//                 <Select
-//                   label="Year"
-//                   placeholder="Select year"
-//                   data={years}
-//                   value={inputs.year}
-//                   onChange={(value) =>
-//                     setInputs({ ...inputs, year: value || "" })
-//                   }
-//                   required
-//                 />
-//               </Grid.Col>
-//               <Grid.Col span={12}>
-//                 <TextInput
-//                   label="Title"
-//                   placeholder="Title"
-//                   value={inputs.title}
-//                   onChange={(e) =>
-//                     setInputs({ ...inputs, title: e.target.value })
-//                   }
-//                   required
-//                 />
-//               </Grid.Col>
-//               <Grid.Col span={12}>
-//                 <Accordion>
-//                   <Accordion.Item label="Optional Conference Details">
-//                     <Grid>{/* Add optional fields here */}</Grid>
-//                   </Accordion.Item>
-//                 </Accordion>
-//               </Grid.Col>
-//               <Grid.Col
-//                 span={12}
-//                 style={{ display: "flex", justifyContent: "flex-end" }}
-//               >
-//                 <Button
-//                   type="submit"
-//                   loading={isLoading}
-//                   leftIcon={<FloppyDisk size={16} />}
-//                 >
-//                   Save
-//                 </Button>
-//               </Grid.Col>
-//             </Grid>
-//           </form>
-//         </Paper>
-
-//         <Paper mt="xl" p="md" withBorder>
-//           <Title order={3} mb="sm">
-//             Report:
-//           </Title>
-//           <div style={{ overflowX: "auto", maxHeight: "400px" }}>
-//             {tableData.length === 0 ? (
-//               <p>No Data Found</p>
-//             ) : (
-//               <Table striped highlightOnHover>
-//                 <thead>
-//                   <tr>
-//                     <th>Sr.</th>
-//                     <th>Title of Paper</th>
-//                     <th>Authors</th>
-//                     <th>Details</th>
-//                     <th>Download</th>
-//                     <th>Action</th>
-//                   </tr>
-//                 </thead>
-//                 <tbody>
-//                   {tableData.map((data, index) => (
-//                     <tr key={index}>
-//                       <td>{data.id}</td>
-//                       <td>{data.title}</td>
-//                       <td>{data.author}</td>
-//                       <td>{data.details}</td>
-//                       <td>
-//                         <Button variant="outline" size="xs">
-//                           Download
-//                         </Button>
-//                       </td>
-//                       <td>
-//                         <Button
-//                           variant="filled"
-//                           color="red"
-//                           size="xs"
-//                           leftIcon={<Trash size={14} />}
-//                           onClick={() => handleDelete(data.id)}
-//                         >
-//                           Delete
-//                         </Button>
-//                       </td>
-//                     </tr>
-//                   ))}
-//                 </tbody>
-//               </Table>
-//             )}
-//           </div>
-//         </Paper>
-//       </Container>
-//     </MantineProvider>
-//   );
-// }
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
@@ -241,136 +10,145 @@ import {
   Select,
   Button,
   Table,
-  FileInput,
-  Modal,
+  ScrollArea,
+  ActionIcon,
+  Pagination,
 } from "@mantine/core";
-import { FloppyDisk, Pencil, Trash, UploadSimple } from "@phosphor-icons/react";
+import { FloppyDisk, PencilSimple, Trash } from "@phosphor-icons/react";
+import { useSelector } from "react-redux";
 import {
   getConferenceRoute,
   insertConferenceRoute,
   updateConferenceRoute,
-  deleteConferenceRoute,
+  deleteResearchPaperRoute,
 } from "../../../../routes/facultyProfessionalProfileRoutes";
 import { useSelector } from "react-redux";
 
 export default function Conference() {
   const [inputs, setInputs] = useState({
     author: "",
-    coAuthor: "",
+    coAuthors: "",
     conferenceName: "",
-    conferenceFile: null,
+    // conferenceFile: null,
     year: "",
     title: "",
-    venueHostInstitute: "",
-    dateOfSubmission: "",
-    dateOfAcceptance: "",
-    dateOfPublication: "",
-    pageNo: "",
-    status: "",
-    conferenceDates: "",
-    isbnNo: "",
+    // venueHostInstitute: "",
+    // dateOfSubmission: "",
+    // dateOfAcceptance: "",
+    // dateOfPublication: "",
+    // pageNo: "",
+    // status: "",
+    // conferenceDates: "",
+    // isbnNo: "",
   });
   const [isLoading, setIsLoading] = useState(false);
   const [tableData, setTableData] = useState([]);
   const [editingId, setEditingId] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  // const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1); // Current page number
+  const rowsPerPage = 10; // Number of rows per page
+
   const pfNo = useSelector((state) => state.pfNo.value);
 
-  const fetchConferences = async () => {
+  const fetchAchievements = async () => {
     try {
-      const response = await axios.get(getConferenceRoute, {
+      const res = await axios.get(getConferenceRoute, {
         params: { pfNo },
       });
-      setTableData(response.data);
+      console.log(res.data);
+      setTableData(res.data);
     } catch (error) {
-      console.error("Error fetching conferences:", error);
+      console.error(error);
     }
   };
 
+  // Fetch achievements on component mount
   useEffect(() => {
-    fetchConferences();
+    fetchAchievements();
   }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
     try {
+      setIsLoading(true);
+      const formData = new FormData();
+      formData.append("user_id", 5318); // Adjust this as needed
+      formData.append("author", inputs.author);
+      formData.append("title", inputs.title);
+      formData.append("co_authors", inputs.coAuthors);
+      formData.append("name", inputs.conferenceName);
+      formData.append("year", inputs.year);
       if (editingId) {
-        const formData = new FormData();
-        formData.append("author", inputs.author);
-        formData.append("co_authors", inputs.coAuthor);
-        formData.append("title", inputs.title);
-        formData.append("name", inputs.conferenceName);
-        formData.append("venue", inputs.venueHostInstitute);
-        formData.append("isbn_no", inputs.isbnNo);
-        formData.append("page_no", inputs.pageNo);
-        formData.append("year", inputs.year);
-        formData.append("status", inputs.status);
-        formData.append("doi", inputs.conferenceDates);
-        formData.append("doa", inputs.dateOfAcceptance);
-        formData.append("dop", inputs.dateOfPublication);
-        formData.append("dos", inputs.dateOfSubmission);
+        // Update the book
         formData.append("conferencepk", editingId);
         await axios.post(updateConferenceRoute, formData);
       } else {
-        const formData = new FormData();
-        formData.append("author", inputs.author);
-        formData.append("co_authors", inputs.coAuthor);
-        formData.append("title", inputs.title);
-        formData.append("name", inputs.conferenceName);
-        formData.append("venue", inputs.venueHostInstitute);
-        formData.append("isbn_no", inputs.isbnNo);
-        formData.append("page_no", inputs.pageNo);
-        formData.append("year", inputs.year);
-        formData.append("status", inputs.status);
-        formData.append("doi", inputs.conferenceDates);
-        formData.append("doa", inputs.dateOfAcceptance);
-        formData.append("dop", inputs.dateOfPublication);
-        formData.append("dos", inputs.dateOfSubmission);
+        // Create a new book
         await axios.post(insertConferenceRoute, formData);
       }
-      fetchConferences();
       setInputs({
         author: "",
-        coAuthor: "",
+        coAuthors: "",
         conferenceName: "",
-        conferenceFile: null,
+        // journalFile: null,
         year: "",
         title: "",
-        venueHostInstitute: "",
-        dateOfSubmission: "",
-        dateOfAcceptance: "",
-        dateOfPublication: "",
-        pageNo: "",
-        status: "",
-        conferenceDates: "",
-        isbnNo: "",
+        // volume: "",
+        // pageNo: "",
+        // paperRefNo: "",
+        // dateSubmission: "",
+        // datePublication: "",
+        // status: "",
+        // category: "",
+        // doi: "",
       });
-      setEditingId(null);
-      setIsModalOpen(false);
+      setEditingId(null); // Reset editing ID
+      // Refresh the list of achievements
+      fetchAchievements();
     } catch (error) {
-      console.error("Error submitting conference:", error);
+      console.error(error);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleEdit = (conference) => {
-    setInputs(conference);
-    setEditingId(conference.id);
-    setIsModalOpen(true);
-  };
-
-  const handleDelete = async (id) => {
-    try {
-      const formData = new FormData();
-      formData.append("pk", id);
-      await axios.post(deleteConferenceRoute, formData);
-      fetchConferences();
-    } catch (error) {
-      console.error("Error deleting conference:", error);
+  const handleDelete = async (achievement) => {
+    if (window.confirm("Are you sure you want to delete this Conference?")) {
+      try {
+        // console.log(achievement)
+        await axios.post(
+          deleteResearchPaperRoute,
+          new URLSearchParams({ pk: achievement }),
+        ); // Adjust the delete URL as needed
+        fetchAchievements();
+      } catch (error) {
+        console.error("Error deleting Conference:", error);
+      }
     }
   };
+
+  const handleEdit = (project) => {
+    setInputs({
+      author: project.authors,
+      coAuthors: project.co_authors,
+      conferenceName: project.name,
+      year: project.year,
+      title: project.title_paper,
+      // volume: project.year,
+      // pageNo: project.page_no,
+      // paperRefNo: project.ref,
+      // dateSubmission: project.dos,
+      // datePublication: project.dop,
+      // status: project.status,
+      // category: project.is_sci ? "SCI" : "SCIE",
+    });
+    setEditingId(project.id);
+  };
+
+  // Calculate the current rows to display based on pagination
+  const indexOfLastRow = currentPage * rowsPerPage;
+  const indexOfFirstRow = indexOfLastRow - rowsPerPage;
+  const currentRows = tableData.slice(indexOfFirstRow, indexOfLastRow);
 
   const years = Array.from({ length: 31 }, (_, i) => (2000 + i).toString());
 
@@ -399,6 +177,7 @@ export default function Conference() {
                   onChange={(e) =>
                     setInputs({ ...inputs, author: e.target.value })
                   }
+                  style={{ padding: "10px" }}
                   required
                 />
               </Grid.Col>
@@ -406,10 +185,11 @@ export default function Conference() {
                 <TextInput
                   label="Co-author(s)"
                   placeholder="Co-Author"
-                  value={inputs.coAuthor}
+                  value={inputs.coAuthors}
                   onChange={(e) =>
-                    setInputs({ ...inputs, coAuthor: e.target.value })
+                    setInputs({ ...inputs, coAuthors: e.target.value })
                   }
+                  style={{ padding: "10px" }}
                 />
               </Grid.Col>
               <Grid.Col span={6}>
@@ -420,10 +200,11 @@ export default function Conference() {
                   onChange={(e) =>
                     setInputs({ ...inputs, conferenceName: e.target.value })
                   }
+                  style={{ padding: "10px" }}
                   required
                 />
               </Grid.Col>
-              <Grid.Col span={3}>
+              {/* <Grid.Col span={3}>
                 <FileInput
                   label="Conference File"
                   placeholder="Choose File"
@@ -433,14 +214,15 @@ export default function Conference() {
                     setInputs({ ...inputs, conferenceFile: file })
                   }
                 />
-              </Grid.Col>
-              <Grid.Col span={3}>
+              </Grid.Col> */}
+              <Grid.Col span={6}>
                 <Select
                   label="Year"
                   placeholder="2021"
                   data={years}
                   value={inputs.year}
                   onChange={(value) => setInputs({ ...inputs, year: value })}
+                  style={{ padding: "10px" }}
                   required
                 />
               </Grid.Col>
@@ -452,13 +234,14 @@ export default function Conference() {
                   onChange={(e) =>
                     setInputs({ ...inputs, title: e.target.value })
                   }
+                  style={{ padding: "10px" }}
                   required
                 />
               </Grid.Col>
               <Grid.Col span={12}>
                 {/* <Accordion>
                   <Accordion.Item label="Optional Conference Details"> */}
-                <details>
+                {/* <details>
                   <summary style={{ cursor: "pointer", color: "#2185d0" }}>
                     Optional Journal Details
                   </summary>
@@ -474,6 +257,7 @@ export default function Conference() {
                             venueHostInstitute: e.target.value,
                           })
                         }
+                        style={{ padding: "10px" }}
                       />
                     </Grid.Col>
                     <Grid.Col span={6}>
@@ -487,6 +271,7 @@ export default function Conference() {
                             dateOfSubmission: e.target.value,
                           })
                         }
+                        style={{ padding: "10px" }}
                       />
                     </Grid.Col>
                     <Grid.Col span={6}>
@@ -500,6 +285,7 @@ export default function Conference() {
                             dateOfAcceptance: e.target.value,
                           })
                         }
+                        style={{ padding: "10px" }}
                       />
                     </Grid.Col>
                     <Grid.Col span={6}>
@@ -513,6 +299,7 @@ export default function Conference() {
                             dateOfPublication: e.target.value,
                           })
                         }
+                        style={{ padding: "10px" }}
                       />
                     </Grid.Col>
                     <Grid.Col span={6}>
@@ -523,6 +310,7 @@ export default function Conference() {
                         onChange={(e) =>
                           setInputs({ ...inputs, pageNo: e.target.value })
                         }
+                        style={{ padding: "10px" }}
                       />
                     </Grid.Col>
                     <Grid.Col span={6}>
@@ -534,6 +322,7 @@ export default function Conference() {
                         onChange={(value) =>
                           setInputs({ ...inputs, status: value })
                         }
+                        style={{ padding: "10px" }}
                       />
                     </Grid.Col>
                     <Grid.Col span={6}>
@@ -547,6 +336,7 @@ export default function Conference() {
                             conferenceDates: e.target.value,
                           })
                         }
+                        style={{ padding: "10px" }}
                       />
                     </Grid.Col>
                     <Grid.Col span={6}>
@@ -557,16 +347,18 @@ export default function Conference() {
                         onChange={(e) =>
                           setInputs({ ...inputs, isbnNo: e.target.value })
                         }
+                        style={{ padding: "10px" }}
                       />
                     </Grid.Col>
                   </Grid>
-                </details>
+                </details> */}
                 {/* </Accordion.Item>
                 </Accordion> */}
               </Grid.Col>
               <Grid.Col
                 span={12}
-                style={{ display: "flex", justifyContent: "flex-end" }}
+                p="md"
+                style={{ display: "flex", justifyContent: "flex-start" }}
               >
                 <Button
                   type="submit"
@@ -580,7 +372,7 @@ export default function Conference() {
           </form>
         </Paper>
 
-        <Paper mt="xl" p="md" withBorder>
+        {/* <Paper mt="xl" p="md" withBorder>
           <Title order={3} mb="sm">
             Report:
           </Title>
@@ -640,200 +432,148 @@ export default function Conference() {
               </Table>
             )}
           </div>
-        </Paper>
+        </Paper> */}
 
-        <Modal
-          opened={isModalOpen}
-          onClose={() => {
-            setIsModalOpen(false);
-            setEditingId(null);
-            setInputs({
-              author: "",
-              coAuthor: "",
-              conferenceName: "",
-              conferenceFile: null,
-              year: "",
-              title: "",
-              venueHostInstitute: "",
-              dateOfSubmission: "",
-              dateOfAcceptance: "",
-              dateOfPublication: "",
-              pageNo: "",
-              status: "",
-              conferenceDates: "",
-              isbnNo: "",
-            });
-          }}
-          title="Edit Conference"
-        >
-          <form onSubmit={handleSubmit}>
-            <Grid>
-              <Grid.Col span={6}>
-                <TextInput
-                  label="Author"
-                  placeholder="Author"
-                  value={inputs.author}
-                  onChange={(e) =>
-                    setInputs({ ...inputs, author: e.target.value })
-                  }
-                  required
-                />
-              </Grid.Col>
-              <Grid.Col span={6}>
-                <TextInput
-                  label="Co-author(s)"
-                  placeholder="Co-Author"
-                  value={inputs.coAuthor}
-                  onChange={(e) =>
-                    setInputs({ ...inputs, coAuthor: e.target.value })
-                  }
-                />
-              </Grid.Col>
-              <Grid.Col span={12}>
-                <TextInput
-                  label="Conference Name"
-                  placeholder="Name of the Conference"
-                  value={inputs.conferenceName}
-                  onChange={(e) =>
-                    setInputs({ ...inputs, conferenceName: e.target.value })
-                  }
-                  required
-                />
-              </Grid.Col>
-              <Grid.Col span={6}>
-                <FileInput
-                  label="Conference File"
-                  placeholder="Choose File"
-                  icon={<UploadSimple size={14} />}
-                  value={inputs.conferenceFile}
-                  onChange={(file) =>
-                    setInputs({ ...inputs, conferenceFile: file })
-                  }
-                />
-              </Grid.Col>
-              <Grid.Col span={6}>
-                <Select
-                  label="Year"
-                  placeholder="2021"
-                  data={years}
-                  value={inputs.year}
-                  onChange={(value) => setInputs({ ...inputs, year: value })}
-                  required
-                />
-              </Grid.Col>
-              <Grid.Col span={12}>
-                <TextInput
-                  label="Title"
-                  placeholder="Title"
-                  value={inputs.title}
-                  onChange={(e) =>
-                    setInputs({ ...inputs, title: e.target.value })
-                  }
-                  required
-                />
-              </Grid.Col>
-              <Grid.Col span={6}>
-                <TextInput
-                  label="Venue/Host Institute"
-                  placeholder="Venue/Host Institute"
-                  value={inputs.venueHostInstitute}
-                  onChange={(e) =>
-                    setInputs({
-                      ...inputs,
-                      venueHostInstitute: e.target.value,
-                    })
-                  }
-                />
-              </Grid.Col>
-              <Grid.Col span={6}>
-                <TextInput
-                  label="Date of Submission(DOS)"
-                  placeholder="Date/Time"
-                  value={inputs.dateOfSubmission}
-                  onChange={(e) =>
-                    setInputs({
-                      ...inputs,
-                      dateOfSubmission: e.target.value,
-                    })
-                  }
-                />
-              </Grid.Col>
-              <Grid.Col span={6}>
-                <TextInput
-                  label="Date of Acceptance(DOA)"
-                  placeholder="Date/Time"
-                  value={inputs.dateOfAcceptance}
-                  onChange={(e) =>
-                    setInputs({
-                      ...inputs,
-                      dateOfAcceptance: e.target.value,
-                    })
-                  }
-                />
-              </Grid.Col>
-              <Grid.Col span={6}>
-                <TextInput
-                  label="Date of  Publication(DOP)"
-                  placeholder="Date/Time"
-                  value={inputs.dateOfPublication}
-                  onChange={(e) =>
-                    setInputs({
-                      ...inputs,
-                      dateOfPublication: e.target.value,
-                    })
-                  }
-                />
-              </Grid.Col>
-              <Grid.Col span={6}>
-                <TextInput
-                  label="Page No."
-                  placeholder="Date of Publication"
-                  value={inputs.pageNo}
-                  onChange={(e) =>
-                    setInputs({ ...inputs, pageNo: e.target.value })
-                  }
-                />
-              </Grid.Col>
-              <Grid.Col span={6}>
-                <Select
-                  label="Status"
-                  placeholder="Status"
-                  data={["Published", "Accepted", "Submitted"]}
-                  value={inputs.status}
-                  onChange={(value) => setInputs({ ...inputs, status: value })}
-                />
-              </Grid.Col>
-              <Grid.Col span={6}>
-                <TextInput
-                  label="Conference Date(s)"
-                  placeholder="SCI/SCIE"
-                  value={inputs.conferenceDates}
-                  onChange={(e) =>
-                    setInputs({
-                      ...inputs,
-                      conferenceDates: e.target.value,
-                    })
-                  }
-                />
-              </Grid.Col>
-              <Grid.Col span={6}>
-                <TextInput
-                  label="ISBN No"
-                  placeholder="Date of Issuance"
-                  value={inputs.isbnNo}
-                  onChange={(e) =>
-                    setInputs({ ...inputs, isbnNo: e.target.value })
-                  }
-                />
-              </Grid.Col>
-              <Grid.Col span={12}>
-                <Button type="submit" loading={isLoading}>
-                  Update
-                </Button>
-              </Grid.Col>
-            </Grid>
-          </form>
-        </Modal>
+        <Paper mt="xl" p="md" withBorder>
+          <Title order={3} mb="sm" style={{ color: "#2185d0" }}>
+            Report:
+          </Title>
+          <ScrollArea>
+            <Table
+              striped
+              highlightOnHover
+              withBorder
+              style={{ minWidth: "100%", borderCollapse: "collapse" }}
+            >
+              <thead>
+                <tr style={{ backgroundColor: "#f8f9fa" }}>
+                  {[
+                    "Title Of Conference",
+                    "Authors",
+                    "Co-Authors",
+                    "Conference Name",
+                    "Year",
+                    "Actions",
+                  ].map((header, index) => (
+                    <th
+                      key={index}
+                      style={{
+                        textAlign: "center",
+                        padding: "12px",
+                        color: "#495057",
+                        fontWeight: "600",
+                        border: "1px solid #dee2e6",
+                        backgroundColor: "#f1f3f5",
+                      }}
+                    >
+                      {header}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {currentRows.length > 0 ? (
+                  currentRows.map((project) => (
+                    <tr key={project.id} style={{ backgroundColor: "#fff" }}>
+                      <td
+                        style={{
+                          padding: "12px",
+                          textAlign: "center",
+                          border: "1px solid #dee2e6",
+                        }}
+                      >
+                        {project.title_paper}
+                      </td>
+                      <td
+                        style={{
+                          padding: "12px",
+                          textAlign: "center",
+                          border: "1px solid #dee2e6",
+                        }}
+                      >
+                        {project.authors}
+                      </td>
+                      <td
+                        style={{
+                          padding: "12px",
+                          textAlign: "center",
+                          border: "1px solid #dee2e6",
+                        }}
+                      >
+                        {project.co_authors}
+                      </td>
+                      <td
+                        style={{
+                          padding: "12px",
+                          textAlign: "center",
+                          border: "1px solid #dee2e6",
+                        }}
+                      >
+                        {project.name}
+                      </td>
+                      <td
+                        style={{
+                          padding: "12px",
+                          textAlign: "center",
+                          border: "1px solid #dee2e6",
+                        }}
+                      >
+                        {project.year}
+                      </td>
+                      <td
+                        style={{
+                          padding: "12px",
+                          textAlign: "center",
+                          border: "1px solid #dee2e6",
+                          whiteSpace: "nowrap", // Prevent text wrapping
+                          width: "100px", // Ensure sufficient space for icons
+                        }}
+                      >
+                        <ActionIcon
+                          color="blue"
+                          onClick={() => handleEdit(project)}
+                          variant="light"
+                          style={{ marginRight: "8px" }}
+                        >
+                          <PencilSimple size={16} />
+                        </ActionIcon>
+                        <ActionIcon
+                          color="red"
+                          onClick={() => handleDelete(project.id)}
+                          variant="light"
+                        >
+                          <Trash size={16} />
+                        </ActionIcon>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td
+                      colSpan={5}
+                      style={{
+                        textAlign: "center",
+                        padding: "12px",
+                        border: "1px solid #dee2e6",
+                      }}
+                    >
+                      No Conference found.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </Table>
+          </ScrollArea>
+
+          {/* Pagination Component */}
+          <Pagination
+            total={Math.ceil(tableData.length / rowsPerPage)} // Total pages
+            page={currentPage} // Current page
+            onChange={setCurrentPage} // Handle page change
+            mt="lg" // Add margin-top
+            position="center" // Center the pagination
+          />
+        </Paper>
       </Container>
     </MantineProvider>
   );
