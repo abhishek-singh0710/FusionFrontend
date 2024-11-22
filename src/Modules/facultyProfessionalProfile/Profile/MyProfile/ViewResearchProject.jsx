@@ -7,17 +7,25 @@ import {
   Title,
   Table,
   ScrollArea,
+  Pagination,
 } from "@mantine/core";
 import { MagnifyingGlass } from "@phosphor-icons/react";
+import { useSelector } from "react-redux";
 import { getResearchProjectsRoute } from "../../../../routes/facultyProfessionalProfileRoutes";
 
 export default function ViewResearchProject() {
   const [tableData, setTableData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1); // Current page number
+  const rowsPerPage = 10; // Number of rows per page
+
+  const pfNo = useSelector((state) => state.pfNo.value);
 
   // Function to fetch projects from the backend
   const fetchProjects = async () => {
     try {
-      const response = await axios.get(getResearchProjectsRoute);
+      const response = await axios.get(getResearchProjectsRoute, {
+        params: { pfNo },
+      });
       const projects = response.data;
       // Sort projects by submission date in descending order
       const sortedProjects = projects.sort(
@@ -33,6 +41,11 @@ export default function ViewResearchProject() {
   useEffect(() => {
     fetchProjects();
   }, []);
+
+  // Calculate the current rows to display based on pagination
+  const indexOfLastRow = currentPage * rowsPerPage;
+  const indexOfFirstRow = indexOfLastRow - rowsPerPage;
+  const currentRows = tableData.slice(indexOfFirstRow, indexOfLastRow);
 
   return (
     <MantineProvider withGlobalStyles withNormalizeCSS>
@@ -138,14 +151,7 @@ export default function ViewResearchProject() {
             </Table>
           </ScrollArea> */}
 
-          <ScrollArea
-            style={{
-              padding: "20px",
-              borderRadius: "8px",
-              border: "1px solid #e0e0e0",
-              boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
-            }}
-          >
+          <ScrollArea>
             <Table
               striped
               highlightOnHover
@@ -181,8 +187,8 @@ export default function ViewResearchProject() {
                 </tr>
               </thead>
               <tbody>
-                {tableData.length > 0 ? (
-                  tableData.map((project, index) => (
+                {currentRows.length > 0 ? (
+                  currentRows.map((project, index) => (
                     <tr key={index} style={{ backgroundColor: "#fff" }}>
                       <td
                         style={{
@@ -287,6 +293,15 @@ export default function ViewResearchProject() {
               </tbody>
             </Table>
           </ScrollArea>
+
+          {/* Pagination Component */}
+          <Pagination
+            total={Math.ceil(tableData.length / rowsPerPage)} // Total pages
+            page={currentPage} // Current page
+            onChange={setCurrentPage} // Handle page change
+            mt="lg" // Add margin-top
+            position="center" // Center the pagination
+          />
         </Paper>
       </Container>
     </MantineProvider>

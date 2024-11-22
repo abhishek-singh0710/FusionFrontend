@@ -12,9 +12,10 @@ import {
   Button,
   Table,
   ActionIcon,
+  Pagination,
 } from "@mantine/core";
-import { DateInput } from "@mantine/dates";
 import { FloppyDisk, PencilSimple, Trash } from "@phosphor-icons/react";
+import { useSelector } from "react-redux";
 import {
   getTalkRoute,
   insertTalkRoute,
@@ -32,10 +33,16 @@ export default function ExpertLecturesForm() {
   const [tableData, setTableData] = useState([]);
   const [isEdit, setEdit] = useState(false);
   const [Id, setId] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1); // Current page number
+  const rowsPerPage = 10; // Number of rows per page
+
+  const pfNo = useSelector((state) => state.pfNo.value);
 
   const fetchProjects = async () => {
     try {
-      const response = await axios.get(getTalkRoute);
+      const response = await axios.get(getTalkRoute, {
+        params: { pfNo },
+      });
       const projects = response.data;
       setTableData(projects);
     } catch (error) {
@@ -89,7 +96,7 @@ export default function ExpertLecturesForm() {
     setInputs({
       presentationType: lecture.l_type,
       place: lecture.place,
-      date: lecture.l_date ? new Date(lecture.l_date) : null,
+      date: lecture.l_date,
       title: lecture.title,
     });
 
@@ -107,6 +114,19 @@ export default function ExpertLecturesForm() {
       }
     }
   };
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setInputs((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  // Calculate the current rows to display based on pagination
+  const indexOfLastRow = currentPage * rowsPerPage;
+  const indexOfFirstRow = indexOfLastRow - rowsPerPage;
+  const currentRows = tableData.slice(indexOfFirstRow, indexOfLastRow);
 
   return (
     <MantineProvider withGlobalStyles withNormalizeCSS>
@@ -139,6 +159,7 @@ export default function ExpertLecturesForm() {
                   onChange={(value) =>
                     setInputs({ ...inputs, presentationType: value || "" })
                   }
+                  style={{ padding: "10px" }}
                   required
                 />
               </Grid.Col>
@@ -150,10 +171,12 @@ export default function ExpertLecturesForm() {
                   onChange={(e) =>
                     setInputs({ ...inputs, place: e.target.value })
                   }
+                  style={{ padding: "10px" }}
                   required
                 />
               </Grid.Col>
-              <Grid.Col span={4}>
+
+              {/* <Grid.Col span={4}>
                 <DateInput
                   label="Date"
                   placeholder="Select date"
@@ -161,7 +184,20 @@ export default function ExpertLecturesForm() {
                   onChange={(value) => setInputs({ ...inputs, date: value })}
                   required
                 />
+              </Grid.Col> */}
+
+              <Grid.Col span={4}>
+                <TextInput
+                  label="Date"
+                  name="date"
+                  value={inputs.date}
+                  onChange={handleInputChange}
+                  placeholder="Select Date"
+                  type="date"
+                  style={{ padding: "10px" }} // Consistent padding
+                />
               </Grid.Col>
+
               <Grid.Col span={12}>
                 <TextInput
                   label="Title"
@@ -170,12 +206,14 @@ export default function ExpertLecturesForm() {
                   onChange={(e) =>
                     setInputs({ ...inputs, title: e.target.value })
                   }
+                  style={{ padding: "10px" }}
                   required
                 />
               </Grid.Col>
               <Grid.Col
                 span={12}
-                style={{ display: "flex", justifyContent: "flex-end" }}
+                p="md"
+                style={{ display: "flex", justifyContent: "flex-start" }}
               >
                 <Button
                   type="submit"
@@ -285,7 +323,7 @@ export default function ExpertLecturesForm() {
               </tr>
             </thead>
             <tbody>
-              {tableData.length === 0 ? (
+              {currentRows.length === 0 ? (
                 <tr>
                   <td
                     colSpan={6}
@@ -299,7 +337,7 @@ export default function ExpertLecturesForm() {
                   </td>
                 </tr>
               ) : (
-                tableData.map((lecture, index) => (
+                currentRows.map((lecture, index) => (
                   <tr key={lecture.id} style={{ backgroundColor: "#fff" }}>
                     <td
                       style={{
@@ -351,6 +389,8 @@ export default function ExpertLecturesForm() {
                         padding: "12px",
                         textAlign: "center",
                         border: "1px solid #dee2e6",
+                        whiteSpace: "nowrap", // Prevent text wrapping
+                        width: "100px", // Ensure sufficient space for icons
                       }}
                     >
                       <ActionIcon
@@ -374,6 +414,15 @@ export default function ExpertLecturesForm() {
               )}
             </tbody>
           </Table>
+
+          {/* Pagination Component */}
+          <Pagination
+            total={Math.ceil(tableData.length / rowsPerPage)} // Total pages
+            page={currentPage} // Current page
+            onChange={setCurrentPage} // Handle page change
+            mt="lg" // Add margin-top
+            position="center" // Center the pagination
+          />
         </Paper>
       </Container>
     </MantineProvider>

@@ -18,9 +18,10 @@ import {
   Button,
   Table,
   ActionIcon,
+  Pagination,
 } from "@mantine/core";
-import { DatePickerInput } from "@mantine/dates";
 import { FloppyDisk, PencilSimple, Trash } from "@phosphor-icons/react";
+import { useSelector } from "react-redux";
 import {
   getResearchProjectsRoute,
   insertResearchProjectsRoute,
@@ -44,11 +45,17 @@ export default function ResearchProjects() {
   const [tableData, setTableData] = useState([]);
   const [isEdit, setEdit] = useState(false);
   const [Id, setId] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1); // Current page number
+  const rowsPerPage = 10; // Number of rows per page
+
+  const pfNo = useSelector((state) => state.pfNo.value);
 
   // Function to fetch projects from the backend
   const fetchProjects = async () => {
     try {
-      const response = await axios.get(getResearchProjectsRoute);
+      const response = await axios.get(getResearchProjectsRoute, {
+        params: { pfNo },
+      });
       const projects = response.data;
       console.log(projects);
       // Sort projects by submission date in descending order
@@ -138,13 +145,9 @@ export default function ResearchProjects() {
       coPi: project.co_pi,
       fundingAgency: project.funding_agency,
       status: project.status,
-      submissionDate: project.date_submission
-        ? new Date(project.date_submission)
-        : null,
-      startDate: project.start_date ? new Date(project.start_date) : null,
-      expectedFinishDate: project.finish_date
-        ? new Date(project.finish_date)
-        : null,
+      submissionDate: project.date_submission,
+      startDate: project.start_date,
+      expectedFinishDate: project.finish_date,
       financialOutlay: project.financial_outlay,
       title: project.title,
     });
@@ -167,6 +170,19 @@ export default function ResearchProjects() {
       }
     }
   };
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setInputs((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  // Calculate the current rows to display based on pagination
+  const indexOfLastRow = currentPage * rowsPerPage;
+  const indexOfFirstRow = indexOfLastRow - rowsPerPage;
+  const currentRows = tableData.slice(indexOfFirstRow, indexOfLastRow);
 
   return (
     <MantineProvider withGlobalStyles withNormalizeCSS>
@@ -234,19 +250,34 @@ export default function ResearchProjects() {
                   style={{ padding: "10px" }} // Consistent padding
                 />
               </Grid.Col>
-              <Grid.Col span={3}>
-                <DatePickerInput
+              {/* <Grid.Col span={3}>
+                <TextInput
                   label="Submission Date"
                   placeholder="Select date"
+                  name="submissionDate"
                   value={inputs.submissionDate}
                   onChange={(date) =>
                     setInputs({ ...inputs, submissionDate: date })
                   }
-                  valueFormat="YYYY-MM-DD"
+                  type="date"
+                  // valueFormat="YYYY-MM-DD"
+                  style={{ padding: "10px" }} // Consistent padding
+                />
+              </Grid.Col> */}
+
+              <Grid.Col span={3}>
+                <TextInput
+                  label="Submission Date"
+                  name="submissionDate"
+                  value={inputs.submissionDate}
+                  onChange={handleInputChange}
+                  placeholder="Select Date"
+                  type="date"
                   style={{ padding: "10px" }} // Consistent padding
                 />
               </Grid.Col>
-              <Grid.Col span={3}>
+
+              {/* <Grid.Col span={3}>
                 <DatePickerInput
                   label="Start Date"
                   placeholder="Select date"
@@ -255,8 +286,21 @@ export default function ResearchProjects() {
                   valueFormat="YYYY-MM-DD"
                   style={{ padding: "10px" }} // Consistent padding
                 />
-              </Grid.Col>
+              </Grid.Col> */}
+
               <Grid.Col span={3}>
+                <TextInput
+                  label="Start Date"
+                  name="startDate"
+                  value={inputs.startDate}
+                  onChange={handleInputChange}
+                  placeholder="Select Date"
+                  type="date"
+                  style={{ padding: "10px" }} // Consistent padding
+                />
+              </Grid.Col>
+
+              {/* <Grid.Col span={3}>
                 <DatePickerInput
                   label="Expected Finish Date"
                   placeholder="Select date"
@@ -267,7 +311,20 @@ export default function ResearchProjects() {
                   valueFormat="YYYY-MM-DD"
                   style={{ padding: "10px" }} // Consistent padding
                 />
+              </Grid.Col> */}
+
+              <Grid.Col span={3}>
+                <TextInput
+                  label="Expected Finish Date"
+                  name="expectedFinishDate"
+                  value={inputs.expectedFinishDate}
+                  onChange={handleInputChange}
+                  placeholder="Select Date"
+                  type="date"
+                  style={{ padding: "10px" }} // Consistent padding
+                />
               </Grid.Col>
+
               <Grid.Col span={3}>
                 <TextInput
                   required
@@ -295,7 +352,8 @@ export default function ResearchProjects() {
 
               <Grid.Col
                 span={12}
-                style={{ display: "flex", justifyContent: "flex-end" }}
+                p="md"
+                style={{ display: "flex", justifyContent: "flex-start" }}
               >
                 <Button
                   type="submit"
@@ -362,8 +420,8 @@ export default function ResearchProjects() {
               </tr>
             </thead>
             <tbody>
-              {tableData.length > 0 ? (
-                tableData.map((project, index) => (
+              {currentRows.length > 0 ? (
+                currentRows.map((project, index) => (
                   <tr key={index} style={{ backgroundColor: "#fff" }}>
                     <td
                       style={{
@@ -453,6 +511,8 @@ export default function ResearchProjects() {
                         padding: "12px",
                         textAlign: "center",
                         border: "1px solid #dee2e6",
+                        whiteSpace: "nowrap", // Prevent text wrapping
+                        width: "100px", // Ensure sufficient space for icons
                       }}
                     >
                       <ActionIcon
@@ -490,6 +550,15 @@ export default function ResearchProjects() {
               )}
             </tbody>
           </Table>
+
+          {/* Pagination Component */}
+          <Pagination
+            total={Math.ceil(tableData.length / rowsPerPage)} // Total pages
+            page={currentPage} // Current page
+            onChange={setCurrentPage} // Handle page change
+            mt="lg" // Add margin-top
+            position="center" // Center the pagination
+          />
         </Paper>
       </Container>
     </MantineProvider>

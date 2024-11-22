@@ -6,6 +6,7 @@ import classes from "../../../Dashboard/Dashboard.module.css"; // Ensure the CSS
 import PgThesis from "./PgThesis";
 import PhdThesis from "./PhdThesis";
 
+// eslint-disable-next-line react/prop-types, no-unused-vars
 function ThesisSupervisionMaster({ breadCrumbItems, setBreadCrumbItems }) {
   const [activeTab, setActiveTab] = useState("0");
   const tabsListRef = useRef(null);
@@ -33,13 +34,13 @@ function ThesisSupervisionMaster({ breadCrumbItems, setBreadCrumbItems }) {
     const currentTab = tabItems[parseInt(activeTab, 10)];
     // console.log(currentTab);
 
-    const breadcrumbs = [
-      { title: currentTab.title, href: "#" },
-    ].map((item, index) => (
-      <Text key={index} component="a" href={item.href} size="16px" fw={600}>
-        {item.title}
-      </Text>
-    ));
+    const breadcrumbs = [{ title: currentTab.title, href: "#" }].map(
+      (item, index) => (
+        <Text key={index} component="a" href={item.href} size="16px" fw={600}>
+          {item.title}
+        </Text>
+      ),
+    );
 
     setBreadCrumbItems((prevBreadCrumbs) => {
       const firstThreeEntries = prevBreadCrumbs.slice(0, 3);

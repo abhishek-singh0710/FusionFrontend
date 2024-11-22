@@ -19,6 +19,7 @@ import {
   GithubLogo,
 } from "@phosphor-icons/react";
 import axios from "axios";
+import { useSelector } from "react-redux";
 import {
   getPersonalInfoRoute,
   updatePersonalInfoRoute,
@@ -66,10 +67,14 @@ export default function AboutMePage() {
   const [isLoading, setIsLoading] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
 
+  const pfNo = useSelector((state) => state.pfNo.value);
+
   // Fetch user data from the backend
   const fetchUserData = async () => {
     try {
-      const response = await axios.get(getPersonalInfoRoute);
+      const response = await axios.get(getPersonalInfoRoute, {
+        params: { pfNo },
+      });
       // console.log(response);
       if (response.data) {
         setInputs({
@@ -170,8 +175,12 @@ export default function AboutMePage() {
                 compact
                 onClick={() => setIsEdit(!isEdit)}
               >
-                {isEdit ? <FloppyDisk size={16} /> : <PencilSimple size={16} />}
-                {isEdit ? " Save" : " Edit"}
+                {isEdit ? (
+                  <FloppyDisk size={16} style={{ marginRight: "10px" }} />
+                ) : (
+                  <PencilSimple size={16} style={{ marginRight: "10px" }} />
+                )}
+                {isEdit ? "Disable Edit" : "Enable Edit"}
               </Button>
             </Grid.Col>
           </Grid>

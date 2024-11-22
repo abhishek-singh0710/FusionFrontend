@@ -15,8 +15,10 @@ import {
   Button,
   Table,
   ActionIcon,
+  Pagination,
 } from "@mantine/core";
 import { FloppyDisk, PencilSimple, Trash } from "@phosphor-icons/react";
+import { useSelector } from "react-redux";
 import {
   getPatentsRoute,
   insertPatentsRoute,
@@ -37,10 +39,16 @@ export default function Patents() {
   const [, setError] = useState(null); // For error handling
   const [isEdit, setEdit] = useState(false);
   const [Id, setId] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1); // Current page number
+  const rowsPerPage = 10; // Number of rows per page
+
+  const pfNo = useSelector((state) => state.pfNo.value);
 
   const fetchProjects = async () => {
     try {
-      const response = await axios.get(getPatentsRoute);
+      const response = await axios.get(getPatentsRoute, {
+        params: { pfNo },
+      });
       const projects = response.data;
       // Sort projects by submission date in descending order
       const sortedProjects = projects.sort(
@@ -130,6 +138,11 @@ export default function Patents() {
       }
     }
   };
+
+  // Calculate the current rows to display based on pagination
+  const indexOfLastRow = currentPage * rowsPerPage;
+  const indexOfFirstRow = indexOfLastRow - rowsPerPage;
+  const currentRows = tableData.slice(indexOfFirstRow, indexOfLastRow);
 
   return (
     <MantineProvider withGlobalStyles withNormalizeCSS>
@@ -232,7 +245,8 @@ export default function Patents() {
               </Grid.Col>
               <Grid.Col
                 span={12}
-                style={{ display: "flex", justifyContent: "flex-end" }}
+                p="md"
+                style={{ display: "flex", justifyContent: "flex-start" }}
               >
                 <Button
                   type="submit"
@@ -297,8 +311,8 @@ export default function Patents() {
               </tr>
             </thead>
             <tbody>
-              {tableData.length > 0 ? (
-                tableData.map((project) => (
+              {currentRows.length > 0 ? (
+                currentRows.map((project) => (
                   <tr key={project.id} style={{ backgroundColor: "#fff" }}>
                     <td
                       style={{
@@ -359,6 +373,8 @@ export default function Patents() {
                         padding: "12px",
                         textAlign: "center",
                         border: "1px solid #dee2e6",
+                        whiteSpace: "nowrap", // Prevent text wrapping
+                        width: "100px", // Ensure sufficient space for icons
                       }}
                     >
                       <ActionIcon
@@ -395,6 +411,15 @@ export default function Patents() {
               )}
             </tbody>
           </Table>
+
+          {/* Pagination Component */}
+          <Pagination
+            total={Math.ceil(tableData.length / rowsPerPage)} // Total pages
+            page={currentPage} // Current page
+            onChange={setCurrentPage} // Handle page change
+            mt="lg" // Add margin-top
+            position="center" // Center the pagination
+          />
         </Paper>
       </Container>
     </MantineProvider>

@@ -3,14 +3,20 @@ import { Button, Flex, Tabs, Text } from "@mantine/core";
 import { CaretCircleLeft, CaretCircleRight } from "@phosphor-icons/react";
 // import CustomBreadcrumbs from "../../../../components/Breadcrumbs";
 // import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
 import classes from "../../../Dashboard/Dashboard.module.css"; // Ensure the CSS module is properly set
-// import Conference from "./Conference";
+import Conference from "./Conference";
 import Books from "./Books";
 import Journal from "./Journal";
+import { setPfNo } from "../../../../redux/pfNoSlice";
+import { getPFRoute } from "../../../../routes/facultyProfessionalProfileRoutes";
 
-function PublicationMaster({ breadCrumbItems, setBreadCrumbItems }) {
+// eslint-disable-next-line react/prop-types
+function PublicationMaster({ setBreadCrumbItems }) {
   const [activeTab, setActiveTab] = useState("0");
   const tabsListRef = useRef(null);
+  const dispatch = useDispatch();
 
   // const pfNo = useSelector((state) => state.pfNo.value);
 
@@ -20,7 +26,7 @@ function PublicationMaster({ breadCrumbItems, setBreadCrumbItems }) {
   const tabItems = [
     { title: "Journal", component: <Journal /> },
     { title: "Books", component: <Books /> },
-    // { title: "Conference", component: <Conference /> },
+    { title: "Conference", component: <Conference /> },
     // { title: "Thesis Supervision", component: <ThesisSupervisionMaster /> },
   ];
 
@@ -37,17 +43,32 @@ function PublicationMaster({ breadCrumbItems, setBreadCrumbItems }) {
     });
   };
 
+  const username = useSelector((state) => state.user.roll_no);
+  console.log(username);
+
+  const fetchPfNo = async () => {
+    const formData = new FormData();
+    formData.append("username", username);
+    const res = await axios.post(getPFRoute, formData);
+    console.log("res", res.data.pf);
+    dispatch(setPfNo(res.data.pf));
+  };
+
+  useEffect(() => {
+    fetchPfNo();
+  }, []);
+
   useEffect(() => {
     const currentTab = tabItems[parseInt(activeTab, 10)];
     // console.log(currentTab);
 
-    const breadcrumbs = [
-      { title: currentTab.title, href: "#" },
-    ].map((item, index) => (
-      <Text key={index} component="a" href={item.href} size="16px" fw={600}>
-        {item.title}
-      </Text>
-    ));
+    const breadcrumbs = [{ title: currentTab.title, href: "#" }].map(
+      (item, index) => (
+        <Text key={index} component="a" href={item.href} size="16px" fw={600}>
+          {item.title}
+        </Text>
+      ),
+    );
 
     setBreadCrumbItems((prevBreadCrumbs) => {
       const firstThreeEntries = prevBreadCrumbs.slice(0, 3);

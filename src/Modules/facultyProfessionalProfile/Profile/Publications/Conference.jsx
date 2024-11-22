@@ -1,234 +1,3 @@
-// import { useState } from "react";
-// // import { Save } from "lucide-react";
-// import axios from "axios";
-// import {
-//   MantineProvider,
-//   Container,
-//   Paper,
-//   Title,
-//   Grid,
-//   TextInput,
-//   Select,
-//   Button,
-//   Table,
-//   FileInput,
-//   Accordion,
-// } from "@mantine/core";
-// import { FloppyDisk, Trash, UploadSimple } from "@phosphor-icons/react";
-
-// export default function Conference() {
-//   const [inputs, setInputs] = useState({
-//     author: "",
-//     coAuthor: "",
-//     conferenceName: "",
-//     conferneceFile: "",
-//     year: "",
-//     title: "",
-//   });
-//   const [isLoading, setIsLoading] = useState(false);
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     try {
-//       setIsLoading(true);
-//       const res = await axios.post("/author_insert", inputs);
-//       console.log(res.data);
-//     } catch (error) {
-//       console.log(error);
-//     } finally {
-//       setIsLoading(false);
-//     }
-//   };
-
-//   const handleDelete = async (id) => {
-//     try {
-//       const res = await axios.post("/emp_consultancy_projectsDelete", id);
-//       console.log(res.data);
-//     } catch (error) {
-//       console.log(error);
-//     }
-//   };
-
-//   const years = Array.from({ length: 31 }, (_, i) => (2000 + i).toString());
-
-//   // let tableData = [];
-//   // useEffect(() => {
-//   //   const getTableData = async () => {
-//   //     try {
-//   //       const res = await axios.get("/get_data");
-//   //       tableData = res.data;
-//   //     } catch (error) {
-//   //       console.log(error);
-//   //     }
-//   //   };
-//   //   getTableData();
-//   // }, []);
-
-//   const tableData = Array.from({ length: 10 }, (_, index) => ({
-//     id: `${index + 1}`,
-//     title: `Title of Paper ${index + 1}`,
-//     author: `Author ${String.fromCharCode(65 + index)}`,
-//     conferenceName: `Details ${String.fromCharCode(65 + index)}`,
-//     conferenceFile: `Download Link`,
-//   }));
-
-//   return (
-//     <MantineProvider withGlobalStyles withNormalizeCSS>
-//       <Container size="2xl" mt="xl">
-//         <Paper
-//           shadow="xs"
-//           p="md"
-//           withBorder
-//           style={{ borderLeft: "8px solid #2185d0" }}
-//         >
-//           <Title order={2} mb="sm">
-//             Add a Conference
-//           </Title>
-//           <form onSubmit={handleSubmit}>
-//             <Grid>
-//               <Grid.Col span={6}>
-//                 <TextInput
-//                   label="Author"
-//                   placeholder="Author"
-//                   value={inputs.author}
-//                   onChange={(e) =>
-//                     setInputs({ ...inputs, author: e.target.value })
-//                   }
-//                   required
-//                 />
-//               </Grid.Col>
-//               <Grid.Col span={6}>
-//                 <TextInput
-//                   label="Co-author(s)"
-//                   placeholder="Co-author(s)"
-//                   value={inputs.coAuthor}
-//                   onChange={(e) =>
-//                     setInputs({ ...inputs, coAuthor: e.target.value })
-//                   }
-//                 />
-//               </Grid.Col>
-//               <Grid.Col span={6}>
-//                 <TextInput
-//                   label="Conference Name"
-//                   placeholder="Name of the Conference"
-//                   value={inputs.conferenceName}
-//                   onChange={(e) =>
-//                     setInputs({ ...inputs, conferenceName: e.target.value })
-//                   }
-//                   required
-//                 />
-//               </Grid.Col>
-//               <Grid.Col span={3}>
-//                 <FileInput
-//                   label="Conference File"
-//                   placeholder="Choose file"
-//                   icon={<UploadSimple size={14} />}
-//                   value={inputs.conferenceFile}
-//                   onChange={(file) =>
-//                     setInputs({ ...inputs, conferenceFile: file })
-//                   }
-//                 />
-//               </Grid.Col>
-//               <Grid.Col span={3}>
-//                 <Select
-//                   label="Year"
-//                   placeholder="Select year"
-//                   data={years}
-//                   value={inputs.year}
-//                   onChange={(value) =>
-//                     setInputs({ ...inputs, year: value || "" })
-//                   }
-//                   required
-//                 />
-//               </Grid.Col>
-//               <Grid.Col span={12}>
-//                 <TextInput
-//                   label="Title"
-//                   placeholder="Title"
-//                   value={inputs.title}
-//                   onChange={(e) =>
-//                     setInputs({ ...inputs, title: e.target.value })
-//                   }
-//                   required
-//                 />
-//               </Grid.Col>
-//               <Grid.Col span={12}>
-//                 <Accordion>
-//                   <Accordion.Item label="Optional Conference Details">
-//                     <Grid>{/* Add optional fields here */}</Grid>
-//                   </Accordion.Item>
-//                 </Accordion>
-//               </Grid.Col>
-//               <Grid.Col
-//                 span={12}
-//                 style={{ display: "flex", justifyContent: "flex-end" }}
-//               >
-//                 <Button
-//                   type="submit"
-//                   loading={isLoading}
-//                   leftIcon={<FloppyDisk size={16} />}
-//                 >
-//                   Save
-//                 </Button>
-//               </Grid.Col>
-//             </Grid>
-//           </form>
-//         </Paper>
-
-//         <Paper mt="xl" p="md" withBorder>
-//           <Title order={3} mb="sm">
-//             Report:
-//           </Title>
-//           <div style={{ overflowX: "auto", maxHeight: "400px" }}>
-//             {tableData.length === 0 ? (
-//               <p>No Data Found</p>
-//             ) : (
-//               <Table striped highlightOnHover>
-//                 <thead>
-//                   <tr>
-//                     <th>Sr.</th>
-//                     <th>Title of Paper</th>
-//                     <th>Authors</th>
-//                     <th>Details</th>
-//                     <th>Download</th>
-//                     <th>Action</th>
-//                   </tr>
-//                 </thead>
-//                 <tbody>
-//                   {tableData.map((data, index) => (
-//                     <tr key={index}>
-//                       <td>{data.id}</td>
-//                       <td>{data.title}</td>
-//                       <td>{data.author}</td>
-//                       <td>{data.details}</td>
-//                       <td>
-//                         <Button variant="outline" size="xs">
-//                           Download
-//                         </Button>
-//                       </td>
-//                       <td>
-//                         <Button
-//                           variant="filled"
-//                           color="red"
-//                           size="xs"
-//                           leftIcon={<Trash size={14} />}
-//                           onClick={() => handleDelete(data.id)}
-//                         >
-//                           Delete
-//                         </Button>
-//                       </td>
-//                     </tr>
-//                   ))}
-//                 </tbody>
-//               </Table>
-//             )}
-//           </div>
-//         </Paper>
-//       </Container>
-//     </MantineProvider>
-//   );
-// }
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
@@ -243,13 +12,15 @@ import {
   Table,
   ScrollArea,
   ActionIcon,
+  Pagination,
 } from "@mantine/core";
 import { FloppyDisk, PencilSimple, Trash } from "@phosphor-icons/react";
+import { useSelector } from "react-redux";
 import {
   getConferenceRoute,
   insertConferenceRoute,
   updateConferenceRoute,
-  deleteConferenceRoute,
+  deleteResearchPaperRoute,
 } from "../../../../routes/facultyProfessionalProfileRoutes";
 
 export default function Conference() {
@@ -273,10 +44,16 @@ export default function Conference() {
   const [tableData, setTableData] = useState([]);
   const [editingId, setEditingId] = useState(null);
   // const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1); // Current page number
+  const rowsPerPage = 10; // Number of rows per page
+
+  const pfNo = useSelector((state) => state.pfNo.value);
 
   const fetchAchievements = async () => {
     try {
-      const res = await axios.get(getConferenceRoute);
+      const res = await axios.get(getConferenceRoute, {
+        params: { pfNo },
+      });
       console.log(res.data);
       setTableData(res.data);
     } catch (error) {
@@ -339,7 +116,7 @@ export default function Conference() {
       try {
         // console.log(achievement)
         await axios.post(
-          deleteConferenceRoute,
+          deleteResearchPaperRoute,
           new URLSearchParams({ pk: achievement }),
         ); // Adjust the delete URL as needed
         fetchAchievements();
@@ -366,6 +143,11 @@ export default function Conference() {
     });
     setEditingId(project.id);
   };
+
+  // Calculate the current rows to display based on pagination
+  const indexOfLastRow = currentPage * rowsPerPage;
+  const indexOfFirstRow = indexOfLastRow - rowsPerPage;
+  const currentRows = tableData.slice(indexOfFirstRow, indexOfLastRow);
 
   const years = Array.from({ length: 31 }, (_, i) => (2000 + i).toString());
 
@@ -394,6 +176,7 @@ export default function Conference() {
                   onChange={(e) =>
                     setInputs({ ...inputs, author: e.target.value })
                   }
+                  style={{ padding: "10px" }}
                   required
                 />
               </Grid.Col>
@@ -403,8 +186,9 @@ export default function Conference() {
                   placeholder="Co-Author"
                   value={inputs.coAuthors}
                   onChange={(e) =>
-                    setInputs({ ...inputs, coAuthor: e.target.value })
+                    setInputs({ ...inputs, coAuthors: e.target.value })
                   }
+                  style={{ padding: "10px" }}
                 />
               </Grid.Col>
               <Grid.Col span={6}>
@@ -415,6 +199,7 @@ export default function Conference() {
                   onChange={(e) =>
                     setInputs({ ...inputs, conferenceName: e.target.value })
                   }
+                  style={{ padding: "10px" }}
                   required
                 />
               </Grid.Col>
@@ -436,6 +221,7 @@ export default function Conference() {
                   data={years}
                   value={inputs.year}
                   onChange={(value) => setInputs({ ...inputs, year: value })}
+                  style={{ padding: "10px" }}
                   required
                 />
               </Grid.Col>
@@ -447,13 +233,14 @@ export default function Conference() {
                   onChange={(e) =>
                     setInputs({ ...inputs, title: e.target.value })
                   }
+                  style={{ padding: "10px" }}
                   required
                 />
               </Grid.Col>
               <Grid.Col span={12}>
                 {/* <Accordion>
                   <Accordion.Item label="Optional Conference Details"> */}
-                <details>
+                {/* <details>
                   <summary style={{ cursor: "pointer", color: "#2185d0" }}>
                     Optional Journal Details
                   </summary>
@@ -469,6 +256,7 @@ export default function Conference() {
                             venueHostInstitute: e.target.value,
                           })
                         }
+                        style={{ padding: "10px" }}
                       />
                     </Grid.Col>
                     <Grid.Col span={6}>
@@ -482,6 +270,7 @@ export default function Conference() {
                             dateOfSubmission: e.target.value,
                           })
                         }
+                        style={{ padding: "10px" }}
                       />
                     </Grid.Col>
                     <Grid.Col span={6}>
@@ -495,6 +284,7 @@ export default function Conference() {
                             dateOfAcceptance: e.target.value,
                           })
                         }
+                        style={{ padding: "10px" }}
                       />
                     </Grid.Col>
                     <Grid.Col span={6}>
@@ -508,6 +298,7 @@ export default function Conference() {
                             dateOfPublication: e.target.value,
                           })
                         }
+                        style={{ padding: "10px" }}
                       />
                     </Grid.Col>
                     <Grid.Col span={6}>
@@ -518,6 +309,7 @@ export default function Conference() {
                         onChange={(e) =>
                           setInputs({ ...inputs, pageNo: e.target.value })
                         }
+                        style={{ padding: "10px" }}
                       />
                     </Grid.Col>
                     <Grid.Col span={6}>
@@ -529,6 +321,7 @@ export default function Conference() {
                         onChange={(value) =>
                           setInputs({ ...inputs, status: value })
                         }
+                        style={{ padding: "10px" }}
                       />
                     </Grid.Col>
                     <Grid.Col span={6}>
@@ -542,6 +335,7 @@ export default function Conference() {
                             conferenceDates: e.target.value,
                           })
                         }
+                        style={{ padding: "10px" }}
                       />
                     </Grid.Col>
                     <Grid.Col span={6}>
@@ -552,16 +346,18 @@ export default function Conference() {
                         onChange={(e) =>
                           setInputs({ ...inputs, isbnNo: e.target.value })
                         }
+                        style={{ padding: "10px" }}
                       />
                     </Grid.Col>
                   </Grid>
-                </details>
+                </details> */}
                 {/* </Accordion.Item>
                 </Accordion> */}
               </Grid.Col>
               <Grid.Col
                 span={12}
-                style={{ display: "flex", justifyContent: "flex-end" }}
+                p="md"
+                style={{ display: "flex", justifyContent: "flex-start" }}
               >
                 <Button
                   type="submit"
@@ -675,8 +471,8 @@ export default function Conference() {
                 </tr>
               </thead>
               <tbody>
-                {tableData.length > 0 ? (
-                  tableData.map((project) => (
+                {currentRows.length > 0 ? (
+                  currentRows.map((project) => (
                     <tr key={project.id} style={{ backgroundColor: "#fff" }}>
                       <td
                         style={{
@@ -728,6 +524,8 @@ export default function Conference() {
                           padding: "12px",
                           textAlign: "center",
                           border: "1px solid #dee2e6",
+                          whiteSpace: "nowrap", // Prevent text wrapping
+                          width: "100px", // Ensure sufficient space for icons
                         }}
                       >
                         <ActionIcon
@@ -765,6 +563,15 @@ export default function Conference() {
               </tbody>
             </Table>
           </ScrollArea>
+
+          {/* Pagination Component */}
+          <Pagination
+            total={Math.ceil(tableData.length / rowsPerPage)} // Total pages
+            page={currentPage} // Current page
+            onChange={setCurrentPage} // Handle page change
+            mt="lg" // Add margin-top
+            position="center" // Center the pagination
+          />
         </Paper>
       </Container>
     </MantineProvider>

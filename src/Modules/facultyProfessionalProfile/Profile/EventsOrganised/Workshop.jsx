@@ -13,9 +13,10 @@ import {
   Button,
   Table,
   ActionIcon,
+  Pagination,
 } from "@mantine/core";
-import { DatePickerInput } from "@mantine/dates";
 import { FloppyDisk, PencilSimple, Trash } from "@phosphor-icons/react";
+import { useSelector } from "react-redux";
 import {
   getEventRoute,
   insertEventRoute,
@@ -38,12 +39,19 @@ export default function WorkshopForm() {
   const [, setError] = useState(null); // For error handling
   const [isEdit, setEdit] = useState(false);
   const [eventId, setEventId] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1); // Current page number
+  const rowsPerPage = 10; // Number of rows per page
+
+  const pfNo = useSelector((state) => state.pfNo.value);
+
   // new URLSearchParams({"pk": projectId}))
 
   // Fetch projects from the backend
   const fetchProjects = async () => {
     try {
-      const response = await axios.get(getEventRoute);
+      const response = await axios.get(getEventRoute, {
+        params: { pfNo },
+      });
       const projects = response.data;
       // Sort projects by submission date in descending order
       const sortedProjects = projects.sort(
@@ -110,8 +118,8 @@ export default function WorkshopForm() {
     setInputs({
       role: project.role,
       sponsoringAgency: project.sponsoring_agency,
-      startDate: project.start_date ? new Date(project.start_date) : null,
-      endDate: project.end_date ? new Date(project.end_date) : null,
+      startDate: project.start_date,
+      endDate: project.end_date,
       venue: project.venue,
       eventType: project.type,
       name: project.name,
@@ -135,6 +143,19 @@ export default function WorkshopForm() {
       }
     }
   };
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setInputs((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  // Calculate the current rows to display based on pagination
+  const indexOfLastRow = currentPage * rowsPerPage;
+  const indexOfFirstRow = indexOfLastRow - rowsPerPage;
+  const currentRows = tableData.slice(indexOfFirstRow, indexOfLastRow);
 
   return (
     <MantineProvider
@@ -173,6 +194,7 @@ export default function WorkshopForm() {
                   onChange={(value) =>
                     setInputs({ ...inputs, role: value || "" })
                   }
+                  style={{ padding: "10px" }}
                 />
               </Grid.Col>
               <Grid.Col span={6}>
@@ -184,24 +206,52 @@ export default function WorkshopForm() {
                   onChange={(e) =>
                     setInputs({ ...inputs, sponsoringAgency: e.target.value })
                   }
+                  style={{ padding: "10px" }}
                 />
               </Grid.Col>
-              <Grid.Col span={6}>
+
+              {/* <Grid.Col span={6}>
                 <DatePickerInput
                   label="Start Date"
                   placeholder="Select date"
                   value={inputs.startDate}
                   onChange={(date) => setInputs({ ...inputs, startDate: date })}
                 />
-              </Grid.Col>
+              </Grid.Col> */}
+
               <Grid.Col span={6}>
+                <TextInput
+                  label="Start Date"
+                  name="startDate"
+                  value={inputs.startDate}
+                  onChange={handleInputChange}
+                  placeholder="Select Date"
+                  type="date"
+                  style={{ padding: "10px" }} // Consistent padding
+                />
+              </Grid.Col>
+
+              {/* <Grid.Col span={6}>
                 <DatePickerInput
                   label="End Date"
                   placeholder="Select date"
                   value={inputs.endDate}
                   onChange={(date) => setInputs({ ...inputs, endDate: date })}
                 />
+              </Grid.Col> */}
+
+              <Grid.Col span={6}>
+                <TextInput
+                  label="End Date"
+                  name="endDate"
+                  value={inputs.endDate}
+                  onChange={handleInputChange}
+                  placeholder="Select Date"
+                  type="date"
+                  style={{ padding: "10px" }} // Consistent padding
+                />
               </Grid.Col>
+
               <Grid.Col span={6}>
                 <TextInput
                   required
@@ -211,6 +261,7 @@ export default function WorkshopForm() {
                   onChange={(e) =>
                     setInputs({ ...inputs, venue: e.target.value })
                   }
+                  style={{ padding: "10px" }}
                 />
               </Grid.Col>
               <Grid.Col span={6}>
@@ -225,6 +276,7 @@ export default function WorkshopForm() {
                   onChange={(value) =>
                     setInputs({ ...inputs, eventType: value || "" })
                   }
+                  style={{ padding: "10px" }}
                 />
               </Grid.Col>
               <Grid.Col span={12}>
@@ -236,11 +288,13 @@ export default function WorkshopForm() {
                   onChange={(e) =>
                     setInputs({ ...inputs, name: e.target.value })
                   }
+                  style={{ padding: "10px" }}
                 />
               </Grid.Col>
               <Grid.Col
                 span={12}
-                style={{ display: "flex", justifyContent: "flex-end" }}
+                p="md"
+                style={{ display: "flex", justifyContent: "flex-start" }}
               >
                 <Button
                   type="submit"
@@ -353,7 +407,7 @@ export default function WorkshopForm() {
               </tr>
             </thead>
             <tbody>
-              {tableData.map((project) => (
+              {currentRows.map((project) => (
                 <tr key={project.id} style={{ backgroundColor: "#fff" }}>
                   <td
                     style={{
@@ -423,6 +477,8 @@ export default function WorkshopForm() {
                       padding: "12px",
                       textAlign: "center",
                       border: "1px solid #dee2e6",
+                      whiteSpace: "nowrap", // Prevent text wrapping
+                      width: "100px", // Ensure sufficient space for icons
                     }}
                   >
                     <ActionIcon
@@ -445,6 +501,15 @@ export default function WorkshopForm() {
               ))}
             </tbody>
           </Table>
+
+          {/* Pagination Component */}
+          <Pagination
+            total={Math.ceil(tableData.length / rowsPerPage)} // Total pages
+            page={currentPage} // Current page
+            onChange={setCurrentPage} // Handle page change
+            mt="lg" // Add margin-top
+            position="center" // Center the pagination
+          />
         </Paper>
       </Container>
     </MantineProvider>

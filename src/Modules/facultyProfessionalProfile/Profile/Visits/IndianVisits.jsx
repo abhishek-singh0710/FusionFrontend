@@ -12,9 +12,10 @@ import {
   Button,
   Table,
   ActionIcon,
+  Pagination,
 } from "@mantine/core";
-import { DatePickerInput } from "@mantine/dates";
 import { FloppyDisk, PencilSimple, Trash } from "@phosphor-icons/react";
+import { useSelector } from "react-redux";
 import {
   getIVisitsRoute,
   insertIVisitsRoute,
@@ -35,11 +36,17 @@ export default function IndianVisits() {
   const [, setError] = useState(null); // For error handling
   const [isEdit, setEdit] = useState(false);
   const [Id, setId] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1); // Current page number
+  const rowsPerPage = 10; // Number of rows per page
+
+  const pfNo = useSelector((state) => state.pfNo.value);
 
   // Fetch projects from the backend
   const fetchProjects = async () => {
     try {
-      const response = await axios.get(getIVisitsRoute);
+      const response = await axios.get(getIVisitsRoute, {
+        params: { pfNo },
+      });
       const projects = response.data;
       // Sort projects by submission date in descending order
       const sortedProjects = projects.sort(
@@ -105,8 +112,8 @@ export default function IndianVisits() {
     setInputs({
       country: project.country,
       place: project.place,
-      fromDate: project.start_date ? new Date(project.start_date) : null,
-      toDate: project.end_date ? new Date(project.end_date) : null,
+      fromDate: project.start_date,
+      toDate: project.end_date,
       purpose: project.purpose,
     });
 
@@ -128,6 +135,19 @@ export default function IndianVisits() {
       }
     }
   };
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setInputs((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  // Calculate the current rows to display based on pagination
+  const indexOfLastRow = currentPage * rowsPerPage;
+  const indexOfFirstRow = indexOfLastRow - rowsPerPage;
+  const currentRows = tableData.slice(indexOfFirstRow, indexOfLastRow);
 
   return (
     <MantineProvider withGlobalStyles withNormalizeCSS>
@@ -170,7 +190,8 @@ export default function IndianVisits() {
                   style={{ padding: "10px" }} // Consistent padding
                 />
               </Grid.Col>
-              <Grid.Col span={6}>
+
+              {/* <Grid.Col span={6}>
                 <DatePickerInput
                   label="From"
                   placeholder="Select date"
@@ -178,8 +199,21 @@ export default function IndianVisits() {
                   onChange={(date) => setInputs({ ...inputs, fromDate: date })}
                   style={{ padding: "10px" }} // Consistent padding
                 />
-              </Grid.Col>
+              </Grid.Col> */}
+
               <Grid.Col span={6}>
+                <TextInput
+                  label="From"
+                  name="fromDate"
+                  value={inputs.fromDate}
+                  onChange={handleInputChange}
+                  placeholder="Select Date"
+                  type="date"
+                  style={{ padding: "10px" }} // Consistent padding
+                />
+              </Grid.Col>
+
+              {/* <Grid.Col span={6}>
                 <DatePickerInput
                   label="To"
                   placeholder="Select date"
@@ -187,7 +221,20 @@ export default function IndianVisits() {
                   onChange={(date) => setInputs({ ...inputs, toDate: date })}
                   style={{ padding: "10px" }} // Consistent padding
                 />
+              </Grid.Col> */}
+
+              <Grid.Col span={6}>
+                <TextInput
+                  label="To"
+                  name="toDate"
+                  value={inputs.toDate}
+                  onChange={handleInputChange}
+                  placeholder="Select Date"
+                  type="date"
+                  style={{ padding: "10px" }} // Consistent padding
+                />
               </Grid.Col>
+
               <Grid.Col span={12}>
                 <TextInput
                   required
@@ -202,7 +249,8 @@ export default function IndianVisits() {
               </Grid.Col>
               <Grid.Col
                 span={12}
-                style={{ display: "flex", justifyContent: "flex-end" }}
+                p="md"
+                style={{ display: "flex", justifyContent: "flex-start" }}
               >
                 <Button
                   type="submit"
@@ -266,8 +314,8 @@ export default function IndianVisits() {
               </tr>
             </thead>
             <tbody>
-              {tableData.length > 0 ? (
-                tableData.map((visit) => (
+              {currentRows.length > 0 ? (
+                currentRows.map((visit) => (
                   <tr key={visit.id} style={{ backgroundColor: "#fff" }}>
                     <td
                       style={{
@@ -319,6 +367,8 @@ export default function IndianVisits() {
                         padding: "12px",
                         textAlign: "center",
                         border: "1px solid #dee2e6",
+                        whiteSpace: "nowrap", // Prevent text wrapping
+                        width: "100px", // Ensure sufficient space for icons
                       }}
                     >
                       <ActionIcon
@@ -355,6 +405,15 @@ export default function IndianVisits() {
               )}
             </tbody>
           </Table>
+
+          {/* Pagination Component */}
+          <Pagination
+            total={Math.ceil(tableData.length / rowsPerPage)} // Total pages
+            page={currentPage} // Current page
+            onChange={setCurrentPage} // Handle page change
+            mt="lg" // Add margin-top
+            position="center" // Center the pagination
+          />
         </Paper>
       </Container>
     </MantineProvider>

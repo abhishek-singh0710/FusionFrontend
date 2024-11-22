@@ -1,249 +1,3 @@
-// import { useState, useEffect } from "react";
-// import axios from "axios";
-// import {
-//   MantineProvider,
-//   Container,
-//   Paper,
-//   Title,
-//   Grid,
-//   TextInput,
-//   Select,
-//   Button,
-//   Table,
-// } from "@mantine/core";
-// import { FloppyDisk, Trash, Pencil } from "@phosphor-icons/react";
-
-// export default function Books() {
-//   const [inputs, setInputs] = useState({
-//     publishType: "",
-//     author: "",
-//     publisher: "",
-//     year: "",
-//     title: "",
-//   });
-//   const [achievements, setAchievements] = useState([]);
-//   const [isLoading, setIsLoading] = useState(false);
-//   const [editingId, setEditingId] = useState(null); // For editing
-
-//   // Fetch achievements on component mount
-//   useEffect(() => {
-//     const fetchAchievements = async () => {
-//       try {
-//         const res = await axios.get("http://127.0.0.1:8000/eis/api/fetch_book");
-//         setAchievements(res.data);
-//       } catch (error) {
-//         console.error(error);
-//       }
-//     };
-//     fetchAchievements();
-//   }, []);
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     try {
-//       setIsLoading(true);
-//       if (editingId) {
-//         // Update the book
-//         const formData = new FormData();
-//         formData.append("user_id", 5318); // Adjust this as needed
-//         formData.append("book_p_type", inputs.publishType);
-//         formData.append("book_author", inputs.author);
-//         formData.append("book_publisher", inputs.publisher);
-//         formData.append("book_year", inputs.year);
-//         formData.append("book_title", inputs.title);
-//         formData.append("bookspk", editingId);
-//         await axios.put("http://127.0.0.1:8000/eis/api/books/edit", formData);
-//       } else {
-//         // Create a new book
-//         const formData = new FormData();
-//         formData.append("user_id", 5318); // Adjust this as needed
-//         formData.append("book_p_type", inputs.publishType);
-//         formData.append("book_author", inputs.author);
-//         formData.append("book_publisher", inputs.publisher);
-//         formData.append("book_year", inputs.year);
-//         formData.append("book_title", inputs.title);
-//         await axios.post("http://127.0.0.1:8000/eis/api/book/", formData);
-//       }
-//       setInputs({
-//         publishType: "",
-//         author: "",
-//         publisher: "",
-//         year: "",
-//         title: "",
-//       });
-//       setEditingId(null); // Reset editing ID
-//       // Refresh the list of achievements
-//       const res = await axios.get("http://127.0.0.1:8000/eis/api/fetch_book");
-//       setAchievements(res.data);
-//     } catch (error) {
-//       console.error(error);
-//     } finally {
-//       setIsLoading(false);
-//     }
-//   };
-
-//   const handleEdit = (achievement) => {
-//     setInputs({
-//       publishType: achievement.publishType,
-//       author: achievement.author,
-//       publisher: achievement.publisher,
-//       year: achievement.year,
-//       title: achievement.title,
-//     });
-//     setEditingId(achievement.id); // Store the ID of the book being edited
-//   };
-
-//   const years = Array.from({ length: 31 }, (_, i) => (2000 + i).toString());
-
-//   return (
-//     <MantineProvider withGlobalStyles withNormalizeCSS>
-//       <Container size="2xl" mt="xl">
-//         <Paper
-//           shadow="xs"
-//           p="md"
-//           withBorder
-//           style={{ borderLeft: "8px solid #2185d0" }}
-//         >
-//           <Title order={2} mb="sm">
-//             {editingId ? "Edit Book/Book Chapter" : "Add a Book/Book Chapter"}
-//           </Title>
-//           <form onSubmit={handleSubmit}>
-//             <Grid>
-//               <Grid.Col span={6}>
-//                 <Select
-//                   label="Publish Type"
-//                   placeholder="Select Type"
-//                   data={[
-//                     { value: "book", label: "Book" },
-//                     { value: "monograph", label: "Monograph" },
-//                     { value: "book-chapter", label: "Book Chapter" },
-//                     { value: "handbook", label: "Handbook" },
-//                     { value: "technical-report", label: "Technical Report" },
-//                   ]}
-//                   value={inputs.publishType}
-//                   onChange={(e) =>
-//                     setInputs({ ...inputs, publishType: e.target.value || "" })
-//                   }
-//                   required
-//                 />
-//               </Grid.Col>
-//               <Grid.Col span={6}>
-//                 <TextInput
-//                   label="Author"
-//                   placeholder="Author"
-//                   value={inputs.author}
-//                   onChange={(e) =>
-//                     setInputs({ ...inputs, author: e.target.value })
-//                   }
-//                   required
-//                 />
-//               </Grid.Col>
-//               <Grid.Col span={6}>
-//                 <TextInput
-//                   label="Publisher"
-//                   placeholder="Publisher"
-//                   value={inputs.publisher}
-//                   onChange={(e) =>
-//                     setInputs({ ...inputs, publisher: e.target.value })
-//                   }
-//                   required
-//                 />
-//               </Grid.Col>
-//               <Grid.Col span={6}>
-//                 <Select
-//                   label="Publishing Year"
-//                   placeholder="Select Year"
-//                   data={years}
-//                   value={inputs.year}
-//                   onChange={(e) =>
-//                     setInputs({ ...inputs, year: e.target.value || "" })
-//                   }
-//                   required
-//                 />
-//               </Grid.Col>
-//               <Grid.Col span={12}>
-//                 <TextInput
-//                   label="Title"
-//                   placeholder="Title"
-//                   value={inputs.title}
-//                   onChange={(e) =>
-//                     setInputs({ ...inputs, title: e.target.value })
-//                   }
-//                   required
-//                 />
-//               </Grid.Col>
-//               <Grid.Col
-//                 span={12}
-//                 style={{ display: "flex", justifyContent: "flex-end" }}
-//               >
-//                 <Button
-//                   type="submit"
-//                   loading={isLoading}
-//                   leftIcon={<FloppyDisk size={16} />}
-//                 >
-//                   Save
-//                 </Button>
-//               </Grid.Col>
-//             </Grid>
-//           </form>
-//         </Paper>
-
-//         <Paper mt="xl" p="md" withBorder>
-//           <Title order={3} mb="sm">
-//             Report:
-//           </Title>
-//           {achievements.length === 0 ? (
-//             <p>No Books Recorded Yet</p>
-//           ) : (
-//             <Table>
-//               <thead>
-//                 <tr>
-//                   <th>Sr</th>
-//                   <th>Title of Book</th>
-//                   <th>Authors</th>
-//                   <th>Publish Type</th>
-//                   <th>Year</th>
-//                   <th>Publisher</th>
-//                   <th>Action</th>
-//                 </tr>
-//               </thead>
-//               <tbody>
-//                 {achievements.map((achievement, index) => (
-//                   <tr key={achievement.id}>
-//                     <td>{index + 1}</td>
-//                     <td>{achievement.title}</td>
-//                     <td>{achievement.author}</td>
-//                     <td>{achievement.publishType}</td>
-//                     <td>{achievement.year}</td>
-//                     <td>{achievement.publisher}</td>
-//                     <td>
-//                       <Button
-//                         variant="subtle"
-//                         color="blue"
-//                         leftIcon={<Pencil size={16} />}
-//                         onClick={() => handleEdit(achievement)}
-//                       >
-//                         Edit
-//                       </Button>
-//                       <Button
-//                         variant="subtle"
-//                         color="red"
-//                         leftIcon={<Trash size={16} />}
-//                       >
-//                         Delete
-//                       </Button>
-//                     </td>
-//                   </tr>
-//                 ))}
-//               </tbody>
-//             </Table>
-//           )}
-//         </Paper>
-//       </Container>
-//     </MantineProvider>
-//   );
-// }
-
 import { useState, useEffect } from "react";
 import axios from "axios";
 import {
@@ -258,8 +12,16 @@ import {
   Table,
   ScrollArea,
   ActionIcon,
+  Pagination,
 } from "@mantine/core";
 import { FloppyDisk, Trash, PencilSimple } from "@phosphor-icons/react";
+import { useSelector } from "react-redux";
+import {
+  deleteBooksRoute,
+  getBooksRoute,
+  insertBooksRoute,
+  updateBooksRoute,
+} from "../../../../routes/facultyProfessionalProfileRoutes";
 
 export default function Books() {
   const [inputs, setInputs] = useState({
@@ -272,10 +34,17 @@ export default function Books() {
   const [tableData, setTableData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [editingId, setEditingId] = useState(null); // For editing
+  const [currentPage, setCurrentPage] = useState(1); // Current page number
+  const rowsPerPage = 10; // Number of rows per page
+
+  const pfNo = useSelector((state) => state.pfNo.value);
+  // console.log(pfNo);
 
   const fetchAchievements = async () => {
     try {
-      const res = await axios.get("http://127.0.0.1:8000/eis/api/fetch_book");
+      const res = await axios.get(getBooksRoute, {
+        params: { pfNo },
+      });
       console.log(res.data);
       setTableData(res.data);
     } catch (error) {
@@ -302,10 +71,10 @@ export default function Books() {
       if (editingId) {
         // Update the book
         formData.append("bookspk", editingId);
-        await axios.post("http://127.0.0.1:8000/eis/api/books/edit", formData);
+        await axios.post(updateBooksRoute, formData);
       } else {
         // Create a new book
-        await axios.post("http://127.0.0.1:8000/eis/api/book/", formData);
+        await axios.post(insertBooksRoute, formData);
       }
       setInputs({
         publishType: "",
@@ -340,7 +109,7 @@ export default function Books() {
       try {
         // console.log(achievement)
         await axios.post(
-          "http://127.0.0.1:8000/eis/api/emp_published_booksDelete/",
+          deleteBooksRoute,
           new URLSearchParams({ pk: achievement }),
         ); // Adjust the delete URL as needed
         fetchAchievements(); // Refresh the project list after deletion
@@ -349,6 +118,11 @@ export default function Books() {
       }
     }
   };
+
+  // Calculate the current rows to display based on pagination
+  const indexOfLastRow = currentPage * rowsPerPage;
+  const indexOfFirstRow = indexOfLastRow - rowsPerPage;
+  const currentRows = tableData.slice(indexOfFirstRow, indexOfLastRow);
 
   const years = Array.from({ length: 31 }, (_, i) => (2000 + i).toString());
 
@@ -437,7 +211,8 @@ export default function Books() {
               </Grid.Col>
               <Grid.Col
                 span={12}
-                style={{ display: "flex", justifyContent: "flex-end" }}
+                p="md"
+                style={{ display: "flex", justifyContent: "flex-start" }}
               >
                 <Button
                   type="submit"
@@ -490,8 +265,8 @@ export default function Books() {
                 </tr>
               </thead>
               <tbody>
-                {tableData.length > 0 ? (
-                  tableData.map((project) => (
+                {currentRows.length > 0 ? (
+                  currentRows.map((project) => (
                     <tr key={project.id} style={{ backgroundColor: "#fff" }}>
                       <td
                         style={{
@@ -543,6 +318,8 @@ export default function Books() {
                           padding: "12px",
                           textAlign: "center",
                           border: "1px solid #dee2e6",
+                          whiteSpace: "nowrap", // Prevent text wrapping
+                          width: "100px", // Ensure sufficient space for icons
                         }}
                       >
                         <ActionIcon
@@ -580,6 +357,15 @@ export default function Books() {
               </tbody>
             </Table>
           </ScrollArea>
+
+          {/* Pagination Component */}
+          <Pagination
+            total={Math.ceil(tableData.length / rowsPerPage)} // Total pages
+            page={currentPage} // Current page
+            onChange={setCurrentPage} // Handle page change
+            mt="lg" // Add margin-top
+            position="center" // Center the pagination
+          />
         </Paper>
       </Container>
     </MantineProvider>

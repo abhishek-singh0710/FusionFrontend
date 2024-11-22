@@ -12,8 +12,10 @@ import {
   Button,
   Table,
   ActionIcon,
+  Pagination,
 } from "@mantine/core";
 import { FloppyDisk, PencilSimple, Trash } from "@phosphor-icons/react";
+import { useSelector } from "react-redux";
 import {
   getAwardsRoute,
   insertAwardRoute,
@@ -32,6 +34,10 @@ export default function AchievementsForm() {
   const [tableData, setTableData] = useState([]);
   const [isEdit, setEdit] = useState(false);
   const [Id, setId] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1); // Current page number
+  const rowsPerPage = 10; // Number of rows per page
+
+  const pfNo = useSelector((state) => state.pfNo.value);
 
   // function changeAchievements() {
   //   setAchievements(1);
@@ -69,7 +75,9 @@ export default function AchievementsForm() {
 
   const fetchProjects = async () => {
     try {
-      const response = await axios.get(getAwardsRoute);
+      const response = await axios.get(getAwardsRoute, {
+        params: { pfNo },
+      });
       const projects = response.data;
       setTableData(projects);
     } catch (error) {
@@ -147,6 +155,11 @@ export default function AchievementsForm() {
       }
     }
   };
+
+  // Calculate the current rows to display based on pagination
+  const indexOfLastRow = currentPage * rowsPerPage;
+  const indexOfFirstRow = indexOfLastRow - rowsPerPage;
+  const currentRows = tableData.slice(indexOfFirstRow, indexOfLastRow);
 
   return (
     <MantineProvider withGlobalStyles withNormalizeCSS>
@@ -228,7 +241,8 @@ export default function AchievementsForm() {
               </Grid.Col>
               <Grid.Col
                 span={12}
-                style={{ display: "flex", justifyContent: "flex-end" }}
+                p="md"
+                style={{ display: "flex", justifyContent: "flex-start" }}
               >
                 <Button
                   type="submit"
@@ -333,7 +347,7 @@ export default function AchievementsForm() {
               </tr>
             </thead>
             <tbody>
-              {tableData.length === 0 ? (
+              {currentRows.length === 0 ? (
                 <tr>
                   <td
                     colSpan={5}
@@ -347,7 +361,7 @@ export default function AchievementsForm() {
                   </td>
                 </tr>
               ) : (
-                tableData.map((achievement, index) => (
+                currentRows.map((achievement, index) => (
                   <tr key={achievement.id} style={{ backgroundColor: "#fff" }}>
                     <td
                       style={{
@@ -390,6 +404,8 @@ export default function AchievementsForm() {
                         padding: "12px",
                         textAlign: "center",
                         border: "1px solid #dee2e6",
+                        whiteSpace: "nowrap", // Prevent text wrapping
+                        width: "100px", // Ensure sufficient space for icons
                       }}
                     >
                       <ActionIcon
@@ -413,6 +429,15 @@ export default function AchievementsForm() {
               )}
             </tbody>
           </Table>
+
+          {/* Pagination Component */}
+          <Pagination
+            total={Math.ceil(tableData.length / rowsPerPage)} // Total pages
+            page={currentPage} // Current page
+            onChange={setCurrentPage} // Handle page change
+            mt="lg" // Add margin-top
+            position="center" // Center the pagination
+          />
         </Paper>
       </Container>
     </MantineProvider>

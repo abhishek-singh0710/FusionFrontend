@@ -5,7 +5,8 @@ import { CaretCircleLeft, CaretCircleRight } from "@phosphor-icons/react";
 import classes from "../../../Dashboard/Dashboard.module.css"; // Ensure the CSS module is properly set
 import Conference from "./Conference";
 
-function VisitsMaster({ breadCrumbItems, setBreadCrumbItems }) {
+// eslint-disable-next-line react/prop-types
+function VisitsMaster({ setBreadCrumbItems }) {
   const [activeTab, setActiveTab] = useState("0");
   const tabsListRef = useRef(null);
 
@@ -31,13 +32,13 @@ function VisitsMaster({ breadCrumbItems, setBreadCrumbItems }) {
     const currentTab = tabItems[parseInt(activeTab, 10)];
     // console.log(currentTab);
 
-    const breadcrumbs = [
-      { title: currentTab.title, href: "#" },
-    ].map((item, index) => (
-      <Text key={index} component="a" href={item.href} size="16px" fw={600}>
-        {item.title}
-      </Text>
-    ));
+    const breadcrumbs = [{ title: currentTab.title, href: "#" }].map(
+      (item, index) => (
+        <Text key={index} component="a" href={item.href} size="16px" fw={600}>
+          {item.title}
+        </Text>
+      ),
+    );
 
     setBreadCrumbItems((prevBreadCrumbs) => {
       const firstThreeEntries = prevBreadCrumbs.slice(0, 3);
