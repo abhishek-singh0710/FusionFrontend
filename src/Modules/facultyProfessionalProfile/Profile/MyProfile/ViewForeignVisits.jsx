@@ -13,7 +13,7 @@ import {
 import { Airplane } from "@phosphor-icons/react";
 import { useSelector } from "react-redux";
 import { getFVisitsRoute } from "../../../../routes/facultyProfessionalProfileRoutes";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 
 export default function ViewForeignVisits() {
   const [tableData, setTableData] = useState([]);

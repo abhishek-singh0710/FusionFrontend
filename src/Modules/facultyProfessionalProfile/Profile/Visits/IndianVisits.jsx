@@ -21,7 +21,7 @@ import {
   insertIVisitsRoute,
   deleteIVisitsRoute,
 } from "../../../../routes/facultyProfessionalProfileRoutes";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 
 export default function IndianVisits() {
   const [inputs, setInputs] = useState({

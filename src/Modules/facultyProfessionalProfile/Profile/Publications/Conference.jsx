@@ -22,7 +22,7 @@ import {
   updateConferenceRoute,
   deleteResearchPaperRoute,
 } from "../../../../routes/facultyProfessionalProfileRoutes";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 
 export default function Conference() {
   const [inputs, setInputs] = useState({

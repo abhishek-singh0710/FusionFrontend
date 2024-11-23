@@ -27,7 +27,7 @@ import {
   insertResearchProjectsRoute,
   deleteResearchProjectsRoute,
 } from "../../../../routes/facultyProfessionalProfileRoutes";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 
 export default function ResearchProjects() {
   const [inputs, setInputs] = useState({

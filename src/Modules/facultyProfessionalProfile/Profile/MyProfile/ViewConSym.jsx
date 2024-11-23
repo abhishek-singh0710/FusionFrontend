@@ -13,7 +13,7 @@ import {
 import { MapPin } from "@phosphor-icons/react";
 import { useSelector } from "react-redux";
 import { getConsymRoute } from "../../../../routes/facultyProfessionalProfileRoutes";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 
 export default function ViewConSym() {
   const [tableData, setTableData] = useState([]);

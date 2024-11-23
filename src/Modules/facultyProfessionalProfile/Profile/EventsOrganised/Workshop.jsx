@@ -23,7 +23,7 @@ import {
   updateEventRoute,
   deleteEventRoute,
 } from "../../../../routes/facultyProfessionalProfileRoutes";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 
 export default function WorkshopForm() {
   const [inputs, setInputs] = useState({
