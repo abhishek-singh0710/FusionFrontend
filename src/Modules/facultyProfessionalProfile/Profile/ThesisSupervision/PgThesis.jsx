@@ -23,7 +23,7 @@ import {
   insertPGThesisRoute,
   deletePGThesisRoute,
 } from "../../../../routes/facultyProfessionalProfileRoutes";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 
 export default function PgThesis() {
   const [inputs, setInputs] = useState({

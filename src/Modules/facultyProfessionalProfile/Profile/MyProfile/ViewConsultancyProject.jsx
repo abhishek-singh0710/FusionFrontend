@@ -13,7 +13,7 @@ import {
 import { Briefcase } from "@phosphor-icons/react";
 import { useSelector } from "react-redux";
 import { getConsultancyProjectRoute } from "../../../../routes/facultyProfessionalProfileRoutes";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 
 export default function ViewConsultancyProject() {
   const [tableData, setTableData] = useState([]);

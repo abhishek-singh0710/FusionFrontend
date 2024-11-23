@@ -229,7 +229,7 @@ import {
 import { Chalkboard } from "@phosphor-icons/react";
 import { useSelector } from "react-redux";
 import { getEventRoute } from "../../../../routes/facultyProfessionalProfileRoutes";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 
 export default function ViewEvents() {
   const [tableData, setTableData] = useState([]);

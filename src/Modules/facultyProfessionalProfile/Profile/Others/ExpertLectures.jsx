@@ -21,7 +21,7 @@ import {
   insertTalkRoute,
   deleteTalkRoute,
 } from "../../../../routes/facultyProfessionalProfileRoutes";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 
 export default function ExpertLecturesForm() {
   const [inputs, setInputs] = useState({

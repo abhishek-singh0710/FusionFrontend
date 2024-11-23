@@ -19,7 +19,7 @@ import {
   insertConsultancyProjectRoute,
   deleteConsultancyProjectRoute,
 } from "../../../../routes/facultyProfessionalProfileRoutes";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 
 export default function ConsultancyProjects() {
   const [inputs, setInputs] = useState({

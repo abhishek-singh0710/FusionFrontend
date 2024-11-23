@@ -520,7 +520,7 @@ import {
   insertPhDThesisRoute,
   deletePGThesisRoute,
 } from "../../../../routes/facultyProfessionalProfileRoutes";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 
 export default function PhdThesis() {
   const [inputs, setInputs] = useState({
