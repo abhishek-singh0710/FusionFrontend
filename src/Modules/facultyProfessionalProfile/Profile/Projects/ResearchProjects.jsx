@@ -1,11 +1,5 @@
 import { useState, useEffect } from "react";
-// import { Save, Edit, Trash } from "lucide-react"; // Importing Edit and Trash icons
 import axios from "axios";
-// import {
-//   TextInput, Button, Grid, Select, Table, ActionIcon, Container, Title, Divider, Box,
-// } from '@mantine/core';
-// import { PencilSimple } from '@phosphor-icons/react';
-// import './ResearchProjectManager.css';
 
 import {
   MantineProvider,
@@ -27,7 +21,6 @@ import {
   insertResearchProjectsRoute,
   deleteResearchProjectsRoute,
 } from "../../../../routes/facultyProfessionalProfileRoutes";
-// import { useSelector } from "react-redux";
 
 export default function ResearchProjects() {
   const [inputs, setInputs] = useState({
@@ -122,24 +115,6 @@ export default function ResearchProjects() {
     }
   };
 
-  // const handleEdit = (project) => {
-  //   // Populate the inputs with the project data for editing
-
-  //   setInputs({
-  //     pi: project.pi,
-  //     coPi: project.co_pi,
-  //     fundingAgency: project.funding_agency,
-  //     status: project.status,
-  //     submissionDate: project.date_submission,
-  //     startDate: project.start_date,
-  //     expectedFinishDate: project.finish_date,
-  //     financialOutlay: project.financial_outlay,
-  //     title: project.title,
-  //   });
-
-  //   setId(project.id);
-  //   setEdit(true);
-  // };
   const handleEdit = (project) => {
     setInputs({
       pi: project.pi,
@@ -251,20 +226,6 @@ export default function ResearchProjects() {
                   style={{ padding: "10px" }} // Consistent padding
                 />
               </Grid.Col>
-              {/* <Grid.Col span={3}>
-                <TextInput
-                  label="Submission Date"
-                  placeholder="Select date"
-                  name="submissionDate"
-                  value={inputs.submissionDate}
-                  onChange={(date) =>
-                    setInputs({ ...inputs, submissionDate: date })
-                  }
-                  type="date"
-                  // valueFormat="YYYY-MM-DD"
-                  style={{ padding: "10px" }} // Consistent padding
-                />
-              </Grid.Col> */}
 
               <Grid.Col span={3}>
                 <TextInput
@@ -277,17 +238,6 @@ export default function ResearchProjects() {
                   style={{ padding: "10px" }} // Consistent padding
                 />
               </Grid.Col>
-
-              {/* <Grid.Col span={3}>
-                <DatePickerInput
-                  label="Start Date"
-                  placeholder="Select date"
-                  value={inputs.startDate}
-                  onChange={(date) => setInputs({ ...inputs, startDate: date })}
-                  valueFormat="YYYY-MM-DD"
-                  style={{ padding: "10px" }} // Consistent padding
-                />
-              </Grid.Col> */}
 
               <Grid.Col span={3}>
                 <TextInput
@@ -300,19 +250,6 @@ export default function ResearchProjects() {
                   style={{ padding: "10px" }} // Consistent padding
                 />
               </Grid.Col>
-
-              {/* <Grid.Col span={3}>
-                <DatePickerInput
-                  label="Expected Finish Date"
-                  placeholder="Select date"
-                  value={inputs.expectedFinishDate}
-                  onChange={(date) =>
-                    setInputs({ ...inputs, expectedFinishDate: date })
-                  }
-                  valueFormat="YYYY-MM-DD"
-                  style={{ padding: "10px" }} // Consistent padding
-                />
-              </Grid.Col> */}
 
               <Grid.Col span={3}>
                 <TextInput

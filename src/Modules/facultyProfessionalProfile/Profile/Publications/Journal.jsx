@@ -64,7 +64,7 @@ export default function Journal() {
   // Fetch achievements on component mount
   useEffect(() => {
     fetchAchievements();
-  }, []);
+  }, [pfNo]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

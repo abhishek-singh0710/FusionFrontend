@@ -1,6 +1,7 @@
 import { host } from "../globalRoutes";
 
 export const getPFRoute = `${host}/eis/api/profile/`;
+export const getAllFacultyIdsRoute = `${host}/eis/api/get_id/`;
 
 export const getPersonalInfoRoute = `${host}/eis/api/get_personal_info/`;
 export const updatePersonalInfoRoute = `${host}/eis/api/update_personal_info/`;
@@ -50,6 +51,7 @@ export const getPhDThesisRoute = `${host}/eis/api/phd_thesis/pf_no/`;
 export const insertPhDThesisRoute = `${host}/eis/api/phd/`;
 
 export const getResearchProjectsRoute = `${host}/eis/api/projects/pf_no/`;
+export const getAllResearchProjectsRoute = `${host}/eis/api/projects/all/`;
 export const insertResearchProjectsRoute = `${host}/eis/api/project/`;
 export const deleteResearchProjectsRoute = `${host}/eis/api/emp_research_projectsDelete/`;
 
@@ -65,3 +67,25 @@ export const getConferenceRoute = `${host}/eis/api/fetch_conference/`;
 export const insertConferenceRoute = `${host}/eis/api/conference/`;
 export const updateConferenceRoute = `${host}/eis/api/conference/edit`;
 export const deleteConferenceRoute = `${host}/eis/api/emp_confrence_organisedDelete/`;
+
+// 4 forms
+
+export const insertAdministrativePosition = `${host}/eis/api/add_administrative_position/`;
+export const getAdministrativePosition = `${host}/eis/api/get_administrative_positions/`;
+export const deleteAdministrativePosition = `${host}/eis/api/delete_administrative_position/`;
+
+export const insertQualifications = `${host}/eis/api/add_qualification/`;
+export const getQualifications = `${host}/eis/api/get_qualifications/`;
+export const deleteQualifications = `${host}/eis/api/delete_qualification/`;
+
+export const insertHonors = `${host}/eis/api/add_honor/`;
+export const getHonors = `${host}/eis/api/get_honors/`;
+export const deleteHonors = `${host}/eis/api/delete_honor/`;
+
+export const insertProfessionalExperience = `${host}/eis/api/add_professional_experience/`;
+export const getProfessionalExperience = `${host}/eis/api/get_professional_experiences/`;
+export const deleteProfessionalExperience = `${host}/eis/api/delete_professional_experience/`;
+
+// temp
+
+export const csrf = `${host}/eis/api/csrf/`;
