@@ -164,11 +164,20 @@ export default function AboutMePage() {
           withBorder
           style={{ borderLeft: "8px solid #2185d0", marginBottom: "1rem" }}
         >
-          <Grid align="center">
-            <Grid.Col span={10}>
+          <Grid
+            type="container"
+            breakpoints={{
+              xs: "100px",
+              sm: "200px",
+              md: "700px",
+              lg: "900px",
+              xl: "1000px",
+            }}
+          >
+            <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
               <Title order={2}>Profile</Title>
             </Grid.Col>
-            <Grid.Col span={1}>
+            <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
               <Button
                 variant="filled"
                 color={isEdit ? "green" : "blue"}
@@ -199,7 +208,7 @@ export default function AboutMePage() {
 
           {/* Details Section */}
           <Grid mt="md" gutter="md">
-            <Grid.Col span={6}>
+            <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
               <TextInput
                 label="Date Of Joining"
                 name="dateOfJoining"
@@ -210,7 +219,7 @@ export default function AboutMePage() {
                 disabled={!isEdit}
               />
             </Grid.Col>
-            <Grid.Col span={6}>
+            <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
               <TextInput
                 label="Pension Fund #"
                 name="pensionFund"
@@ -220,7 +229,7 @@ export default function AboutMePage() {
                 disabled={!isEdit}
               />
             </Grid.Col>
-            <Grid.Col span={6}>
+            <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
               <TextInput
                 label="Education"
                 name="education"
@@ -230,7 +239,7 @@ export default function AboutMePage() {
                 disabled={!isEdit}
               />
             </Grid.Col>
-            <Grid.Col span={6}>
+            <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
               <TextInput
                 label="Interest Areas"
                 name="interestAreas"
@@ -244,7 +253,7 @@ export default function AboutMePage() {
 
           {/* Contact Details Section */}
           <Grid mt="md" gutter="md">
-            <Grid.Col span={6}>
+            <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
               <TextInput
                 label="Contact"
                 name="contact"
@@ -255,7 +264,7 @@ export default function AboutMePage() {
                 icon={<Phone size={16} />}
               />
             </Grid.Col>
-            <Grid.Col span={6}>
+            <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
               <TextInput
                 label="Email"
                 name="email"
@@ -266,7 +275,7 @@ export default function AboutMePage() {
                 icon={<EnvelopeSimple size={16} />}
               />
             </Grid.Col>
-            <Grid.Col span={6}>
+            <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
               <TextInput
                 label="LinkedIn"
                 name="linkedIn"
@@ -277,7 +286,7 @@ export default function AboutMePage() {
                 icon={<LinkedinLogo size={16} />}
               />
             </Grid.Col>
-            <Grid.Col span={6}>
+            <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
               <TextInput
                 label="Github"
                 name="github"

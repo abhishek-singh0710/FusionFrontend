@@ -140,8 +140,17 @@ export default function AdministrativePosition() {
             Add Administrative Position
           </Title>
           <form onSubmit={handleSubmit}>
-            <Grid gutter="md">
-              <Grid.Col span={6}>
+            <Grid
+              type="container"
+              breakpoints={{
+                xs: "100px",
+                sm: "200px",
+                md: "700px",
+                lg: "900px",
+                xl: "1000px",
+              }}
+            >
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <TextInput
                   required
                   label="Title"
@@ -153,7 +162,7 @@ export default function AdministrativePosition() {
                   style={{ padding: "10px" }}
                 />
               </Grid.Col>
-              <Grid.Col span={6}>
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <TextInput
                   required
                   label="Description"
@@ -165,7 +174,7 @@ export default function AdministrativePosition() {
                   style={{ padding: "10px" }}
                 />
               </Grid.Col>
-              <Grid.Col span={6}>
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <TextInput
                   label="From Date"
                   type="date"
@@ -176,7 +185,7 @@ export default function AdministrativePosition() {
                   style={{ padding: "10px" }}
                 />
               </Grid.Col>
-              <Grid.Col span={6}>
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <TextInput
                   label="To Date"
                   type="date"
