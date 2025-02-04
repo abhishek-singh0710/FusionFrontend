@@ -96,7 +96,7 @@ export default function AchievementsForm() {
       setIsLoading(true);
 
       const formData = new FormData();
-      formData.append("user_id", 5318);
+      formData.append("user_id", pfNo);
       formData.append("type", inputs.achievementType);
       formData.append("a_day", inputs.day);
       formData.append("a_month", inputs.month);

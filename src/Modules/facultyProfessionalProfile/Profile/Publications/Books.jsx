@@ -65,7 +65,7 @@ export default function Books() {
     try {
       setIsLoading(true);
       const formData = new FormData();
-      formData.append("user_id", 5318); // Adjust this as needed
+      formData.append("user_id", pfNo); // Adjust this as needed
       formData.append("book_p_type", inputs.publishType);
       formData.append("book_author", inputs.author);
       formData.append("book_publisher", inputs.publisher);

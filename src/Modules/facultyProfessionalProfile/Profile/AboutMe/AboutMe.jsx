@@ -105,7 +105,7 @@ export default function AboutMePage() {
 
       // Prepare the data to send
       const data = {
-        user_id: 5318, // Static or fetched from context
+        user_id: pfNo, // Static or fetched from context
         aboutMe: inputs.aboutMe,
         dateOfJoining: inputs.dateOfJoining,
         education: inputs.education,

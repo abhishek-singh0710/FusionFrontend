@@ -61,7 +61,7 @@
 //       setIsLoading(true);
 
 //       const formData = new FormData();
-//       formData.append("user_id", 5318); // Adjust this as needed
+//       formData.append("user_id", pfNo); // Adjust this as needed
 //       formData.append("s_year", inputs.year);
 //       formData.append("name", inputs.name);
 //       formData.append("roll", inputs.rollNumber);
@@ -570,7 +570,7 @@ export default function PhdThesis() {
       setIsLoading(true);
 
       const formData = new FormData();
-      formData.append("user_id", 5318); // Adjust this as needed
+      formData.append("user_id", pfNo); // Adjust this as needed
       formData.append("s_year", inputs.year);
       formData.append("name", inputs.name);
       formData.append("roll", inputs.rollNumber);

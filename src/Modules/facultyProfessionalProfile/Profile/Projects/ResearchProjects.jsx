@@ -72,7 +72,7 @@ export default function ResearchProjects() {
     try {
       setIsLoading(true);
       const formData = new FormData();
-      formData.append("user_id", 5318);
+      formData.append("user_id", pfNo);
       formData.append("pi", inputs.pi);
       formData.append("co_pi", inputs.coPi);
       formData.append("funding_agency", inputs.fundingAgency);

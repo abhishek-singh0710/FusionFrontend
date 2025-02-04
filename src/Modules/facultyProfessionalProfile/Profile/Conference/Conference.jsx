@@ -76,7 +76,7 @@ export default function ConferenceSymposium() {
       setIsLoading(true);
 
       const formData = new FormData();
-      formData.append("user_id", 5318);
+      formData.append("user_id", pfNo);
       formData.append("conference_name", inputs.conferenceName);
       formData.append("conference_venue", inputs.venue);
       formData.append("conference_role", inputs.role);
