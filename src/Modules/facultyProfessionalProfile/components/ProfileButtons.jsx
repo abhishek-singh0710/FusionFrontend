@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { Button, Flex, Tabs, Text } from "@mantine/core";
 import { CaretCircleLeft, CaretCircleRight } from "@phosphor-icons/react";
-import axios from "axios";
+// import axios from "axios";
 import ProjectsMaster from "../Profile/Projects/ProjectMaster";
 import ThesisSupervisionMaster from "../Profile/ThesisSupervision/ThesisSupervisionMaster";
 import EventMaster from "../Profile/EventsOrganised/EventMaster";
@@ -193,29 +193,29 @@ function ProfileButtons() {
   }, [activeTab]);
 
   // Function to handle report generation and file download
-  const handleGenerateReport = async () => {
-    try {
-      const formData = new FormData();
-      formData.append("username", "atul");
-      const response = await axios.post(
-        "http://127.0.0.1:8000/eis/api/report/",
-        formData,
-        {
-          responseType: "blob",
-        },
-      );
-      const blob = new Blob([response.data], { type: "application/pdf" });
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = "report.pdf";
-      link.click();
-    } catch (error) {
-      console.error(
-        "Error downloading CV:",
-        error.response ? error.response.data : error.message,
-      );
-    }
-  };
+  // const handleGenerateReport = async () => {
+  //   try {
+  //     const formData = new FormData();
+  //     formData.append("username", "atul");
+  //     const response = await axios.post(
+  //       "http://127.0.0.1:8000/eis/api/report/",
+  //       formData,
+  //       {
+  //         responseType: "blob",
+  //       },
+  //     );
+  //     const blob = new Blob([response.data], { type: "application/pdf" });
+  //     const link = document.createElement("a");
+  //     link.href = URL.createObjectURL(blob);
+  //     link.download = "report.pdf";
+  //     link.click();
+  //   } catch (error) {
+  //     console.error(
+  //       "Error downloading CV:",
+  //       error.response ? error.response.data : error.message,
+  //     );
+  //   }
+  // };
 
   return userRole === "Professor" || userRole === "Assistant Professor" ? (
     <>
@@ -280,7 +280,7 @@ function ProfileButtons() {
         )}
 
         {/* Only show Generate Report button for Professor and Assistant Professor */}
-        {(userRole === "Professor" || userRole === "Assistant Professor") && (
+        {/* {(userRole === "Professor" || userRole === "Assistant Professor") && (
           <Button
             onClick={handleGenerateReport}
             variant="filled"
@@ -289,7 +289,7 @@ function ProfileButtons() {
           >
             Generate Report
           </Button>
-        )}
+        )} */}
       </Flex>
 
       {/* Display the active tab content */}
