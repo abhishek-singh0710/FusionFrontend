@@ -178,8 +178,17 @@ export default function ConferenceSymposium() {
             Add a Conference/Symposium
           </Title>
           <form onSubmit={handleSubmit}>
-            <Grid gutter="md">
-              <Grid.Col span={6}>
+            <Grid
+              type="container"
+              breakpoints={{
+                xs: "100px",
+                sm: "200px",
+                md: "700px",
+                lg: "900px",
+                xl: "1000px",
+              }}
+            >
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <TextInput
                   required
                   label="Role"
@@ -191,7 +200,7 @@ export default function ConferenceSymposium() {
                   style={{ padding: "10px" }}
                 />
               </Grid.Col>
-              <Grid.Col span={6}>
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <TextInput
                   required
                   label="Venue"
@@ -204,7 +213,7 @@ export default function ConferenceSymposium() {
                 />
               </Grid.Col>
 
-              {/* <Grid.Col span={6}>
+              {/* <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <DatePickerInput
                   label="Start Date"
                   placeholder="Select date"
@@ -213,7 +222,7 @@ export default function ConferenceSymposium() {
                 />
               </Grid.Col> */}
 
-              <Grid.Col span={6}>
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <TextInput
                   label="Start Date"
                   name="startDate"
@@ -225,7 +234,7 @@ export default function ConferenceSymposium() {
                 />
               </Grid.Col>
 
-              {/* <Grid.Col span={6}>
+              {/* <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <DatePickerInput
                   label="End Date"
                   placeholder="Select date"
@@ -234,7 +243,7 @@ export default function ConferenceSymposium() {
                 />
               </Grid.Col> */}
 
-              <Grid.Col span={6}>
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <TextInput
                   label="End Date"
                   name="endDate"
