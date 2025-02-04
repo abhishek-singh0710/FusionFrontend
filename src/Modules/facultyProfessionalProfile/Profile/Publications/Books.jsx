@@ -38,6 +38,9 @@ export default function Books() {
   const rowsPerPage = 10; // Number of rows per page
 
   const pfNo = useSelector((state) => state.pfNo.value);
+  // const csrfToken = document.querySelector('meta[name="csrf-token"]');
+  //   .getAttribute("content");
+  // console.log(csrfToken);
   // console.log(pfNo);
 
   const fetchAchievements = async () => {
