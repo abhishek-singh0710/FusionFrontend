@@ -176,8 +176,17 @@ export default function ResearchProjects() {
             Add a Research Project
           </Title>
           <form onSubmit={handleSubmit}>
-            <Grid gutter="md">
-              <Grid.Col span={6}>
+            <Grid
+              type="container"
+              breakpoints={{
+                xs: "100px",
+                sm: "200px",
+                md: "700px",
+                lg: "900px",
+                xl: "1000px",
+              }}
+            >
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <TextInput
                   required
                   label="Project Incharge (PI)"
@@ -187,7 +196,7 @@ export default function ResearchProjects() {
                   style={{ padding: "10px" }} // Consistent padding
                 />
               </Grid.Col>
-              <Grid.Col span={6}>
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <TextInput
                   required
                   label="Co-Project Incharge (CO-PI)"
@@ -199,7 +208,7 @@ export default function ResearchProjects() {
                   style={{ padding: "10px" }} // Consistent padding
                 />
               </Grid.Col>
-              <Grid.Col span={6}>
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <TextInput
                   required
                   label="Funding Agency"
@@ -211,7 +220,7 @@ export default function ResearchProjects() {
                   style={{ padding: "10px" }} // Consistent padding
                 />
               </Grid.Col>
-              <Grid.Col span={6}>
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <Select
                   label="Status"
                   placeholder="Select status"
@@ -227,7 +236,7 @@ export default function ResearchProjects() {
                 />
               </Grid.Col>
 
-              <Grid.Col span={3}>
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <TextInput
                   label="Submission Date"
                   name="submissionDate"
@@ -239,7 +248,7 @@ export default function ResearchProjects() {
                 />
               </Grid.Col>
 
-              <Grid.Col span={3}>
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <TextInput
                   label="Start Date"
                   name="startDate"
@@ -251,7 +260,7 @@ export default function ResearchProjects() {
                 />
               </Grid.Col>
 
-              <Grid.Col span={3}>
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <TextInput
                   label="Expected Finish Date"
                   name="expectedFinishDate"
@@ -263,7 +272,7 @@ export default function ResearchProjects() {
                 />
               </Grid.Col>
 
-              <Grid.Col span={3}>
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <TextInput
                   required
                   label="Financial Outlay"

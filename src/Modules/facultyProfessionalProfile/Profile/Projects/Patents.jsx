@@ -161,8 +161,17 @@ export default function Patents() {
             Add a Patent
           </Title>
           <form onSubmit={handleSubmit}>
-            <Grid gutter="md">
-              <Grid.Col span={6}>
+            <Grid
+              type="container"
+              breakpoints={{
+                xs: "100px",
+                sm: "200px",
+                md: "700px",
+                lg: "900px",
+                xl: "1000px",
+              }}
+            >
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <TextInput
                   required
                   label="Patent Number"
@@ -174,7 +183,7 @@ export default function Patents() {
                   style={{ padding: "10px" }} // Consistent padding
                 />
               </Grid.Col>
-              <Grid.Col span={6}>
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <Select
                   label="Status"
                   placeholder="Select status"
@@ -191,7 +200,7 @@ export default function Patents() {
                   style={{ padding: "10px" }} // Consistent padding
                 />
               </Grid.Col>
-              <Grid.Col span={4}>
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <TextInput
                   required
                   label="Earnings (in Rs.)"
@@ -203,7 +212,7 @@ export default function Patents() {
                   style={{ padding: "10px" }} // Consistent padding
                 />
               </Grid.Col>
-              <Grid.Col span={4}>
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <Select
                   label="Month"
                   placeholder="Select Month"
@@ -217,7 +226,7 @@ export default function Patents() {
                   style={{ padding: "10px" }} // Consistent padding
                 />
               </Grid.Col>
-              <Grid.Col span={4}>
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <Select
                   label="Year"
                   placeholder="Select Year"

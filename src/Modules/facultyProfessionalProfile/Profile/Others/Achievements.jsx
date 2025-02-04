@@ -180,8 +180,17 @@ export default function AchievementsForm() {
             Add an Achievement
           </Title>
           <form onSubmit={handleSubmit}>
-            <Grid gutter="md">
-              <Grid.Col span={3}>
+            <Grid
+              type="container"
+              breakpoints={{
+                xs: "100px",
+                sm: "200px",
+                md: "700px",
+                lg: "900px",
+                xl: "1000px",
+              }}
+            >
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <Select
                   label="Day"
                   placeholder="Select Day"
@@ -193,7 +202,7 @@ export default function AchievementsForm() {
                   required
                 />
               </Grid.Col>
-              <Grid.Col span={3}>
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <Select
                   label="Month"
                   placeholder="Select Month"
@@ -205,7 +214,7 @@ export default function AchievementsForm() {
                   required
                 />
               </Grid.Col>
-              <Grid.Col span={3}>
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <Select
                   label="Year"
                   placeholder="Select Year"
@@ -217,7 +226,7 @@ export default function AchievementsForm() {
                   required
                 />
               </Grid.Col>
-              <Grid.Col span={3}>
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <Select
                   label="Achievement Type"
                   placeholder="Select Type"

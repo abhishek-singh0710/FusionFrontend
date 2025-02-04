@@ -147,8 +147,17 @@ export default function ExpertLecturesForm() {
             Add an Expert Lecture/Invited Talk
           </Title>
           <form onSubmit={handleSubmit}>
-            <Grid gutter="md">
-              <Grid.Col span={4}>
+            <Grid
+              type="container"
+              breakpoints={{
+                xs: "100px",
+                sm: "200px",
+                md: "700px",
+                lg: "900px",
+                xl: "1000px",
+              }}
+            >
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <Select
                   label="Presentation Type"
                   placeholder="Select Presentation Type"
@@ -164,7 +173,7 @@ export default function ExpertLecturesForm() {
                   required
                 />
               </Grid.Col>
-              <Grid.Col span={4}>
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <TextInput
                   label="Place"
                   placeholder="Place"
@@ -177,7 +186,7 @@ export default function ExpertLecturesForm() {
                 />
               </Grid.Col>
 
-              {/* <Grid.Col span={4}>
+              {/* <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <DateInput
                   label="Date"
                   placeholder="Select date"
@@ -187,7 +196,7 @@ export default function ExpertLecturesForm() {
                 />
               </Grid.Col> */}
 
-              <Grid.Col span={4}>
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <TextInput
                   label="Date"
                   name="date"

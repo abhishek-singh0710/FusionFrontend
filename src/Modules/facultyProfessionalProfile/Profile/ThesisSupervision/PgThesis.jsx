@@ -163,7 +163,16 @@ export default function PgThesis() {
             Add a PG Thesis
           </Title>
           <form onSubmit={handleSubmit}>
-            <Grid gutter="md">
+            <Grid
+              type="container"
+              breakpoints={{
+                xs: "100px",
+                sm: "200px",
+                md: "700px",
+                lg: "900px",
+                xl: "1000px",
+              }}
+            >
               <Grid.Col span={12}>
                 <TextInput
                   required
@@ -176,7 +185,7 @@ export default function PgThesis() {
                   style={{ padding: "10px" }} // Consistent padding
                 />
               </Grid.Col>
-              <Grid.Col span={4}>
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <TextInput
                   required
                   label="Roll Number"
@@ -188,7 +197,7 @@ export default function PgThesis() {
                   style={{ padding: "10px" }} // Consistent padding
                 />
               </Grid.Col>
-              <Grid.Col span={4}>
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <Select
                   label="Month"
                   placeholder="Select Month"
@@ -214,7 +223,7 @@ export default function PgThesis() {
                   style={{ padding: "10px" }} // Consistent padding
                 />
               </Grid.Col>
-              <Grid.Col span={4}>
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <Select
                   label="Year"
                   placeholder="Select Year"
@@ -240,7 +249,7 @@ export default function PgThesis() {
                   style={{ padding: "10px" }} // Consistent padding
                 />
               </Grid.Col>
-              <Grid.Col span={6}>
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <TextInput
                   required
                   label="Title"
@@ -252,7 +261,7 @@ export default function PgThesis() {
                   style={{ padding: "10px" }} // Consistent padding
                 />
               </Grid.Col>
-              <Grid.Col span={6}>
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <TextInput
                   required
                   label="Supervisor"
