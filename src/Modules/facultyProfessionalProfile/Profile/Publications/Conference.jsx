@@ -168,8 +168,17 @@ export default function Conference() {
             {inputs.id ? "Edit Conference" : "Add a Conference"}
           </Title>
           <form onSubmit={handleSubmit}>
-            <Grid>
-              <Grid.Col span={6}>
+            <Grid
+              type="container"
+              breakpoints={{
+                xs: "100px",
+                sm: "200px",
+                md: "700px",
+                lg: "900px",
+                xl: "1000px",
+              }}
+            >
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <TextInput
                   label="Author"
                   placeholder="Author"
@@ -181,7 +190,7 @@ export default function Conference() {
                   required
                 />
               </Grid.Col>
-              <Grid.Col span={6}>
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <TextInput
                   label="Co-author(s)"
                   placeholder="Co-Author"
@@ -192,7 +201,7 @@ export default function Conference() {
                   style={{ padding: "10px" }}
                 />
               </Grid.Col>
-              <Grid.Col span={6}>
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <TextInput
                   label="Conference Name"
                   placeholder="Name of the Conference"
@@ -215,7 +224,7 @@ export default function Conference() {
                   }
                 />
               </Grid.Col> */}
-              <Grid.Col span={6}>
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <Select
                   label="Year"
                   placeholder="2021"
@@ -246,7 +255,7 @@ export default function Conference() {
                     Optional Journal Details
                   </summary>
                   <Grid gutter="md">
-                    <Grid.Col span={6}>
+                    <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                       <TextInput
                         label="Venue/Host Institute"
                         placeholder="Venue/Host Institute"
@@ -260,7 +269,7 @@ export default function Conference() {
                         style={{ padding: "10px" }}
                       />
                     </Grid.Col>
-                    <Grid.Col span={6}>
+                    <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                       <TextInput
                         label="Date of Submission(DOS)"
                         placeholder="Date/Time"
@@ -274,7 +283,7 @@ export default function Conference() {
                         style={{ padding: "10px" }}
                       />
                     </Grid.Col>
-                    <Grid.Col span={6}>
+                    <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                       <TextInput
                         label="Date of Acceptance(DOA)"
                         placeholder="Date/Time"
@@ -288,7 +297,7 @@ export default function Conference() {
                         style={{ padding: "10px" }}
                       />
                     </Grid.Col>
-                    <Grid.Col span={6}>
+                    <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                       <TextInput
                         label="Date of Publication(DOP)"
                         placeholder="Date/Time"
@@ -302,7 +311,7 @@ export default function Conference() {
                         style={{ padding: "10px" }}
                       />
                     </Grid.Col>
-                    <Grid.Col span={6}>
+                    <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                       <TextInput
                         label="Page No."
                         placeholder="Date of Publication"
@@ -313,7 +322,7 @@ export default function Conference() {
                         style={{ padding: "10px" }}
                       />
                     </Grid.Col>
-                    <Grid.Col span={6}>
+                    <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                       <Select
                         label="Status"
                         placeholder="Status"
@@ -325,7 +334,7 @@ export default function Conference() {
                         style={{ padding: "10px" }}
                       />
                     </Grid.Col>
-                    <Grid.Col span={6}>
+                    <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                       <TextInput
                         label="Conference Date(s)"
                         placeholder="SCI/SCIE"
@@ -339,7 +348,7 @@ export default function Conference() {
                         style={{ padding: "10px" }}
                       />
                     </Grid.Col>
-                    <Grid.Col span={6}>
+                    <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                       <TextInput
                         label="ISBN No"
                         placeholder="Date of Issuance"

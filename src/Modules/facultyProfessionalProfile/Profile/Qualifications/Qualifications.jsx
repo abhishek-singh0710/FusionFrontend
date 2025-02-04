@@ -134,8 +134,17 @@ export default function Qualifications() {
             Add Qualification
           </Title>
           <form onSubmit={handleSubmit}>
-            <Grid gutter="md">
-              <Grid.Col span={6}>
+            <Grid
+              type="container"
+              breakpoints={{
+                xs: "100px",
+                sm: "200px",
+                md: "700px",
+                lg: "900px",
+                xl: "1000px",
+              }}
+            >
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <TextInput
                   required
                   label="Degree"
@@ -147,7 +156,7 @@ export default function Qualifications() {
                   style={{ padding: "10px" }}
                 />
               </Grid.Col>
-              <Grid.Col span={6}>
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <TextInput
                   required
                   label="College"

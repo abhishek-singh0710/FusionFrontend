@@ -169,8 +169,17 @@ export default function Journal() {
             {inputs.id ? "Edit Journal" : "Add a Journal"}
           </Title>
           <form onSubmit={handleSubmit}>
-            <Grid gutter="md">
-              <Grid.Col span={6}>
+            <Grid
+              type="container"
+              breakpoints={{
+                xs: "100px",
+                sm: "200px",
+                md: "700px",
+                lg: "900px",
+                xl: "1000px",
+              }}
+            >
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <TextInput
                   required
                   label="Author"
@@ -182,7 +191,7 @@ export default function Journal() {
                   style={{ padding: "10px" }} // Consistent padding
                 />
               </Grid.Col>
-              <Grid.Col span={6}>
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <TextInput
                   required
                   label="Co-author(s)"
@@ -194,7 +203,7 @@ export default function Journal() {
                   style={{ padding: "10px" }} // Consistent padding
                 />
               </Grid.Col>
-              <Grid.Col span={6}>
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <TextInput
                   required
                   label="Journal Name"
@@ -217,7 +226,7 @@ export default function Journal() {
                   style={{ padding: "10px" }} // Consistent padding
                 />
               </Grid.Col> */}
-              <Grid.Col span={6}>
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <Select
                   label="Year"
                   placeholder="Select year"
@@ -259,7 +268,7 @@ export default function Journal() {
                     Optional Journal Details
                   </summary>
                   <Grid gutter="md">
-                    <Grid.Col span={6}>
+                    <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                       <TextInput
                         label="Volume No./Issue No."
                         placeholder="Volume No./Issue No."
@@ -270,7 +279,7 @@ export default function Journal() {
                         style={{ padding: "10px" }} // Consistent padding
                       />
                     </Grid.Col>
-                    <Grid.Col span={6}>
+                    <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                       <TextInput
                         label="Page No."
                         placeholder="Page No."
@@ -281,7 +290,7 @@ export default function Journal() {
                         style={{ padding: "10px" }} // Consistent padding
                       />
                     </Grid.Col>
-                    <Grid.Col span={6}>
+                    <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                       <TextInput
                         label="Paper Reference No."
                         placeholder="Paper Reference No."
@@ -292,7 +301,7 @@ export default function Journal() {
                         style={{ padding: "10px" }} // Consistent padding
                       />
                     </Grid.Col>
-                    <Grid.Col span={6}>
+                    <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                       <DatePickerInput
                         label="Date Of Submission"
                         placeholder="Select date"
@@ -303,7 +312,7 @@ export default function Journal() {
                         style={{ padding: "10px" }} // Consistent padding
                       />
                     </Grid.Col>
-                    <Grid.Col span={6}>
+                    <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                       <DatePickerInput
                         label="Date of Publication"
                         placeholder="Select date"
@@ -314,7 +323,7 @@ export default function Journal() {
                         style={{ padding: "10px" }} // Consistent padding
                       />
                     </Grid.Col>
-                    <Grid.Col span={6}>
+                    <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                       <TextInput
                         label="DOI"
                         placeholder="DOI"
@@ -325,7 +334,7 @@ export default function Journal() {
                         style={{ padding: "10px" }} // Consistent padding
                       />
                     </Grid.Col>
-                    <Grid.Col span={6}>
+                    <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                       <Select
                         label="SCI/SCIE"
                         placeholder="Select category"

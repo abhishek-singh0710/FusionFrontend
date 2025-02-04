@@ -170,8 +170,17 @@ export default function ConsultancyProjects() {
             Add a Consultancy Project
           </Title>
           <form onSubmit={handleSubmit}>
-            <Grid gutter="md">
-              <Grid.Col span={6}>
+            <Grid
+              type="container"
+              breakpoints={{
+                xs: "100px",
+                sm: "200px",
+                md: "700px",
+                lg: "900px",
+                xl: "1000px",
+              }}
+            >
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <TextInput
                   required
                   label="Consultant"
@@ -183,7 +192,7 @@ export default function ConsultancyProjects() {
                   style={{ padding: "10px" }}
                 />
               </Grid.Col>
-              <Grid.Col span={6}>
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <TextInput
                   required
                   label="Client"
@@ -195,7 +204,7 @@ export default function ConsultancyProjects() {
                   style={{ padding: "10px" }}
                 />
               </Grid.Col>
-              <Grid.Col span={4}>
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <TextInput
                   required
                   label="Financial Outlay"
@@ -208,7 +217,7 @@ export default function ConsultancyProjects() {
                 />
               </Grid.Col>
 
-              {/* <Grid.Col span={4}>
+              {/* <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <DatePickerInput
                   label="Start Date"
                   placeholder="Select date"
@@ -218,7 +227,7 @@ export default function ConsultancyProjects() {
                 />
               </Grid.Col> */}
 
-              <Grid.Col span={4}>
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <TextInput
                   label="Start Date"
                   name="startDate"
@@ -230,7 +239,7 @@ export default function ConsultancyProjects() {
                 />
               </Grid.Col>
 
-              {/* <Grid.Col span={4}>
+              {/* <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <DatePickerInput
                   label="End Date"
                   placeholder="Select date"
@@ -240,7 +249,7 @@ export default function ConsultancyProjects() {
                 />
               </Grid.Col> */}
 
-              <Grid.Col span={4}>
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <TextInput
                   label="End Date"
                   name="endDate"

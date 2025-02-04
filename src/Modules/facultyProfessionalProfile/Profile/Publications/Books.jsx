@@ -145,8 +145,17 @@ export default function Books() {
             {editingId ? "Edit Book/Book Chapter" : "Add a Book/Book Chapter"}
           </Title>
           <form onSubmit={handleSubmit}>
-            <Grid gutter="md">
-              <Grid.Col span={6}>
+            <Grid
+              type="container"
+              breakpoints={{
+                xs: "100px",
+                sm: "200px",
+                md: "700px",
+                lg: "900px",
+                xl: "1000px",
+              }}
+            >
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <Select
                   label="Publish Type"
                   placeholder="Select Type"
@@ -165,7 +174,7 @@ export default function Books() {
                   style={{ padding: "10px" }} // Consistent padding
                 />
               </Grid.Col>
-              <Grid.Col span={6}>
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <TextInput
                   label="Author"
                   placeholder="Author"
@@ -177,7 +186,7 @@ export default function Books() {
                   style={{ padding: "10px" }} // Consistent padding
                 />
               </Grid.Col>
-              <Grid.Col span={6}>
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <TextInput
                   label="Publisher"
                   placeholder="Publisher"
@@ -189,7 +198,7 @@ export default function Books() {
                   style={{ padding: "10px" }} // Consistent padding
                 />
               </Grid.Col>
-              <Grid.Col span={6}>
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <Select
                   label="Publishing Year"
                   placeholder="Select Year"
