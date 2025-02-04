@@ -15,6 +15,7 @@ import {
   Textarea,
 } from "@mantine/core";
 import { FloppyDisk, PencilSimple, Trash } from "@phosphor-icons/react";
+import { useSelector } from "react-redux";
 import {
   deleteHonors,
   getHonors,
@@ -35,7 +36,7 @@ export default function Honors() {
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 10;
 
-  const pfNo = 5318;
+  const pfNo = useSelector((state) => state.pfNo.value);
 
   const fetchHonors = async () => {
     try {

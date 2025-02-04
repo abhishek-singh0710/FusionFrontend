@@ -14,6 +14,7 @@ import {
   Pagination,
 } from "@mantine/core";
 import { FloppyDisk, PencilSimple, Trash } from "@phosphor-icons/react";
+import { useSelector } from "react-redux";
 import {
   deleteAdministrativePosition,
   getAdministrativePosition,
@@ -36,7 +37,7 @@ export default function AdministrativePosition() {
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 10;
 
-  const pfNo = 5318;
+  const pfNo = useSelector((state) => state.pfNo.value);
 
   //   const userId = useSelector((state) => state.userId.value);
 
