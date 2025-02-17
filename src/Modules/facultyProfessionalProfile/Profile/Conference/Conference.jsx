@@ -249,7 +249,7 @@ export default function ConferenceSymposium() {
               <Grid.Col span={12}>
                 <TextInput
                   required
-                  label="Conference Name"
+                  label="Event Name"
                   placeholder="Conference Name"
                   value={inputs.conferenceName}
                   onChange={(e) =>
