@@ -15,6 +15,7 @@ import {
   Textarea,
 } from "@mantine/core";
 import { FloppyDisk, PencilSimple, Trash } from "@phosphor-icons/react";
+import { useSelector } from "react-redux";
 import {
   deleteHonors,
   getHonors,
@@ -35,7 +36,7 @@ export default function Honors() {
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 10;
 
-  const pfNo = 5318;
+  const pfNo = useSelector((state) => state.pfNo.value);
 
   const fetchHonors = async () => {
     try {
@@ -130,8 +131,17 @@ export default function Honors() {
             Add Honor
           </Title>
           <form onSubmit={handleSubmit}>
-            <Grid gutter="md">
-              <Grid.Col span={6}>
+            <Grid
+              type="container"
+              breakpoints={{
+                xs: "100px",
+                sm: "200px",
+                md: "700px",
+                lg: "900px",
+                xl: "1000px",
+              }}
+            >
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <TextInput
                   required
                   label="Title"
@@ -143,7 +153,7 @@ export default function Honors() {
                   style={{ padding: "10px" }}
                 />
               </Grid.Col>
-              <Grid.Col span={6}>
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <TextInput
                   label="Period"
                   placeholder="Enter period (optional)"

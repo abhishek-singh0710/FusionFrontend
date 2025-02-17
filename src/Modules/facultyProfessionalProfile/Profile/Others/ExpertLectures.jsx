@@ -61,7 +61,7 @@ export default function ExpertLecturesForm() {
       setIsLoading(true);
 
       const formData = new FormData();
-      formData.append("user_id", 5318);
+      formData.append("user_id", pfNo);
       formData.append("type", inputs.presentationType);
       formData.append("place", inputs.place);
       formData.append("title", inputs.title);

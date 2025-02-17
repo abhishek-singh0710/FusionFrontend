@@ -75,7 +75,7 @@ export default function WorkshopForm() {
       setIsLoading(true);
 
       const formData = new FormData();
-      formData.append("user_id", 5318);
+      formData.append("user_id", pfNo);
       formData.append("event_role", inputs.role);
       formData.append("event_name", inputs.name);
       formData.append("event_venue", inputs.venue);
@@ -182,8 +182,17 @@ export default function WorkshopForm() {
             Add an Event
           </Title>
           <form onSubmit={handleSubmit}>
-            <Grid gutter="md">
-              <Grid.Col span={6}>
+            <Grid
+              type="container"
+              breakpoints={{
+                xs: "100px",
+                sm: "200px",
+                md: "700px",
+                lg: "900px",
+                xl: "1000px",
+              }}
+            >
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <Select
                   label="Role"
                   placeholder="Select Role"
@@ -198,7 +207,7 @@ export default function WorkshopForm() {
                   style={{ padding: "10px" }}
                 />
               </Grid.Col>
-              <Grid.Col span={6}>
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <TextInput
                   required
                   label="Sponsoring Agency"
@@ -211,7 +220,7 @@ export default function WorkshopForm() {
                 />
               </Grid.Col>
 
-              {/* <Grid.Col span={6}>
+              {/* <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <DatePickerInput
                   label="Start Date"
                   placeholder="Select date"
@@ -220,7 +229,7 @@ export default function WorkshopForm() {
                 />
               </Grid.Col> */}
 
-              <Grid.Col span={6}>
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <TextInput
                   label="Start Date"
                   name="startDate"
@@ -232,7 +241,7 @@ export default function WorkshopForm() {
                 />
               </Grid.Col>
 
-              {/* <Grid.Col span={6}>
+              {/* <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <DatePickerInput
                   label="End Date"
                   placeholder="Select date"
@@ -241,7 +250,7 @@ export default function WorkshopForm() {
                 />
               </Grid.Col> */}
 
-              <Grid.Col span={6}>
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <TextInput
                   label="End Date"
                   name="endDate"
@@ -253,7 +262,7 @@ export default function WorkshopForm() {
                 />
               </Grid.Col>
 
-              <Grid.Col span={6}>
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <TextInput
                   required
                   label="Venue"
@@ -265,7 +274,7 @@ export default function WorkshopForm() {
                   style={{ padding: "10px" }}
                 />
               </Grid.Col>
-              <Grid.Col span={6}>
+              <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
                 <Select
                   label="Event Type"
                   placeholder="Select Event Type"

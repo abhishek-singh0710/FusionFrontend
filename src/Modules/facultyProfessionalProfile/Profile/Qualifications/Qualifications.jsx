@@ -15,6 +15,7 @@ import {
   Textarea,
 } from "@mantine/core";
 import { FloppyDisk, PencilSimple, Trash } from "@phosphor-icons/react";
+import { useSelector } from "react-redux";
 import {
   deleteQualifications,
   getQualifications,
@@ -35,7 +36,7 @@ export default function Qualifications() {
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 10;
 
-  const pfNo = 5318;
+  const pfNo = useSelector((state) => state.pfNo.value);
 
   // Function to fetch qualifications from the backend
   const fetchQualifications = async () => {

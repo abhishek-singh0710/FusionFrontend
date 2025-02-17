@@ -71,7 +71,7 @@ export default function Journal() {
     try {
       setIsLoading(true);
       const formData = new FormData();
-      formData.append("user_id", 5318); // Adjust this as needed
+      formData.append("user_id", pfNo); // Adjust this as needed
       formData.append("authors", inputs.author);
       formData.append("title", inputs.title);
       formData.append("co_author", inputs.coAuthors);

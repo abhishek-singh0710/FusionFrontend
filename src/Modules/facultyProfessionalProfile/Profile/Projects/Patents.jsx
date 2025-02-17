@@ -72,7 +72,7 @@ export default function Patents() {
       setIsLoading(true);
 
       const formData = new FormData();
-      formData.append("user_id", 5318);
+      formData.append("user_id", pfNo);
       formData.append("p_no", inputs.patentNumber);
       formData.append("earnings", inputs.earnings);
       formData.append("year", inputs.year);

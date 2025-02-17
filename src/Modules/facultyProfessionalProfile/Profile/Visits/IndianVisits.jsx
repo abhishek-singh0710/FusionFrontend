@@ -70,7 +70,7 @@ export default function IndianVisits() {
       setIsLoading(true);
 
       const formData = new FormData();
-      formData.append("user_id", 5318);
+      formData.append("user_id", pfNo);
       formData.append("country", inputs.country);
       formData.append("place", inputs.place);
       formData.append("purpose", inputs.purpose);
